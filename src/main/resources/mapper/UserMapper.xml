@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 @mapper로 설정된 경로 입력  -->        
+<mapper namespace="com.metanet.main.UserMapper">
+    <insert id="insert">
+        INSERT INTO users (userNo, id, userName, password, joinDate) 
+        VALUES (seq_users_no.nextval, #{id}, 
+        #{userName}, #{password}, sysdate 
+        )
+    </insert>
+</mapper>
