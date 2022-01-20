@@ -12,4 +12,8 @@ public class UserServiceImpl implements UserService {
 	public void register(UserVO vo) {
 		mapper.insert(vo);
 	}
+	
+	public void alalal(int no) {
+		
+	}
 }
