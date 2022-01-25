@@ -12,10 +12,4 @@ public class UserServiceImpl implements UserService {
 	public void register(UserVO vo) {
 		mapper.insert(vo);
 	}
-	private void suin() {
-		// TODO Auto-generated method stub
-		String suin;
-
-
-	}
 }
