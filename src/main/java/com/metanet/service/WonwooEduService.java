@@ -1,5 +1,10 @@
 package com.metanet.service;
 
-public interface WonwooEduService {
+import java.util.List;
 
+import com.metanet.domain.EduVO;
+
+public interface WonwooEduService {
+	
+	public List<EduVO> eduList();
 }
