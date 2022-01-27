@@ -1,5 +1,7 @@
 package com.metanet.service;
 
-public interface suinEduService {
+import com.metanet.domain.EduVO;
 
+public interface suinEduService {
+	public int eduAdd(EduVO vo);
 }
