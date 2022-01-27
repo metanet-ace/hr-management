@@ -58,8 +58,11 @@
     <script src="/assets/vendor/jqvmap/js/jquery.vmap.usa.js"></script>
     <script src="/assets/vendor/jquery.counterup/jquery.counterup.min.js"></script>
 
-
     <script src="/assets/js/dashboard/dashboard-1.js"></script>
+    
+    <!-- Datatable -->
+    <script src="/assets/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="/assets/js/plugins-init/datatables.init.js"></script>
 
 </body>
 
