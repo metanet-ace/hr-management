@@ -1,4 +1,4 @@
-package com.metanet.main;
+package com.metanet.domain;
 
 import lombok.Data;
 import lombok.ToString;
