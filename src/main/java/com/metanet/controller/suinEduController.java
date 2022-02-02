@@ -2,6 +2,7 @@ package com.metanet.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,13 +20,14 @@ public class suinEduController {
 	private suinEduServiceImpl service;
 	
 	@GetMapping("/add")
-	public String eduAdd() {
+	public String eduAdd(Model model) {
+		model.addAttribute("title", "교육 과정 추가");
 		System.out.println("교육 추가 페이지 출력");
 		return "/admin/edu/eduAdd";
 	}
 	
 	@PostMapping("/add")
-	public String eduAdd(@ModelAttribute("params") EduVO params ) {
+	public String eduAdd(@ModelAttribute("params") EduVO params) {
 		service.eduAdd(params);
 		System.out.println("교육 과정 추가");
 		return "index";

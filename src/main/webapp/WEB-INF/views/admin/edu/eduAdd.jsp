@@ -7,36 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- Favicon icon -->
-<link rel="icon" type="image/png" sizes="16x16"
-	href="/assets/images/favicon.png">
-<!-- Daterange picker -->
-<link
-	href="/assets/vendor/bootstrap-daterangepicker/daterangepicker.css"
-	rel="stylesheet">
-<!-- Clockpicker -->
-<link
-	href="/assets/vendor/clockpicker/css/bootstrap-clockpicker.min.css"
-	rel="stylesheet">
-<!-- asColorpicker -->
-<link
-	href="/assets/vendor/jquery-asColorPicker/css/asColorPicker.min.css"
-	rel="stylesheet">
-<!-- Material color picker -->
-<link
-	href="/assets/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css"
-	rel="stylesheet">
-<!-- Pick date -->
-<link rel="stylesheet"
-	href="/assets/vendor/pickadate/themes/default.css">
-<link rel="stylesheet"
-	href="/assets/vendor/pickadate/themes/default.date.css">
-<!-- Custom Stylesheet -->
-<link href="/assets/css/style.css" rel="stylesheet">
-<title>교육과정추가</title>
 </head>
 <body>
 	<!--**********************************
