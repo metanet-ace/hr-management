@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace는 @mapper로 설정된 경로 입력  -->        
+<mapper namespace="com.metanet.persistence.suinEduMapper">
+    <insert id="eduInsert" parameterType="com.metanet.domain.EduVO">
+        INSERT INTO edu
+        VALUES (seq_edu_no.nextval, 
+        		#{eduTitle}, 
+        		#{eduDesc}, 
+        		#{eduLoc}, 
+        		#{eduTime}, 
+        		#{eduTeacher}, 
+        		#{eduPeople}, 
+        		#{eduTarget}, 
+        		#{eduStart}, 
+        		#{eduEnd}, 
+        		#{eduCost})
+    </insert>
+</mapper>	
