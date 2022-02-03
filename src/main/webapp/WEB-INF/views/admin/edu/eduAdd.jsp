@@ -40,8 +40,9 @@
 													상세 <span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduDesc"
-														name="eduDesc" placeholder="교육 상세">
+													<textarea class="form-control" id="eduDesc"
+														name="eduDesc" rows="5"
+														placeholder=""></textarea>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -59,7 +60,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTime"
-														name="eduTime" placeholder="..and confirm it!">
+														name="eduTime" placeholder="총이수시간">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -67,9 +68,8 @@
 													강사<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<textarea class="form-control" id="eduTeacher"
-														name="eduTeacher" rows="5"
-														placeholder="What would you like to see?"></textarea>
+													<input type="text" class="form-control" id="eduTeacher"
+														name="eduTeacher" placeholder="교육 상세">
 												</div>
 											</div>
 										</div>
@@ -80,7 +80,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduPeople"
-														name="eduPeople" placeholder="$21.60">
+														name="eduPeople" placeholder="인원">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -89,18 +89,16 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTarget"
-														name="eduTarget" placeholder="$21.60">
+														name="eduTarget" placeholder="대상">
 												</div>
 											</div>
 											<div class="form-group row">
 												<label class="col-lg-4 col-form-label" for="eduStart">시작일
 													<span class="text-danger">*</span>
 												</label>
-												<div class="col-md-4">
-													<div class="col-lg-6">
-														<input type="text" class="form-control" id="eduStart"
-															name="eduStart" placeholder="212-999-0000">
-													</div>
+												<div class="col-lg-6">
+													<input type="text" class="form-control" id="eduStart"
+															name="eduStart" placeholder="시작일 (yyyy-mm-dd)">												
 												</div>
 											</div>
 											<div class="form-group row">
@@ -109,7 +107,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduEnd"
-														name="eduEnd" placeholder="212-999-0000">
+														name="eduEnd" placeholder="시작일 (yyyy-mm-dd)">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -118,14 +116,14 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduCost"
-														name="eduCost" placeholder="5">
+														name="eduCost" placeholder="비용">
 												</div>
 											</div>
 
 
 											<div class="form-group row">
 												<div class="col-lg-8 ml-auto">
-													<button type="submit" class="btn btn-primary">Submit</button>
+													<button type="submit" class="btn btn-primary">등록</button>
 												</div>
 											</div>
 										</div>
