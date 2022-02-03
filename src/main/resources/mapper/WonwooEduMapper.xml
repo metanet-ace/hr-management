@@ -5,4 +5,24 @@
 		SELECT *
 		FROM EDU
 	</select>
+	
+	<select id="eduDetail" parameterType="Integer" resultType="com.metanet.domain.EduVO">
+		SELECT *
+		FROM EDU
+		WHERE EDU_NO = #{EDU_NO}
+	</select>
+	
+	<delete id="eduDelete" parameterType="Integer">
+		DELETE
+		FROM EDU
+		WHERE EDU_NO = #{EDU_NO}
+	</delete>
+	
+	<update id="eduUpdate" parameterType="com.metanet.domain.EduVO">
+		UPDATE EDU SET EDU_TITLE=#{eduTitle}, EDU_DESC=#{eduDesc}, EDU_LOC=#{eduLoc}, EDU_TIME=#{eduTime},
+		EDU_TEACHER=#{eduTeacher}, EDU_PEOPLE=#{eduPeople}, EDU_TARGET=#{eduTarget}, 
+		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD HH:mi:ss'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD HH:mi:ss'), EDU_COST=#{eduCost}
+		WHERE EDU_NO=#{eduNo}
+		
+	</update>
 </mapper>

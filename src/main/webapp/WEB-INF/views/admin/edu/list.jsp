@@ -51,7 +51,7 @@
                                         </thead>
                                         <tbody>
                                              <c:forEach items="${eduList }" var="list">
-                                              <tr>
+                                              <tr onClick="location.href='./detail?edu_no=${list.eduNo }'">
                                                 <td>${list.eduTitle }</td>
                                                 <td>${list.eduDesc }</td>
                                                 <td>${list.eduLoc }</td>
