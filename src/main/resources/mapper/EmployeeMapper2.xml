@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.metanet.persistence.EmployeeMapper2">
-	<!-- 로그인 -->
-	<select id="selectLogin" resultType="com.metanet.domain.EmployeeVO2">
-		SELECT *
-		FROM EMPLOYEE
-		WHERE EMP_NO = #{empNo} AND EMP_PWD = #{empPwd}
-	</select>
 	
 	<insert id="insertEmp" parameterType="com.metanet.domain.EmployeeVO2">
 		INSERT INTO EMPLOYEE
 		VALUES (SEQ_EMP_NO.NEXTVAL, #{posNo}, #{deptNo}, #{empName}, #{empGender}, #{empPhone}, #{empSal}, #{empEmail}, 
-				#{empHiredate}, null, #{empSsc}, #{empDegree}, #{empCareer}, TO_CHAR(SEQ_EMP_NO.NEXTVAL, 'FM9999999'), 
-				#{empRePhoto}, #{empPhoto}, #{empMil})
+				TO_DATE(#{empHiredate}, 'YYYY-MM-DD'), null, #{empSsc}, #{empDegree}, #{empCareer},  TO_CHAR(SEQ_EMP_NO.NEXTVAL, 'FM99999999'),
+				#{empRePhoto, jdbcType=VARCHAR}, #{empPhoto, jdbcType=VARCHAR}, #{empMil})
 	</insert>
 </mapper>
