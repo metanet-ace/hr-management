@@ -19,7 +19,7 @@ public class EmployeeServiceImpl2 implements EmployeeService2{
 	@Override
 	//사원등록(인사팀)
 	public int insertEmp(EmployeeVO2 emp) {
-		encoder.encode(emp.getEmpPwd());
+		emp.setEmpPwd(encoder.encode(emp.getEmpPwd()));
 		return empMapper.insertEmp(emp);
 	}
 	

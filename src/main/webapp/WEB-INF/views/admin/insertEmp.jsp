@@ -344,6 +344,14 @@
                                                         <input type="text" class="form-control" id="empName" name="empName">
                                                     </div>
                                                 </div>
+                                                  <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="empPwd">비밀번호<span
+                                                            class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6">
+                                                        <input type="password" class="form-control" id="empPwd" name="empPwd">
+                                                    </div>
+                                                </div>
                                                 
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label"><a
