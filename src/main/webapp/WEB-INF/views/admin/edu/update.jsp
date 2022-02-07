@@ -63,7 +63,7 @@
 						</div>
 						<div class="card-body">
 							<div class="form-validation">
-								<form class="form-valide" action="/admin/edu/update" method="post">
+								<form class="form-valide" action="/edu/update" method="post">
 									<input type="hidden" name="eduNo" value="${detail.eduNo}">
 									<div class="row">
 										<div class="col-xl-6">
@@ -137,7 +137,7 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduStart"
+													<input type="date" class="form-control" id="eduStart"
 														name="eduStart" value="${detail.eduStart }" >
 												</div>
 											</div>
@@ -146,7 +146,7 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduEnd"
+													<input type="date" class="form-control" id="eduEnd"
 														name="eduEnd" value="${detail.eduEnd }" >
 												</div>
 											</div>

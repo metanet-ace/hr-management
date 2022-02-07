@@ -38,30 +38,30 @@
                                         <thead>
                                             <tr>
                                                 <th>교육명</th>
-                                                <th>교육상세내용설명</th>
-                                                <th>교육장소</th>
-                                                <th>교육총이수시간</th>
-                                                <th>담당강사</th>
                                                 <th>교육인원</th>
                                                 <th>교육대상</th>
                                                 <th>교육시작일</th>
                                                 <th>교육종료일</th>
-                                                <th>비용</th>
+                                                <th>진행상태</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                              <c:forEach items="${eduList }" var="list">
-                                              <tr onClick="location.href='./detail?edu_no=${list.eduNo }'">
-                                                <td>${list.eduTitle }</td>
-                                                <td>${list.eduDesc }</td>
-                                                <td>${list.eduLoc }</td>
-                                                <td>${list.eduTime }</td>
-                                                <td>${list.eduTeacher }</td>
+                                              <tr>
+                                                <td onClick="location.href='./detail?edu_no=${list.eduNo }'">${list.eduTitle }</td>
                                                 <td>${list.eduPeople }</td>
                                                 <td>${list.eduTarget }</td>
                                                 <td>${list.eduStart }</td>
                                                 <td>${list.eduEnd }</td>
-                                                <td>${list.eduCost }</td>
+                                                <td>
+                                                	<c:choose>
+														<c:when test="${list.eduProgress eq 0}">진행예정</c:when>
+														<c:when test="${list.eduProgress eq 1}">진행중</c:when>
+														<c:otherwise>진행종료</c:otherwise>
+													</c:choose>
+                                                </td>
+                                                <td><button>인원할당</button></td>
                                             </tr>
                                        		 </c:forEach> 
                                         </tbody>
