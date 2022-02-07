@@ -82,7 +82,6 @@ public class EmployeeController2 {
 			emp.setEmpPhoto(mfile.getOriginalFilename());
 		}
 		
-		
 		if (service.insertEmp(emp) > 0) {
 			return "redirect:/admin/emp";
 		}else {

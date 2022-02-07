@@ -5,7 +5,7 @@
 	<insert id="insertEmp" parameterType="com.metanet.domain.EmployeeVO2">
 		INSERT INTO EMPLOYEE
 		VALUES (SEQ_EMP_NO.NEXTVAL, #{posNo}, #{deptNo}, #{empName}, #{empGender}, #{empPhone}, #{empSal}, #{empEmail}, 
-				TO_DATE(#{empHiredate}, 'YYYY-MM-DD'), null, #{empSsc}, #{empDegree}, #{empCareer},  TO_CHAR(SEQ_EMP_NO.NEXTVAL, 'FM99999999'),
+				TO_DATE(#{empHiredate}, 'YYYY-MM-DD'), null, #{empSsc}, #{empDegree}, #{empCareer}, #{empPwd},
 				#{empRePhoto, jdbcType=VARCHAR}, #{empPhoto, jdbcType=VARCHAR}, #{empMil})
 	</insert>
 </mapper>
