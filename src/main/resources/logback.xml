@@ -10,8 +10,8 @@
 	</appender>
 	<logger name="com.metanet" level="debug" additivity="false">
 		<appender-ref ref="consoleAppender" />
-		<!-- MyBatis 로그 -->
 	</logger>
+	<!-- MyBatis 로그 -->
 	<logger name="com.metanet.persistence">
 		<level value="trace" />
 	</logger>
