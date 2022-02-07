@@ -1,12 +1,20 @@
 package com.metanet.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.metanet.domain.EmployeeVO2;
 import com.metanet.service.EmployeeService2;
@@ -16,29 +24,7 @@ public class EmployeeController2 {
 	
 	@Autowired
 	EmployeeService2 service;
-	
-	//로그인페이지 이동(공통)
-	@GetMapping("/main2")
-	public String loginPage() {
-		return "login";
-	}
-	
-	//로그인
-	@PostMapping("/emp/login")
-	public String login(EmployeeVO2 emp, HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		
-		EmployeeVO2 loginEmp = service.selectLogin(emp);
-		System.out.println("++++++" + emp);
-		System.out.println("오류잡아줘" + loginEmp);
-		
-		if(loginEmp != null) {
-			session.setAttribute("loginEmp", loginEmp);
-			return "redirect:/main";
-		}else {
-			return "redirect:/eduList";
-		}
-	}
+
 	
 	//사원등록페이지 이동(인사팀)
 	@GetMapping("/admin/emp/insertEmpPage")
@@ -46,10 +32,64 @@ public class EmployeeController2 {
 		return "/admin/insertEmp";
 	}
 	
-//	//사원등록하기(인사팀)
-//	@PostMapping("/admin/emp/insertEmp")
-//	public String insertEmployee(EmployeeVO2 emp, HttpServletRequest request, )
-//	
+	//사원등록하기(인사팀)
+	@PostMapping("/admin/emp/insertEmp")
+	public String insertEmployee(EmployeeVO2 emp, HttpServletRequest request, Model model, 
+					@RequestParam(name = "upfile", required = false) MultipartFile mfile) {
+		// parameter 값이 없어도 오류가 나지 않게 하기 위해서 required = false
+		
+		// 파일 저장 폴더 지정
+		String savePath = request.getSession().getServletContext().getRealPath("resources/employeeImages");
+		
+		if(!mfile.isEmpty()) {
+			String fileName = mfile.getOriginalFilename();
+			if(fileName != null && fileName.length() > 0) {
+				try {
+					mfile.transferTo(new File(savePath + "\\" + fileName));
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+					
+					String renameFileName = sdf.format(new java.sql.Date(System.currentTimeMillis()));
+					
+					renameFileName += "." + fileName.substring(fileName.lastIndexOf(".") + 1);
+					
+					File originFile = new File(savePath + "\\" + fileName);
+					File renameFile = new File(savePath + "\\" + renameFileName);
+					
+					if(!originFile.renameTo(renameFile)) {
+						FileInputStream fin = new FileInputStream(originFile);
+						FileOutputStream fout = new FileOutputStream(renameFile);
+
+						int data = -1;
+						byte[] buffer = new byte[1024];
+
+						while ((data = fin.read(buffer, 0, buffer.length)) != -1) {
+							fout.write(buffer, 0, buffer.length);
+						}
+						
+						fin.close();
+						fout.close();
+						originFile.delete();
+					}
+					
+					emp.setEmpRePhoto(renameFileName);
+				} catch (Exception e) {
+					e.printStackTrace();
+					model.addAttribute("message", "파일 업로드 실패");
+				}
+			}
+			
+			emp.setEmpPhoto(mfile.getOriginalFilename());
+		}
+		
+		if (service.insertEmp(emp) > 0) {
+			return "redirect:/admin/emp";
+		}else {
+			model.addAttribute("message", "사원 등록하기 실패");
+			return "redirect:/eduList";
+		}
+	}
+	
 	
 	
 	
