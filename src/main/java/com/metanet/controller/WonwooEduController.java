@@ -14,7 +14,7 @@ import com.metanet.domain.EduVO;
 import com.metanet.service.WonwooEduService;
 
 @Controller
-@RequestMapping("/admin/edu")
+@RequestMapping("/edu")
 public class WonwooEduController {
 	
 	@Autowired
@@ -48,14 +48,14 @@ public class WonwooEduController {
 		String test = eduVO.toString();
 		System.out.println(test);
 		wonwooEduService.eduUpdate(eduVO);
-		return "redirect:/admin/edu/detail?edu_no="+Integer.parseInt(request.getParameter("eduNo"));
+		return "redirect:/edu/detail?edu_no="+Integer.parseInt(request.getParameter("eduNo"));
 	}
 	
 	@GetMapping("/delete")
 	public String eduDelete(HttpServletRequest request) {
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
 		wonwooEduService.eduDelete(edu_no);
-		return "redirect:/admin/edu/list";
+		return "redirect:/edu/list";
 	}
 	
 	

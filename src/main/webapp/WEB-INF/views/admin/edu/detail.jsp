@@ -44,7 +44,7 @@
 	}
 	
 	function update(no){
-		if(confirm("해당 교육과정을 수정하시겠습니까?")){
+		if(confirm("해당 교육과정 수정 창으로 이동하시겠습니까?")){
 			location.href="./update?edu_no="+no;
 		}
 	}
