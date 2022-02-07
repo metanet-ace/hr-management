@@ -2,7 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.metanet.persistence.WonwooEduMapper">
 	<select id="eduList" resultType="com.metanet.domain.EduVO">
-		SELECT *
+		SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+		TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+		EDU_PROGRESS
 		FROM EDU
 	</select>
+	
+	<select id="eduDetail" parameterType="Integer" resultType="com.metanet.domain.EduVO">
+		SELECT EDU_NO, EDU_TITLE, EDU_DESC, EDU_LOC, EDU_TIME, EDU_TEACHER, EDU_PEOPLE, EDU_TARGET,
+		TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END, EDU_COST
+		FROM EDU
+		WHERE EDU_NO = #{EDU_NO}
+	</select>
+	
+	<delete id="eduDelete" parameterType="Integer">
+		DELETE
+		FROM EDU
+		WHERE EDU_NO = #{EDU_NO}
+	</delete>
+	
+	<update id="eduUpdate" parameterType="com.metanet.domain.EduVO">
+		UPDATE EDU SET EDU_TITLE=#{eduTitle}, EDU_DESC=#{eduDesc}, EDU_LOC=#{eduLoc}, EDU_TIME=#{eduTime},
+		EDU_TEACHER=#{eduTeacher}, EDU_PEOPLE=#{eduPeople}, EDU_TARGET=#{eduTarget}, 
+		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD'), EDU_COST=#{eduCost}
+		WHERE EDU_NO=#{eduNo}
+		
+	</update>
 </mapper>

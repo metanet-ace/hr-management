@@ -19,4 +19,20 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 		return wonwooEduMapper.eduList();
 	}
 
+	@Override
+	public EduVO eduDetail(int edu_no) {
+		return wonwooEduMapper.eduDetail(edu_no);
+	}
+
+	@Override
+	public void eduDelete(int edu_no) {
+		wonwooEduMapper.eduDelete(edu_no);
+		
+	}
+
+	@Override
+	public void eduUpdate(EduVO eduVO) {
+		wonwooEduMapper.eduUpdate(eduVO);
+	}
+
 }
