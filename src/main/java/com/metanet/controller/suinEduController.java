@@ -23,7 +23,7 @@ public class suinEduController {
 	public String eduAdd(Model model) {
 		model.addAttribute("title", "교육 과정 추가");
 		System.out.println("교육 추가 페이지 출력");
-		return "/admin/edu/eduAdd";
+		return "/admin/edu/add";
 	}
 	
 	@PostMapping("/add")
