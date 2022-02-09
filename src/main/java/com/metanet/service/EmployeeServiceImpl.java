@@ -22,6 +22,10 @@ public class EmployeeServiceImpl {
 		return empRepo.findByEmpNoAndEmpPwd(username, password);
 	}
 	
+	public EmployeeVO selectAll() {
+		return (EmployeeVO) empRepo.findAll();
+	}
+	
 	public List<EmployeeVO> getEmpList(){
 		return empMapper.getEmpList();
 	}
