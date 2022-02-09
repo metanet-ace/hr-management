@@ -15,11 +15,11 @@ public class SecurityService implements UserDetailsService{
 	
 	@Autowired
 	EmployeeRepository empRepo;
-
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		int parsingUser = Integer.parseInt(username); 
-		EmployeeVO vo = empRepo.findByEmpNo(parsingUser); 
+		EmployeeVO vo = empRepo.findByEmpNoWithDeptNo(parsingUser); 
 		if(vo == null) {
 			throw new UsernameNotFoundException(username + " 사용자 없음");
 		} else {

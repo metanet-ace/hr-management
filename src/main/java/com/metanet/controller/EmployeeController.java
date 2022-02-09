@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.metanet.persistence.EmployeeRepository;
 import com.metanet.service.EmployeeServiceImpl;
 
 @SessionAttributes("emp")
@@ -15,7 +16,10 @@ public class EmployeeController {
 	
 	@Autowired
 	EmployeeServiceImpl empService;
-
+	
+	@Autowired
+	EmployeeRepository empRepo;
+	
 	// 시큐리티 사용한 로그인 화면
 	@GetMapping("/signin")
 	public String loginView() {
@@ -50,7 +54,8 @@ public class EmployeeController {
 	@RequestMapping("/admin/emp")
 	public String getEmpListView(Model model) {
 		
-		model.addAttribute("emplist", empService.getEmpList());
+//		model.addAttribute("emplist", empService.getEmpList());
+		model.addAttribute("emplist", empRepo.findAll());
 		model.addAttribute("title", "사원 전체 리스트");
 		return "admin/empList";
 	}
