@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		security.userDetailsService(service);
 	}
 	
-	// 페스워드 암호화 적용
+	// 패스워드 암호화 적용
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();

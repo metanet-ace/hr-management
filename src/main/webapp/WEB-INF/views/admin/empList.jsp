@@ -49,8 +49,8 @@
                                              <c:forEach items="${emplist }" var="list">
                                               <tr>
                                                 <td>${list.empName }</td>
-                                                <td>${list.posNo }</td>
-                                                <td>${list.deptNo }</td>
+                                                <td>${list.pos.posName }</td>
+                                                <td>${list.dept.deptName }</td>
                                                 <td>${list.empEmail }</td>
                                                 <td>${list.empHiredate }</td>
                                                 <td>${list.empSal }</td>
