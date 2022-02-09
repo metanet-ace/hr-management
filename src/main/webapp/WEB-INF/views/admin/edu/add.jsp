@@ -97,8 +97,8 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduStart"
-															name="eduStart" placeholder="시작일 (yyyy-mm-dd)">												
+													<input type="date" class="form-control" id="eduStart"
+															name="eduStart">												
 												</div>
 											</div>
 											<div class="form-group row">
@@ -106,8 +106,8 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduEnd"
-														name="eduEnd" placeholder="시작일 (yyyy-mm-dd)">
+													<input type="date" class="form-control" id="eduEnd"
+														name="eduEnd">
 												</div>
 											</div>
 											<div class="form-group row">
