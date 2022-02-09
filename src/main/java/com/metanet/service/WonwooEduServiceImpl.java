@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.metanet.domain.EduVO;
+import com.metanet.domain.EmpListVO;
 import com.metanet.persistence.WonwooEduMapper;
 
 @Service
@@ -33,6 +34,11 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 	@Override
 	public void eduUpdate(EduVO eduVO) {
 		wonwooEduMapper.eduUpdate(eduVO);
+	}
+
+	@Override
+	public List<EmpListVO> empList() {
+		return wonwooEduMapper.empList();
 	}
 
 }
