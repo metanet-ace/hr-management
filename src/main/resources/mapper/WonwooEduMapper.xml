@@ -26,6 +26,10 @@
 		EDU_TEACHER=#{eduTeacher}, EDU_PEOPLE=#{eduPeople}, EDU_TARGET=#{eduTarget}, 
 		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD'), EDU_COST=#{eduCost}
 		WHERE EDU_NO=#{eduNo}
-		
 	</update>
+	
+	<select id="empList" resultType="com.metanet.domain.EmpListVO">
+		SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
+		WHERE e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+	</select>
 </mapper>
