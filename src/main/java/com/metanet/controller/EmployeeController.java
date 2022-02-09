@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.metanet.persistence.EmployeeRepository;
 import com.metanet.service.EmployeeServiceImpl;
 
-@SessionAttributes("emp")
+@SessionAttributes("sessionEmp")
 @Controller
 public class EmployeeController {
 	
