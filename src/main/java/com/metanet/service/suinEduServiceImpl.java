@@ -28,7 +28,7 @@ public class suinEduServiceImpl implements suinEduService {
 	}
 
 	@Override
-	public void eduAttendance(EduHistoyVO del) throws ParseException {
+	public void eduAttendance() throws ParseException {
 		List<AttendanceVO> list = mapper.eduHistorySelect();
 		Calendar getToday = Calendar.getInstance();
 		getToday.setTime(new Date());

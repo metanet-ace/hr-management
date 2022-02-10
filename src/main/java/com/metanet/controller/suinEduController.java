@@ -43,6 +43,6 @@ public class suinEduController {
 	@Scheduled(cron="0 0 0 * * ?", zone="Asia/Seoul")
 	public void schedulerTest() throws ParseException {
 		System.out.println("Scheduler Test..." + new Date());
-		service.eduAttendance(null);
+		service.eduAttendance();
 	}
 }

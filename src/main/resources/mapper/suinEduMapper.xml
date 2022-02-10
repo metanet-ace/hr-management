@@ -34,7 +34,7 @@
     </select>
     
     <update id="eduAttendanceUpdate" parameterType="java.util.List">
-    	<foreach item="item" index="index" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
+    	<foreach item="item" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
     		update edu_history
     		 set attendance = #{item.attendance}
     		 where edu_hisno = #{item.eduHisno}
