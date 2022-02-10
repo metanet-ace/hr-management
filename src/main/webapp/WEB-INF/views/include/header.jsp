@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -149,7 +150,11 @@
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a href="./app-profile.html" class="dropdown-item">
                                         <i class="icon-user"></i>
-                                        <span class="ml-2">Profile </span>
+                                        <span class="ml-2">
+                                        <sec:authorize access="isAuthenticated()">
+                                        	<sec:authentication property="principal.username" />
+                                        </sec:authorize>
+                                        </span>
                                     </a>
                                     <a href="./email-inbox.html" class="dropdown-item">
                                         <i class="icon-envelope-open"></i>

@@ -23,4 +23,16 @@ public class EmployeeServiceImpl2 implements EmployeeService2{
 		return empMapper.insertEmp(emp);
 	}
 	
+	@Override
+	//사원 상세정보
+	public EmployeeVO2 selectOne(int empNo) {
+		return empMapper.selectOne(empNo);
+	}
+	
+	@Override
+	// 사원수정하기(인사팀) : 비밀번호수정x
+	public int updateEmp(EmployeeVO2 emp) {
+		System.out.println("service에서 empNo확인" + emp.getEmpNo());
+		return empMapper.updateEmp(emp);
+	}
 }
