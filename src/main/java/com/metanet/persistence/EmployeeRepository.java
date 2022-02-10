@@ -2,12 +2,12 @@ package com.metanet.persistence;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
 import com.metanet.domain.EmployeeVO;
 
-public interface EmployeeRepository extends CrudRepository<EmployeeVO, Integer>{
+public interface EmployeeRepository extends JpaRepository<EmployeeVO, Integer>{
 	List<EmployeeVO> findByEmpName(String name);
 	EmployeeVO findByEmpNo(int username);
 	

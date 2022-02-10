@@ -1,8 +1,8 @@
 package com.metanet.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.metanet.domain.EmployeeVO;
@@ -26,8 +26,11 @@ public class EmployeeServiceImpl {
 		return (EmployeeVO) empRepo.findAll();
 	}
 	
-	public List<EmployeeVO> getEmpList(){
-		return empMapper.getEmpList();
+	// 페이징 처리된 사원 전체 리스트 
+	public Page<EmployeeVO> getEmpList(Pageable pageable){
+		return empRepo.findAll(pageable);
 	}
+	
+	
 	
 }
