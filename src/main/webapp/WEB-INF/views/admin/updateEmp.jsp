@@ -325,7 +325,10 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-validation">
-                                    <form class="form-valide" action="/admin/emp/insertEmp" method="post" enctype="multipart/form-data">
+                                    <form class="form-valide" action="/admin/emp/updateEmp" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="empNo" value="${emp.empNo }">
+                                    <input type="hidden" name="empPhoto" value="${emp.empPhoto }">
+                                    <input type="hidden" name="empRePhoto" value="${emp.empRePhoto }">
                                         <div class="row">
                                             <div class="col-xl-6">
                                                 <div class="form-group row">
@@ -333,7 +336,7 @@
                                                         <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="file" class="form-control" id="upfile" name="upfile">
+                                                        ${emp.empPhoto } <input type="file" class="form-control" id="upfile" name="upfile"> 
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -341,15 +344,7 @@
                                                             class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empName" name="empName">
-                                                    </div>
-                                                </div>
-                                                  <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empPwd">비밀번호<span
-                                                            class="text-danger">*</span>
-                                                    </label>
-                                                    <div class="col-lg-6">
-                                                        <input type="password" class="form-control" id="empPwd" name="empPwd">
+                                                        <input type="text" class="form-control" id="empName" name="empName" value="${emp.empName }">
                                                     </div>
                                                 </div>
                                                 
@@ -358,10 +353,18 @@
                                                             href="javascript:void()">성별</a> <span
                                                             class="text-danger">*</span>
                                                     </label>
+                                                    <c:if test="${ emp.empGender eq '여' }">
                                                     <div class="col-lg-8">
-                                                            <input type="radio" name="empGender" value="여"> 여자 &nbsp;
+                                                            <input type="radio" name="empGender" value="여" checked> 여자 &nbsp;
                                                         	<input type="radio" name="empGender" value="남">남자
                                                     </div>
+                                                    </c:if>
+                                                    <c:if test="${ emp.empGender eq '남' }">
+                                                    <div class="col-lg-8">
+                                                            <input type="radio" name="empGender" value="여"> 여자 &nbsp;
+                                                        	<input type="radio" name="empGender" value="남" checked>남자
+                                                    </div>
+                                                    </c:if>
                                                 </div>
                                                 
                                                 <div class="form-group row">
@@ -369,7 +372,7 @@
                                                         <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="tel" class="form-control" id="empPhone" name="empPhone" placeholder="'-' 포함 입력해주세요.">
+                                                        <input type="tel" class="form-control" id="empPhone" name="empPhone" value="${emp.empPhone }" placeholder="'-' 포함 입력해주세요.">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -377,7 +380,7 @@
                                                             class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="email" class="form-control" id="empEmail" name="empEmail">
+                                                        <input type="email" class="form-control" id="empEmail" name="empEmail" value="${emp.empEmail }">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -385,35 +388,80 @@
                                                             class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="date" class="form-control" id="empHiredate" name="empHiredate">
+                                                        <input type="date" class="form-control" id="empHiredate" name="empHiredate" value="${emp.empHiredate }">
+                                                    </div>
+                                                </div>
+                                                 </div>
+                                                 <div class="col-xl-6">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="empRetdate">퇴사일 </label>
+                                                    <div class="col-lg-6">
+                                                        <input type="date" class="form-control" id="empRetdate" name="empRetdate" value="${emp.empRetdate }">
                                                     </div>
                                                 </div>
                                             
+                                           
                                             
+                                           
                                             <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empSsc">주민번호
                                                         <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empSsc" name="empSsc" placeholder="'-' 포함 입력해주세요.">
+                                                        <input type="text" class="form-control" id="empSsc" name="empSsc" value="${emp.empSsc }" placeholder="'-' 포함 입력해주세요.">
                                                     </div>
                                             </div>
-                                            </div>
+                                            
                                                 
-                                            <div class="col-xl-6">
+                                            
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empDegree">최종학력
                                                         <span class="text-danger">*</span>
                                                     </label>
+                                                    <c:if test="${ emp.empDegree eq '고졸'}">
+                                                    <div class="col-lg-6">
+                                                        <select class="form-control" id="empDegree" name="empDegree">
+                                                            <option value="">최종학력을 선택해주세요</option>
+                                                            <option value="고졸" selected>고졸</option>
+                                                            <option value="학사">학사</option>
+                                                            <option value="석사">석사</option>
+                                                            <option value="박사">박사</option>
+                                                        </select>
+                                                    </div>
+                                                    </c:if>
+                                                    <c:if test="${ emp.empDegree eq '학사'}">
+                                                    <div class="col-lg-6">
+                                                        <select class="form-control" id="empDegree" name="empDegree">
+                                                            <option value="">최종학력을 선택해주세요</option>
+                                                            <option value="고졸">고졸</option>
+                                                            <option value="학사" selected>학사</option>
+                                                            <option value="석사">석사</option>
+                                                            <option value="박사">박사</option>
+                                                        </select>
+                                                    </div>
+                                                    </c:if>
+                                                    <c:if test="${ emp.empDegree eq '석사'}">
+                                                    <div class="col-lg-6">
+                                                        <select class="form-control" id="empDegree" name="empDegree">
+                                                            <option value="">최종학력을 선택해주세요</option>
+                                                            <option value="고졸">고졸</option>
+                                                            <option value="학사">학사</option>
+                                                            <option value="석사" selected>석사</option>
+                                                            <option value="박사">박사</option>
+                                                        </select>
+                                                    </div>
+                                                    </c:if>
+                                                    <c:if test="${ emp.empDegree eq '박사'}">
                                                     <div class="col-lg-6">
                                                         <select class="form-control" id="empDegree" name="empDegree">
                                                             <option value="">최종학력을 선택해주세요</option>
                                                             <option value="고졸">고졸</option>
                                                             <option value="학사">학사</option>
                                                             <option value="석사">석사</option>
-                                                            <option value="박사">박사</option>
+                                                            <option value="박사" selected>박사</option>
                                                         </select>
                                                     </div>
+                                                    </c:if>
                                                 </div>
                                                 
                                                 <div class="form-group row">
@@ -421,52 +469,28 @@
                                                             href="javascript:void()">신입/경력</a> <span
                                                             class="text-danger">*</span>
                                                     </label>
+                                                    <c:if test="${ emp.empCareer eq '신입' }">
                                                     <div class="col-lg-8">
-                                                            <input type="radio" name="empCareer" value="신입"> 신입 &nbsp;
+                                                            <input type="radio" name="empCareer" value="신입" checked> 신입 &nbsp;
                                                         	<input type="radio" name="empCareer" value="경력">경력
                                                     </div>
+                                                    </c:if>
+                                                    <c:if test="${ emp.empCareer eq '경력' }">
+                                                    <div class="col-lg-8">
+                                                            <input type="radio" name="empCareer" value="신입"> 신입 &nbsp;
+                                                        	<input type="radio" name="empCareer" value="경력" checked>경력
+                                                    </div>
+                                                    </c:if>
                                                 </div>
                                                 
-                                                <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="deptNo">부서
-                                                        <span class="text-danger">*</span>
-                                                    </label>
-                                                    <div class="col-lg-6">
-                                                        <select class="form-control" id="deptNo" name="deptNo">
-                                                            <option value="">부서를 선택해주세요</option>
-                                                            <option value=1>인사팀</option>
-                                                            <option value=2>마케팅팀</option>
-                                                            <option value=3>경영팀</option>
-                                                            <option value=4>개발팀</option>
-                                                            <option value=5>기획팀</option>
-                                                            <option value=6>법무팀</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
                                                 
-                                                <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="posNo">직급
-                                                        <span class="text-danger">*</span>
-                                                    </label>
-                                                    <div class="col-lg-6">
-                                                        <select class="form-control" id="posNo" name="posNo">
-                                                            <option value="">직급을 선택해주세요</option>
-                                                            <option value=1>사원</option>
-                                                            <option value=2>대리</option>
-                                                            <option value=3>과장</option>
-                                                            <option value=4>차장</option>
-                                                            <option value=5>부장</option>
-                                                            <option value=6>사장</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
                                                 
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empSal">연봉
                                                         <span class="text-danger">*</span>
                                                     </label>
-                                                    <div class="col-lg-4">
-                                                        <input type="text" class="form-control" id="empSal" name="empSal">
+                                                    <div class="col-lg-4"> 
+                                                        <input type="text" class="form-control" id="empSal" name="empSal" value="${emp.empSal }">
                                                         
                                                     </div>
                                                     <div>만 원</div>
@@ -476,21 +500,56 @@
                                                     <label class="col-lg-4 col-form-label" for="empMil">병역
                                                         <span class="text-danger">*</span>
                                                     </label>
+                                                    <c:if test="${ emp.empMil eq '미필' }">
+                                                    <div class="col-lg-6">
+                                                        <select class="form-control" id="empMil" name="empMil">
+                                                            <option value="">병역을 선택해주세요</option>
+                                                            <option value="미필" selected>미필</option>
+                                                            <option value="군필">군필</option>
+                                                            <option value="면제">면제</option>
+                                                            <option value="해당없음">해당없음</option>
+                                                        </select>
+                                                    </div>
+                                                    </c:if>
+                                                    <c:if test="${ emp.empMil eq '군필' }">
+                                                    <div class="col-lg-6">
+                                                        <select class="form-control" id="empMil" name="empMil">
+                                                            <option value="">병역을 선택해주세요</option>
+                                                            <option value="미필">미필</option>
+                                                            <option value="군필" selected>군필</option>
+                                                            <option value="면제">면제</option>
+                                                            <option value="해당없음">해당없음</option>
+                                                        </select>
+                                                    </div>
+                                                    </c:if>
+                                                    <c:if test="${ emp.empMil eq '면제' }">
+                                                    <div class="col-lg-6">
+                                                        <select class="form-control" id="empMil" name="empMil">
+                                                            <option value="">병역을 선택해주세요</option>
+                                                            <option value="미필">미필</option>
+                                                            <option value="군필">군필</option>
+                                                            <option value="면제" selected>면제</option>
+                                                            <option value="해당없음">해당없음</option>
+                                                        </select>
+                                                    </div>
+                                                    </c:if>
+                                                    <c:if test="${ emp.empMil eq '해당없음' }">
                                                     <div class="col-lg-6">
                                                         <select class="form-control" id="empMil" name="empMil">
                                                             <option value="">병역을 선택해주세요</option>
                                                             <option value="미필">미필</option>
                                                             <option value="군필">군필</option>
                                                             <option value="면제">면제</option>
-                                                            <option value="해당없음">해당없음</option>
+                                                            <option value="해당없음" selected>해당없음</option>
                                                         </select>
                                                     </div>
+                                                    </c:if>
                                                 </div>
                                                 
                                                 
                                                 <div class="form-group row">
                                                     <div class="col-lg-8 ml-auto">
-                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                        <input type="submit" class="btn btn-primary">
                                                     </div>
                                                 </div>
                                             </div>
