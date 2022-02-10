@@ -1,9 +1,5 @@
 package com.metanet.domain;
 
-
-
-import java.sql.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,8 +14,8 @@ public class EmployeeVO2 {
 	private String empPhone;
 	private int empSal;
 	private String empEmail;
-	private Date empHiredate;
-	private Date empRetdate;
+	private String empHiredate;
+	private String empRetdate;
 	private String empSsc;
 	private String empDegree;
 	private String empCareer;
@@ -27,4 +23,6 @@ public class EmployeeVO2 {
 	private String empRePhoto;
 	private String empPhoto;
 	private String empMil;
+	private String deptName;
+	private String posName;
 }

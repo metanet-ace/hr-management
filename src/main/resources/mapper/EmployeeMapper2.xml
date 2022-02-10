@@ -2,10 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.metanet.persistence.EmployeeMapper2">
 	
+	<!-- 사원등록 -->
 	<insert id="insertEmp" parameterType="com.metanet.domain.EmployeeVO2">
 		INSERT INTO EMPLOYEE
 		VALUES (SEQ_EMP_NO.NEXTVAL, #{posNo}, #{deptNo}, #{empName}, #{empGender}, #{empPhone}, #{empSal}, #{empEmail}, 
 				TO_DATE(#{empHiredate}, 'YYYY-MM-DD'), null, #{empSsc}, #{empDegree}, #{empCareer}, #{empPwd},
 				#{empRePhoto, jdbcType=VARCHAR}, #{empPhoto, jdbcType=VARCHAR}, #{empMil})
 	</insert>
+	
+	<!-- 사원 상세정보 -->
+	<select id="selectOne" resultType="com.metanet.domain.EmployeeVO2">
+		select e.emp_re_photo, e.emp_photo, e.emp_no, e.emp_name, e.emp_gender, e.emp_ssc, e.emp_sal,
+			   e.emp_phone, e.emp_email, to_char(emp_hiredate, 'YYYY-MM-DD') as emp_hiredate, 
+			   to_char(emp_retdate, 'YYYY-MM-DD') as emp_retdate, d.dept_name, p.pos_name, 
+			   e.emp_degree, e.emp_career, e.emp_mil
+		from employee e, department d, position p
+		where e.dept_no = d.dept_no and e.pos_no = p.pos_no and e.emp_no=#{empNo}
+	</select>
+	
+	<!-- 사원수정(인사팀) : 비밀번호 수정X -->
+	<update id="updateEmp" parameterType="com.metanet.domain.EmployeeVO2">
+		update employee
+		set emp_name = #{empName}, emp_gender = #{empGender}, emp_phone = #{empPhone}, emp_sal = #{empSal}, emp_email = #{empEmail}, 
+			emp_hiredate = to_date(#{empHiredate}, 'YYYY-MM-DD'), emp_retdate = to_date(#{empRetdate}, 'YYYY-MM-DD'), emp_ssc = #{empSsc}, emp_degree = #{empDegree}, emp_career = #{empCareer}, 
+			emp_re_photo = #{empRePhoto, jdbcType=VARCHAR}, emp_photo = #{empPhoto, jdbcType=VARCHAR}, emp_mil = #{empMil}
+		where emp_no = #{empNo}
+	</update>
 </mapper>
