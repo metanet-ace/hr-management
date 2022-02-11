@@ -11,6 +11,6 @@ public class SecurityVO extends User{
 	
 	public SecurityVO(EmployeeVO emp) {
 		super(Integer.toString(emp.getEmpNo()), emp.getEmpPwd(), 
-				AuthorityUtils.createAuthorityList(Integer.toString(emp.getDept().getDeptNo())));
+				AuthorityUtils.createAuthorityList(emp.getDept().getDeptName()));
 	}
 }
