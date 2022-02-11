@@ -74,6 +74,7 @@ public class EmployeeController {
 		int posNo = 0;
 		System.out.println(map.get("deptData"));
 		System.out.println(map.get("posData"));
+		System.out.println(map.get("reason"));
 		Object targetEmpList = map.get("targetEmps");
 		if(map.get("deptData") != "") {
 			deptNo = Integer.parseInt((String) map.get("deptData"));			

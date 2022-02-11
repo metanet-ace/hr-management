@@ -172,6 +172,8 @@
 							<option value=6>사장</option>
 						</select>
 					</div>
+					<label class="col-lg-3 col-form-label" for="reason">사유<span class="text-danger">*</span></label>
+				   	<div class="col-lg-9 col-form-label"><textarea cols="100" rows="2" id="reason" name="issuedContent" placeholder=""></textarea></div>
 					<div class="col-lg-4"></div>
 						<div class="col-lg-4">
 						<input type="submit" class="btn btn-outline-info btn-xl" id="updateHumanResource" style="margin-top:30px;" value="확인">
