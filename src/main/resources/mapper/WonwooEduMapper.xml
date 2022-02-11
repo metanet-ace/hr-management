@@ -85,4 +85,25 @@
 			</when>
 		</choose>
 	</select>
+	
+	<select id="getEduEmpHistroyList" resultType="com.metanet.domain.EduHistoryVO">
+		select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score, h.edu_fin
+    	from employee e, edu d, edu_history h 
+    	where e.emp_no = #{empNo} 
+    	and e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+	</select>
+	
+	<select id="getEduEmpHistroyListByKey" parameterType="Map" resultType="com.metanet.domain.EduHistoryVO">
+    	select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	from employee e, edu d, edu_history h 
+    	where e.emp_no = #{empNo} 
+    	and e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			and d.edu_title like '%' || #{keyword} || '%'
+    		</when>
+    	</choose>
+    </select>
 </mapper>
