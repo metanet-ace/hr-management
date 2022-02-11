@@ -24,9 +24,9 @@
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                                 class="icon icon-app-store"></i><span class="nav-text">조직 관리</span></a>
                         <ul aria-expanded="false">
-                            <li><a href="./app-profile.html">사원 등록</a></li>
-                            <li><a href="./app-profile.html">사원 목록</a></li>
-                   			<li><a href="./app-profile.html">인사 이동</a></li>
+                            <li><a href="/admin/emp/insertEmpPage">사원 등록</a></li>
+                            <li><a href="">사원 목록</a></li>
+                   			<li><a href="/admin/emp">인사 이동</a></li>
                         </ul>
                     </li>
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
