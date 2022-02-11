@@ -1,9 +1,11 @@
 package com.metanet.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
+import com.metanet.domain.PageDTO;
 
 public interface WonwooEduService {
 	
@@ -15,5 +17,9 @@ public interface WonwooEduService {
 
 	public void eduUpdate(EduVO eduVO);
 	
-	public List<EmpListVO> empList();
+	public List<EmpListVO> getPagingList(PageDTO pdto);
+
+	public int totalCount(PageDTO pdto);
+
+	public  List<EmpListVO> empList();
 }
