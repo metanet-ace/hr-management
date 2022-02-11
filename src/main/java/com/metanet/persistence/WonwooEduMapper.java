@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
+import com.metanet.domain.PageDTO;
 
 
 @Mapper
@@ -18,6 +19,10 @@ public interface WonwooEduMapper{
 	public void eduDelete(int edu_no);
 
 	public void eduUpdate(EduVO eduVO);
+
+	public List<EmpListVO> getPagingList(PageDTO pdto);
+
+	public int totalCount(PageDTO pdto);
 
 	public List<EmpListVO> empList();
 }

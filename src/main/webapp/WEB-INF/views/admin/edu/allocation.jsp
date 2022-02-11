@@ -20,6 +20,10 @@ table th {height: 10px;}
 
 form {text-align: center;}
 
+li{
+float: left;
+margin: 20px;
+}
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -30,12 +34,11 @@ form {text-align: center;}
 <div class="content-body">
 		<div class="container-fluid">
 
-<form id="search_form" action="/mysite/board" method="post">
-					<input type="hidden" name="a" value="list"> 
-					<select name="keyField" size="1">
+<form id="search_form" action="./allocation" method="post">
+					<select name="keyword" size="1">
 						<option value="deptName">부서</option>
 						<option value="posName">직급</option>
-					</select> <input type="text" id="kwd" name="keyWord" value=""> <input
+					</select> <input type="text" id="kwd" name="searchContent" value=""> <input
 						type="submit" value="찾기">
 				</form>
 				<br>
@@ -53,7 +56,7 @@ form {text-align: center;}
 					</tr>
 					</thead>
 					<tbody>
-					<c:forEach items="${empList }" var="list">
+					<c:forEach items="${list }" var="list">
 						<tr>
 							<td><input type="checkbox" name="cox{" value="${list.empNo }"></td>
 							<td>${list.empNo }</td>
@@ -64,6 +67,30 @@ form {text-align: center;}
 					</c:forEach>
 					<tbody>
 				</table>
+				<br>
+				<div class="pager">
+               <ul>
+                  <c:if test="${paging.hasPrev }">
+                     <li><a
+                        href="./allocation?pageNum=${paging.startPage-1}&keyword=${pageInfo.keyword }&searchContent=${pageInfo.searchContent}">◀</a></li>
+                  </c:if>
+
+                  <c:forEach var="p" begin="${paging.startPage }"
+                     end="${paging.endPage }" step="1">
+                     <li><a
+                        ${p == tempPageNum ? "style='color:red;' selected" : "" }
+                        href="./allocation?pageNum=${p}&keyword=${pageInfo.keyword }&searchContent=${pageInfo.searchContent}">${p}</a>
+                     </li>
+                  </c:forEach>
+
+                  <c:if test="${paging.hasNext }">
+                     <li><a
+                        href="./allocation?pageNum=${paging.endPage+1}
+                     &keyword=${pageInfo.keyword }
+                     &searchContent=${pageInfo.searchContent}">▶</a></li>
+                  </c:if>
+               </ul>
+            </div>
 				</div>
 				</div>
 <c:import url="/WEB-INF/views/include/footer.jsp" />
