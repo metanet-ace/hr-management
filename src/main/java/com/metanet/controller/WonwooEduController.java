@@ -1,6 +1,8 @@
 package com.metanet.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -67,6 +69,8 @@ public class WonwooEduController {
 		int pageNum=1;
 		String keyword = "";
 		String searchContent = "";
+		/* int edu_no = Integer.parseInt(request.getParameter("edu_no")); */
+		
 		
 		System.out.println(request.getParameter("pageNum"));
 		
@@ -104,6 +108,23 @@ public class WonwooEduController {
 	return "/admin/edu/allocation";
 	}
 	
-		
+	@GetMapping("/history")
+	public String eduEmpHistoyList(Model model) {
+		int empNo = 2299001;
+		model.addAttribute("eduEmpHistoyList", wonwooEduService.getEduEmpHistroyList(empNo));
+		return "/history";
+	}
 	
-}
+	@PostMapping("/history")
+	public String eduEmpHistoyListBykeyword(Model model, HttpServletRequest request) {
+		int empNo = 2299001;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("empNo", empNo);
+		map.put("keyField", request.getParameter("keyField"));
+		map.put("keyword", request.getParameter("keyword"));
+		model.addAttribute("eduEmpHistoyList", wonwooEduService.getEduEmpHistroyListByKey(map));
+		return "/history";
+	}
+
+		
+	}

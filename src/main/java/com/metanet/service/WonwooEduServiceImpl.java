@@ -1,11 +1,12 @@
 package com.metanet.service;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
 import com.metanet.domain.PageDTO;
@@ -51,6 +52,17 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 	@Override
 	public List<EmpListVO> empList() {
 		return wonwooEduMapper.empList();
+	}
+
+	@Override
+	public List<EduHistoryVO> getEduEmpHistroyList(int empNo) {
+		return wonwooEduMapper.getEduEmpHistroyList(empNo);
+	}
+
+	@Override
+	public List<EduHistoryVO> getEduEmpHistroyListByKey(Map<String, Object> map) {
+		return wonwooEduMapper.getEduEmpHistroyListByKey(map);
+		 
 	}
 
 }
