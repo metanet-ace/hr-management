@@ -28,4 +28,11 @@
 			emp_re_photo = #{empRePhoto, jdbcType=VARCHAR}, emp_photo = #{empPhoto, jdbcType=VARCHAR}, emp_mil = #{empMil}
 		where emp_no = #{empNo}
 	</update>
+	
+	<!-- 사원 비밀번호 0000 으로 변경해주기(인사팀) -->
+	<update id="updatePwd" parameterType="com.metanet.domain.EmployeeVO2">
+		update employee
+		set emp_pwd = #{empPwd}
+		where emp_no = #{empNo}
+	</update>
 </mapper>

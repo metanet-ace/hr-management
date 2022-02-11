@@ -297,13 +297,6 @@
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
 
-<<script type="text/javascript">
-function upPwd(no){
-	if(confirm("해당 직원의 비밀번호를 초기화하시겠습니까?")){
-		location.href="/admin/emp/updatePwd?empNo="+no;
-	}
-}
-</script>
 
 
 <!--**********************************
@@ -337,135 +330,118 @@ function upPwd(no){
 					<div class="card-body">
 						<div class="form-validation">
 							<form class="form-valide" align="center">
-							<img
-											src="${ pageContext.servletContext.contextPath }/resources/employeeImages/${ empDetail.empRePhoto }"
-											style="width: 250px; height: 300px">
-											<br><br><br><br>
+								<img
+									src="${ pageContext.servletContext.contextPath }/resources/employeeImages/${ empDetail.empRePhoto }"
+									style="width: 250px; height: 300px"> <br>
+								<br>
+								<br>
+								<br>
 								<div class="row">
-									
-										
-									
+
+
+
 									<div class="col-xl-6">
 
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empNo">사원번호</label>
-											<div class="col-lg-6">
-											${ empDetail.empNo }
-											</div>
+											<div class="col-lg-6">${ empDetail.empNo }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empName">이름</label>
-											<div class="col-lg-6">
-											${ empDetail.empName }
-											</div>
+											<div class="col-lg-6">${ empDetail.empName }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empGender">성별</label>
-											<div class="col-lg-6">
-											${ empDetail.empGender }
-											</div>
+											<div class="col-lg-6">${ empDetail.empGender }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empSsc">주민번호</label>
-											<div class="col-lg-6">
-											${ empDetail.empSsc }
-											</div>
+											<div class="col-lg-6">${ empDetail.empSsc }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empPhone">전화번호</label>
-											<div class="col-lg-6">
-											${ empDetail.empPhone }
-											</div>
+											<div class="col-lg-6">${ empDetail.empPhone }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empEmail">이메일</label>
-											<div class="col-lg-6">
-											${ empDetail.empEmail }
-											</div>
+											<div class="col-lg-6">${ empDetail.empEmail }</div>
 										</div>
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empHiredate">입사일</label>
-											<div class="col-lg-6">
-											${ empDetail.empHiredate }
-											</div>
+											<div class="col-lg-6">${ empDetail.empHiredate }</div>
 										</div>
-										</div>
-										<div class="col-xl-6">
-										
-										
+									</div>
+									<div class="col-xl-6">
+
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empRetdate">퇴사일</label>
-											
+
 											<div class="col-lg-6">
-											<c:if test="${ !empty empDetail.empRetdate }">
+												<c:if test="${ !empty empDetail.empRetdate }">
 											${ empDetail.empRetdate }
 											</c:if>
-											<c:if test="${empty empDetail.empRetdate }">
+												<c:if test="${empty empDetail.empRetdate }">
 											---
 											</c:if>
 											</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="deptName">부서</label>
-											<div class="col-lg-6">
-											${ empDetail.deptName }
-											</div>
+											<div class="col-lg-6">${ empDetail.deptName }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="posName">직급</label>
-											<div class="col-lg-6">
-											${ empDetail.posName }
-											</div>
+											<div class="col-lg-6">${ empDetail.posName }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empDegree">학력</label>
-											<div class="col-lg-6">
-											${ empDetail.empDegree }
-											</div>
+											<div class="col-lg-6">${ empDetail.empDegree }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empCareer">신입/경력</label>
-											<div class="col-lg-6">
-											${ empDetail.empCareer }
-											</div>
+											<div class="col-lg-6">${ empDetail.empCareer }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empMil">병역</label>
-											<div class="col-lg-6">
-											${ empDetail.empMil }
-											</div>
+											<div class="col-lg-6">${ empDetail.empMil }</div>
 										</div>
-										
+
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empSal">연봉</label>
-											<div class="col-lg-6">
-											${ empDetail.empSal } 만 원 </div>
+											<div class="col-lg-6">${ empDetail.empSal } 만 원</div>
 										</div>
 										<div class="form-group row">
 											<div class="col-lg-8 ml-auto">
-											<c:url var="update" value="/admin/emp/updateEmpPage">
-											<c:param name="empNo" value="${empDetail.empNo }" />
-											</c:url>
-												<button type="button" onClick="location.href='${update}';" class="btn btn-primary">수정하기</button>
-												<button type="button" onClick="upPwd(${empDetail.empNo })" class="btn btn-primary">비밀번호 초기화</button>
+												<c:url var="update" value="/emp/upPwdPage">
+													<c:param name="empNo" value="${empDetail.empNo }" />
+												</c:url>
+												<button type="button" onClick="location.href='${update}';"
+													class="btn btn-primary">비밀번호 수정하기</button>
 											</div>
-											
-											
-											
+
+
+
 										</div>
+										
 									</div>
+									
 								</div>
+								<form>
+											<input type="button" value="Print" onclick="window.print()">
+										</form>
 							</form>
+							
 						</div>
 					</div>
 				</div>
