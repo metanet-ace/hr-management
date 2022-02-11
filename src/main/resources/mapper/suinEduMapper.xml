@@ -40,4 +40,29 @@
     		 where edu_hisno = #{item.eduHisno}
     	</foreach>
     </update>
+    
+    <select id="eduHistoryListSelect" resultType="com.metanet.domain.EduHistoryVO">
+    	select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	from employee e, edu d, edu_history h
+    	where e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+    </select>
+    
+    <select id="eduHistoryListSelectByKey" parameterType="Map" resultType="com.metanet.domain.EduHistoryVO">
+    	select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	from employee e, edu d, edu_history h
+    	where e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			and d.edu_title like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"empNo".equals(keyField) '>
+    			and h.emp_no = #{keyword}
+    		</when>
+    		<when test='"empName".equals(keyField) '>
+    			and e.emp_name like '%' || #{keyword} || '%'
+    		</when>
+    	</choose>
+    </select>
 </mapper>	

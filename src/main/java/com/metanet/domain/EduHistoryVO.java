@@ -5,12 +5,11 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class EduHistoyVO {
+public class EduHistoryVO {
 	
-	private int eduHisno;
-	private int eduNO;
-	private int empNO;
-	private String eduFin;
+	private String eduTitle;
+	private int empNo;
+	private String empName;
 	private int attendance;
 	private int score;
 }
