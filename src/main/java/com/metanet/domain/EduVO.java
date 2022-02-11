@@ -18,6 +18,7 @@ public class EduVO {
 	private String eduStart;
 	private String eduEnd;
 	private int eduCost;
+	private int eduProgress;
 	
 	
 	

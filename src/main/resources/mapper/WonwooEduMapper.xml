@@ -2,12 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.metanet.persistence.WonwooEduMapper">
 	<select id="eduList" resultType="com.metanet.domain.EduVO">
-		SELECT *
+		SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+		TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+		EDU_PROGRESS
 		FROM EDU
 	</select>
 	
 	<select id="eduDetail" parameterType="Integer" resultType="com.metanet.domain.EduVO">
-		SELECT *
+		SELECT EDU_NO, EDU_TITLE, EDU_DESC, EDU_LOC, EDU_TIME, EDU_TEACHER, EDU_PEOPLE, EDU_TARGET,
+		TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END, EDU_COST
 		FROM EDU
 		WHERE EDU_NO = #{EDU_NO}
 	</select>
@@ -21,8 +24,86 @@
 	<update id="eduUpdate" parameterType="com.metanet.domain.EduVO">
 		UPDATE EDU SET EDU_TITLE=#{eduTitle}, EDU_DESC=#{eduDesc}, EDU_LOC=#{eduLoc}, EDU_TIME=#{eduTime},
 		EDU_TEACHER=#{eduTeacher}, EDU_PEOPLE=#{eduPeople}, EDU_TARGET=#{eduTarget}, 
-		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD HH:mi:ss'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD HH:mi:ss'), EDU_COST=#{eduCost}
+		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD'), EDU_COST=#{eduCost}
 		WHERE EDU_NO=#{eduNo}
-		
 	</update>
+	
+	<select id="empList" resultType="com.metanet.domain.EmpListVO">
+      SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
+      WHERE e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+   </select>
+		
+	<select id="getPagingList" resultType="com.metanet.domain.EmpListVO">
+		<choose>
+			<when test="keyword =='deptName' and searchContent != null and searchContent !=''">
+			<![CDATA[
+				SELECT * 
+		FROM (SELECT rownum rnum, a.*
+	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
+				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
+				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+				and dept_name like '%'||#{searchContent}||'%'
+				ORDER BY e.emp_no desc) a )
+		WHERE rnum BETWEEN #{startNum} AND #{endNum} 
+			]]>
+			</when>
+			<when test="keyword =='posName' and searchContent != null and searchContent !=''">
+			<![CDATA[
+				SELECT * 
+		FROM (SELECT rownum rnum, a.*
+	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
+				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
+				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+				and pos_name like '%'||#{searchContent}||'%'
+				ORDER BY e.emp_no desc) a )
+		WHERE rnum BETWEEN #{startNum} AND #{endNum} 
+			]]>
+			</when>
+			<otherwise>
+			<![CDATA[
+			SELECT * 
+		FROM (SELECT rownum rnum, a.*
+	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
+				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
+				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+				ORDER BY e.emp_no desc) a )
+		WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			]]>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="totalCount" resultType="Integer">
+	SELECT COUNT(*) FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p
+		WHERE e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+		<choose>
+			<when test="keyword =='deptName' and searchContent != null and searchContent !=''">
+					and d.dept_name like '%'||#{searchContent}||'%'
+				</when>
+			<when test="keyword =='posName' and searchContent != null and searchContent !=''">
+					and p.pos_name like '%'||#{searchContent}||'%'
+			</when>
+		</choose>
+	</select>
+	
+	<select id="getEduEmpHistroyList" resultType="com.metanet.domain.EduHistoryVO">
+		select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score, h.edu_fin
+    	from employee e, edu d, edu_history h 
+    	where e.emp_no = #{empNo} 
+    	and e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+	</select>
+	
+	<select id="getEduEmpHistroyListByKey" parameterType="Map" resultType="com.metanet.domain.EduHistoryVO">
+    	select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	from employee e, edu d, edu_history h 
+    	where e.emp_no = #{empNo} 
+    	and e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			and d.edu_title like '%' || #{keyword} || '%'
+    		</when>
+    	</choose>
+    </select>
 </mapper>

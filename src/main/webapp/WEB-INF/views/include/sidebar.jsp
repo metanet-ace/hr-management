@@ -34,7 +34,7 @@
                         <ul aria-expanded="false">
                             <li><a href="/edu/add">교육 추가</a></li>
                             <li><a href="/edu/list">교육 일정 조회</a></li>
-                            <li><a href="/edu/history">교육 결과</a></li>
+                            <li><a href="/edu/admin/history">교육 결과</a></li>
                         </ul>
                     </li>
                     
