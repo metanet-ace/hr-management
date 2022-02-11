@@ -2,6 +2,7 @@ package com.metanet.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,5 +20,7 @@ public interface suinEduMapper {
 	public ArrayList<AttendanceVO> eduHistorySelect();
 
 	public List<EduHistoryVO> eduHistoryListSelect();
+
+	public List<EduHistoryVO> eduHistoryListSelectByKey(Map<String, String> map);
 
 }

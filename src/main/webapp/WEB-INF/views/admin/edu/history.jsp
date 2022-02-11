@@ -10,13 +10,14 @@
         ***********************************-->
 <div class="content-body">
 	<div class="container-fluid">
-		<!-- 사원 리스트 출력 -->
-		<form id="search_form" action="/admin/emp" method="post">
-			<input type="hidden" name="a" value="list"> <select
-				name="keyField" size="1">
-				<option value="deptName">부서</option>
-				<option value="posName">직급</option>
-			</select> <input type="text" id="kwd" name="keyWord" value=""> <input
+		<!-- 교육 히스토리 리스트 출력 -->
+		<form id="search_form" action="history" method="post">
+			<input type="hidden" name="a" value="list"> 
+			<select name="keyField" size="1">
+				<option value="eduTitle">교육명</option>
+				<option value="empNo">사원번호</option>
+				<option value="empName">사원이름</option>
+			</select> <input type="text" id="kwd" name="keyword" value=""> <input
 				type="submit" value="찾기">
 		</form>
 		<br>
@@ -32,12 +33,15 @@
 				</tr>
 			</thead>
 			<tbody>
+				<c:if test="${empty eduHistoryList}">
+				<tr><td colspan=5>조회된 결과가 없습니다.</td></tr>
+				</c:if>
 				<c:forEach items="${eduHistoryList}" var="list">
 					<tr>
 						<td>${list.eduTitle }</td>
 						<td>${list.empNo }</td>
 						<td>${list.empName }</td>
-						<td>${list.attendance }</td>
+						<td>${list.attendance }%</td>
 						<td>${list.score }</td>
 					</tr>
 				</c:forEach>

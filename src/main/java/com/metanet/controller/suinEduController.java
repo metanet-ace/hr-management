@@ -2,7 +2,11 @@ package com.metanet.controller;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,17 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
-import com.metanet.domain.EmpListVO;
 import com.metanet.service.WonwooEduService;
-import com.metanet.service.WonwooEduServiceImpl;
-import com.metanet.service.suinEduServiceImpl;
+import com.metanet.service.suinEduService;
 
 
 @Controller
@@ -29,7 +31,7 @@ import com.metanet.service.suinEduServiceImpl;
 @Component
 public class suinEduController {
 	@Autowired
-	private suinEduServiceImpl service;
+	private suinEduService service;
 	
 	@Autowired
 	WonwooEduService wonwooEduService;
@@ -55,26 +57,36 @@ public class suinEduController {
 		service.eduAttendance();
 	}
 	
-	@GetMapping("/allocation2")
-	public String eduAllocation(Model model) {
+	@GetMapping("/allocation2/{eduNo}")
+	public String eduAllocation(@PathVariable int eduNo,Model model) {
 		model.addAttribute("empList", wonwooEduService.empList());
 		model.addAttribute("title", "교육 인원할당");
+		model.addAttribute("eduNo", eduNo);
 	return "/admin/edu/allocationCheckbox";
 	}
 	
 	@PostMapping("/allocation2")
-	@ResponseBody
-	public String eduAllocCheck() {
+	public String eduAllocCheck(HttpServletRequest request) {
 		System.out.println(">>>>>>>>>>>> eduAllocCheck");
-//		for(EmpListVO vo : list) {
-//			System.out.println(vo.getEmpNo());
-//		}
-		return "/edu/history";
+		for(String s : request.getParameterValues("empNo")) {
+			System.out.println(s);
+		}
+		System.out.println(request.getParameterValues("empNo").getClass().getName());
+		return "redirect:/edu/admin/history";
 	}
 	
 	@GetMapping("/admin/history")
 	public String eduHistoryList(Model model) {
 		model.addAttribute("eduHistoryList", service.getEduHistoryList());
+		return "/admin/edu/history";
+	}
+	
+	@PostMapping("/admin/history")
+	public String eduHistoryListByKeyword(Model model, HttpServletRequest request) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("keyField", request.getParameter("keyField"));
+		map.put("keyword", request.getParameter("keyword"));
+		model.addAttribute("eduHistoryList", service.getEduHistoryListByKey(map));
 		return "/admin/edu/history";
 	}
 }
