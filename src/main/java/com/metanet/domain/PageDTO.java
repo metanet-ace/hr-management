@@ -2,7 +2,7 @@ package com.metanet.domain;
 
 public class PageDTO {
 
-	   final private static int PAGE_PER_GROUP = 10; // 페이지 당 보여즐 글 수
+	   final private static int PAGE_PER_GROUP = 5; // 페이지 당 보여즐 글 수
 	   
 	   private int pageNum; // 사용자가 위치한 페이지 번호 (parameter로 받아올 값)
 	   
