@@ -61,7 +61,7 @@
 														<c:otherwise>진행종료</c:otherwise>
 													</c:choose>
                                                 </td>
-                                                <td><button>인원할당</button></td>
+                                                <td><button type="button" onclick="location.href='./allocation?edu_no=${list.eduNo }'">인원할당</button></td>
                                             </tr>
                                        		 </c:forEach> 
                                         </tbody>

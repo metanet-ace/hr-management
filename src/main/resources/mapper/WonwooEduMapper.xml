@@ -29,7 +29,81 @@
 	</update>
 	
 	<select id="empList" resultType="com.metanet.domain.EmpListVO">
-		SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
-		WHERE e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+      SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
+      WHERE e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+   </select>
+		
+	<select id="getPagingList" resultType="com.metanet.domain.EmpListVO">
+		<choose>
+			<when test="keyword =='deptName' and searchContent != null and searchContent !=''">
+			<![CDATA[
+				SELECT * 
+		FROM (SELECT rownum rnum, a.*
+	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
+				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
+				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+				and dept_name like '%'||#{searchContent}||'%'
+				ORDER BY e.emp_no desc) a )
+		WHERE rnum BETWEEN #{startNum} AND #{endNum} 
+			]]>
+			</when>
+			<when test="keyword =='posName' and searchContent != null and searchContent !=''">
+			<![CDATA[
+				SELECT * 
+		FROM (SELECT rownum rnum, a.*
+	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
+				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
+				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+				and pos_name like '%'||#{searchContent}||'%'
+				ORDER BY e.emp_no desc) a )
+		WHERE rnum BETWEEN #{startNum} AND #{endNum} 
+			]]>
+			</when>
+			<otherwise>
+			<![CDATA[
+			SELECT * 
+		FROM (SELECT rownum rnum, a.*
+	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
+				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
+				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+				ORDER BY e.emp_no desc) a )
+		WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			]]>
+			</otherwise>
+		</choose>
 	</select>
+	
+	<select id="totalCount" resultType="Integer">
+	SELECT COUNT(*) FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p
+		WHERE e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
+		<choose>
+			<when test="keyword =='deptName' and searchContent != null and searchContent !=''">
+					and d.dept_name like '%'||#{searchContent}||'%'
+				</when>
+			<when test="keyword =='posName' and searchContent != null and searchContent !=''">
+					and p.pos_name like '%'||#{searchContent}||'%'
+			</when>
+		</choose>
+	</select>
+	
+	<select id="getEduEmpHistroyList" resultType="com.metanet.domain.EduHistoryVO">
+		select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score, h.edu_fin
+    	from employee e, edu d, edu_history h 
+    	where e.emp_no = #{empNo} 
+    	and e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+	</select>
+	
+	<select id="getEduEmpHistroyListByKey" parameterType="Map" resultType="com.metanet.domain.EduHistoryVO">
+    	select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	from employee e, edu d, edu_history h 
+    	where e.emp_no = #{empNo} 
+    	and e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			and d.edu_title like '%' || #{keyword} || '%'
+    		</when>
+    	</choose>
+    </select>
 </mapper>
