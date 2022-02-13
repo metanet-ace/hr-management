@@ -4,57 +4,87 @@
 
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
+<style>
+textarea {
+	width: 80%;
+	height: 4.25em;
+	border: none;
+	resize: none;
+}
+</style>
 <script>
-	$(document).ready(function(){
+
+	$(document).ready(function() {
 
 		// 사원 인사이동 처리 버튼 클릭시
-		$("#updateHumanResource").on("click", function(e){
-			
-			 if(confirm("정말로 변경하시겠습니까?")==true){
-	e.preventDefault();	
-			
-			var array = [];
-			
-			$('input:checkbox[name="checkbox"]').each(function(){
-				if($(this).is(":checked")){
-					array.push(this.value);
+		$("#updateHumanResource").on("click", function(e) {
+			e.preventDefault();
+
+			if (confirm("정말로 변경하시겠습니까?") == true) {
+
+				var array = [];
+
+				$('input:checkbox[name="checkbox"]').each(function() {
+					if ($(this).is(":checked")) {
+						array.push(this.value);
+					}
+				});
+
+				if (array.length === 0) {
+					alert("선택된 인원이 없습니다.");
+					return;
 				}
-			});	
-			
-			if(array.length === 0){
-				alert("선택된 인원이 없습니다.");
-				return;
-			}
-			
-			var deptData = $("#changeDept").val();
-			var posData = $("#changePos").val();
-			
-			if(deptData === "" && posData === ""){
-				alert("변경사항이 없습니다.");
-				return;
-			}
-			
-			var data = {targetEmps: array, deptData: deptData, posData: posData};
-			
-			$.ajax({
-				url: '/admin/hr',
-				data: JSON.stringify(data),
-				contentType: 'application/json',
-				type: 'POST',
-				dataType: 'text',
-				success: function(result){
-					console.log(result);
-					alert("성공적으로 처리되었습니다.");
-					window.location.reload();
-				},
-				error: function(error){
-					console.log(error);
+
+				var deptData = $("#changeDept").val();
+				var posData = $("#changePos").val();
+				var reason = $("#reason").val();
+
+				if (deptData === "" && posData === "") {
+					alert("변경사항이 없습니다.");
+					return;
 				}
-			});	
-			}else{
-				
-			} 
+
+				var data = {
+					targetEmps : array,
+					deptData : deptData,
+					posData : posData,
+					reason : reason
+				};
+
+				$.ajax({
+					url : '/admin/hr',
+					data : JSON.stringify(data),
+					contentType : 'application/json',
+					type : 'POST',
+					dataType : 'text',
+					success : function(result) {
+						console.log(result);
+						alert("성공적으로 처리되었습니다.");
+						window.location.reload();
+					},
+					error : function(error) {
+						console.log(error);
+					}
+				});
+			} else {
+
+			}
 		});
+		
+		
+		$("#selectAll").on("click", function(e){
+			 
+			if($('input[name="checkbox"]').is(":checked")){
+				$('input:checkbox[name="checkbox"]').each(function() {
+					this.checked = false;
+				});
+			} else {
+				$('input:checkbox[name="checkbox"]').each(function() {
+					this.checked = true;
+				});
+			}
+		})
+		
 	});
 </script>
 
@@ -64,15 +94,24 @@
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 사원 리스트 출력 -->
-		<form class="form-inline d-flex justify-content-end" action="/admin/emp" method="get">
-			 <select name="field" id="field" class="form-control form-control-sm">
-				<option value="deptName">부서</option>
-				<option value="posName">직급</option>
-				<option value="empName">이름</option>
-			</select> 
-			<input type="text" id="word" name="word" value="" class="form-control form-cotrol-sm" style="margin: 10px">
-		    <input type="submit" class="btn btn-outline-info btn-sm" value="검색">
-		</form>
+		<div class="row" >
+			<div class="col-lg-2">
+				<button class="btn btn-primary" style="margin-top: 0.5em;" id="selectAll">전체선택</button>
+			</div>
+			<div class="col-lg-10">
+				<form class="form-inline d-flex justify-content-end"
+					action="/admin/emp" method="get">
+					<select name="field" id="field"
+						class="form-control form-control-sm">
+						<option value="deptName">부서</option>
+						<option value="posName">직급</option>
+						<option value="empName">이름</option>
+					</select> <input type="text" id="word" name="word" value=""
+						class="form-control form-cotrol-sm" style="margin: 10px">
+					<input type="submit" class="btn btn-outline-info btn-sm" value="검색">
+				</form>
+			</div>
+		</div>
 		<br>
 		<table class="table table-striped" border=1>
 			<thead>
@@ -171,6 +210,11 @@
 							<option value=5>부장</option>
 							<option value=6>사장</option>
 						</select>
+					</div>
+					<label class="col-lg-3 col-form-label" for="reason">사유<span
+						class="text-danger">*</span></label>
+					<div class="col-lg-9" style="margin-top: 2em;">
+						<textarea rows="1" cols="100" id="reason" name="reason"></textarea>
 					</div>
 					<div class="col-lg-4"></div>
 						<div class="col-lg-4">

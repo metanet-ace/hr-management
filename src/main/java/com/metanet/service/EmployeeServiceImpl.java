@@ -1,11 +1,15 @@
 package com.metanet.service;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.metanet.domain.EmpHistoryVO;
 import com.metanet.domain.EmployeeVO;
+import com.metanet.persistence.EmployeeHistoryRepository;
 import com.metanet.persistence.EmployeeMapper;
 import com.metanet.persistence.EmployeeRepository;
 
@@ -17,6 +21,9 @@ public class EmployeeServiceImpl {
 	
 	@Autowired
 	EmployeeRepository empRepo;
+	
+	@Autowired 
+	EmployeeHistoryRepository empHisRepo;
 	
 	// 세션에 로그인 된 사원 정보 넣어주기
 	public EmployeeVO getLoginedEmp(int empNo) {
@@ -43,24 +50,73 @@ public class EmployeeServiceImpl {
 			return empRepo.findByEmpNameContaining(empName, pageable);
 		}
 	
-	// 사원의 인사이동(UPDATE)
-	public int updateEmpDeptAndPos(int empNo, int deptNo, int posNo){
-		EmployeeVO emp = empRepo.findByEmpNo(empNo);
-		emp.getDept().setDeptNo(deptNo);
-		emp.getPos().setPosNo(posNo);
-		return empMapper.updateEmp(emp);
+	// 사원의 부서, 직급이동(UPDATE)
+	public int updateEmpDeptAndPos(int empNo, int deptNo, int posNo, String reason){
+		EmployeeVO emp = empMapper.findByEmpNo(empNo);
+
+		// 사원의 기존 부서, 직급 정보 저장 
+		EmpHistoryVO empHis = new EmpHistoryVO();
+		empHis.setBeforeDept(emp.getBatisDeptNo()); 
+		empHis.setBeforePos(emp.getBatisPosNo());
+		
+		// 부서, 직급 변경 
+		emp.setBatisDeptNo(deptNo);
+		emp.setBatisPosNo(posNo);
+		empMapper.updateEmp(emp);
+		
+		// 히스토리 테이블 정보 입력
+		empHis.setEmpNo(empNo);
+		empHis.setDeptNo(deptNo);
+		empHis.setPosNo(posNo);
+		empHis.setIssuedDate(new Date());
+		empHis.setIssuedOrder("부서이동");
+		empHis.setIssuedContent(reason);
+		
+		return empMapper.saveHistory(empHis); 
 	}
 	// 사원의 부서이동(UPDATE)
-	public int updateEmpDept(int empNo, int deptNo)	{
-		EmployeeVO emp = empRepo.findByEmpNo(empNo);
-		emp.getDept().setDeptNo(deptNo);
-		return empMapper.updateEmp(emp);
+	public int updateEmpDept(int empNo, int deptNo, String reason)	{
+		EmployeeVO emp = empMapper.findByEmpNo(empNo);
+		// 사원의 기존 부서, 직급 정보 저장 
+		EmpHistoryVO empHis = new EmpHistoryVO();
+		empHis.setBeforeDept(emp.getBatisDeptNo());
+		empHis.setBeforePos(emp.getBatisPosNo());
+		empHis.setPosNo(emp.getBatisPosNo());
+		
+		// 부서 변경
+		emp.setBatisDeptNo(deptNo);
+		empMapper.updateEmp(emp);
+		
+		// 히스토리 테이블 정보 입력
+		empHis.setEmpNo(empNo);
+		empHis.setDeptNo(deptNo);
+		empHis.setIssuedDate(new Date());
+		empHis.setIssuedOrder("부서이동");
+		empHis.setIssuedContent(reason);
+	
+		return empMapper.saveHistory(empHis); 
 	}
 	
 	// 사원의 직급이동(UPDATE)
-	public int updateEmpPos(int empNo, int posNo)	{
-		EmployeeVO emp = empRepo.findByEmpNo(empNo);
-		emp.getPos().setPosNo(posNo);
-		return empMapper.updateEmp(emp);
-	}
+	public int updateEmpPos(int empNo, int posNo, String reason)	{
+		EmployeeVO emp = empMapper.findByEmpNo(empNo);
+		// 사원의 기존 부서, 직급 정보 저장 
+		EmpHistoryVO empHis = new EmpHistoryVO();
+		empHis.setBeforeDept(emp.getBatisDeptNo());
+		empHis.setBeforePos(emp.getBatisPosNo());
+		empHis.setDeptNo(emp.getBatisDeptNo());
+		
+		// 직급 변경
+		emp.setBatisPosNo(posNo);
+		empMapper.updateEmp(emp);
+		
+		// 히스토리 테이블 정보 입력
+		empHis.setEmpNo(empNo);
+		empHis.setPosNo(posNo);
+		empHis.setIssuedDate(new Date());
+		empHis.setIssuedOrder("부서이동");
+		empHis.setIssuedContent(reason);
+		
+		return empMapper.saveHistory(empHis); 
+	}	
 }
