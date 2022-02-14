@@ -12,4 +12,5 @@ public interface suinEduService {
 	public void eduAttendance() throws ParseException;
 	public List<EduHistoryVO> getEduHistoryList();
 	public List<EduHistoryVO> getEduHistoryListByKey(Map<String, String> map);
+	public void eduHistoryAdd(Map<String, Object> param);
 }

@@ -63,4 +63,9 @@ public class suinEduServiceImpl implements suinEduService {
 		return mapper.eduHistoryListSelectByKey(map);
 	}
 
+	@Override
+	public void eduHistoryAdd(Map<String, Object> param) {
+		mapper.eduHistroyInsert(param);
+	}
+
 }

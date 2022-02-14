@@ -65,4 +65,10 @@
     		</when>
     	</choose>
     </select>
+    
+    <insert id="eduHistroyInsert" parameterType="Map">
+    <foreach collection="empNo" item="value" index="key" separator=";" open="DECLARE BEGIN" close="; END;">
+    	insert into edu_history values(SEQ_EDU_HISNO.NEXTVAL, #{eduNo}, #{value}, 0, null)
+    </foreach>
+    </insert>
 </mapper>	
