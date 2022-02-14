@@ -10,7 +10,7 @@
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                                 class="icon icon-single-04"></i><span class="nav-text">정보 조회</span></a>
                         <ul aria-expanded="false">
-                            <li><a href="/emp/detail">내 정보 조회</a></li>
+                            <li><a href="/emp/detail?empNo=${sessionEmp.empNo }">내 정보 조회</a></li>
                             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">교육 과정</a>
                                 <ul aria-expanded="false">
                                     <li><a href="/edu/history">진행 예정</a></li>
