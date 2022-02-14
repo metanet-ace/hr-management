@@ -39,7 +39,7 @@ public class EmployeeVO2 {
 	
 	private String empRetdate;
 	
-	@Pattern(regexp="\\d{2}([0]\\d|[1][0-2])([0][1-9]|[1-2]\\d|[3][0-1])[-][1-4]\\d{6}", message="xxxxxx-xxxxxxx 형식을 맞춰주세요.")
+	@Pattern(regexp="\\d{2}([0]\\d|[1][0-2])([0][1-9]|[1-2]\\d|[3][0-1])[-][1-4]\\d{6}", message="xxxxxx-x(1~4)xxxxxx 형식을 맞춰주세요.")
 	private String empSsc;
 	
 	@NotBlank(message="학력을 입력해주세요.")
@@ -51,7 +51,6 @@ public class EmployeeVO2 {
 	private String empPwd;
 	private String empRePhoto;
 	
-	@NotBlank(message="이미지를 첨부해주세요.")
 	private String empPhoto;
 	
 	@NotBlank(message="병역을 선택해주세요.")

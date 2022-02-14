@@ -39,13 +39,12 @@
                                                     <label class="col-lg-4 col-form-label" for="upfile">사원 이미지</label>
                                                     <div class="col-lg-6">
                                                         <input type="file" class="form-control" id="upfile" name="upfile">
-                                                        <span style="color: #ff0000;">${valid_empPhoto}</span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empName">이름</label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empName" name="empName" value="${emp.empName }">
+                                                        <input type="text" class="form-control" id="empName" name="empName" value="${emp.empName }" placeholder="이름을 입력해주세요.">
                                                     	<span style="color: #ff0000;">${valid_empName}</span>
                                                     </div>
                                                 </div>
@@ -64,21 +63,21 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empPhone">전화번호</label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empPhone" name="empPhone">
+                                                        <input type="text" class="form-control" id="empPhone" name="empPhone" value="${emp.empPhone }" placeholder="xxx-(x)xxx-xxxx">
                                                         <span style="color: #ff0000;">${valid_empPhone}</span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empEmail">이메일</label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empEmail" name="empEmail">
+                                                        <input type="text" class="form-control" id="empEmail" name="empEmail" value="${emp.empEmail }" placeholder="xxx@xxx.xxx">
                                                         <span style="color: #ff0000;">${valid_empEmail}</span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empHiredate">입사일</label>
                                                     <div class="col-lg-6">
-                                                        <input type="date" class="form-control" id="empHiredate" name="empHiredate">
+                                                        <input type="date" class="form-control" id="empHiredate" name="empHiredate" value="${emp.empHiredate }">
                                                     </div>
                                                 </div>
                                             
@@ -86,7 +85,7 @@
                                             <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empSsc">주민번호 </label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empSsc" name="empSsc">
+                                                        <input type="text" class="form-control" id="empSsc" name="empSsc" placeholder="xxxxxx-xxxxxxx" value="${emp.empSsc }">
                                                         <span style="color: #ff0000;">${valid_empSsc}</span>
                                                     </div>
                                             </div>
@@ -152,7 +151,7 @@
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empSal">연봉</label>
                                                     <div class="col-lg-4">
-                                                        <input type="text" class="form-control" id="empSal" name="empSal">
+                                                        <input type="text" class="form-control" id="empSal" name="empSal" placeholder="숫자만 입력해주세요." value="${emp.empSal }">
                                                     </div>
                                                     <div>만 원</div>
                                                     
