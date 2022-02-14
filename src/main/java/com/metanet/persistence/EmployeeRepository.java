@@ -4,10 +4,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.metanet.domain.EmployeeVO;
 
-public interface EmployeeRepository extends JpaRepository<EmployeeVO, Integer>{
+public interface EmployeeRepository extends JpaRepository<EmployeeVO, Integer>, QuerydslPredicateExecutor<EmployeeVO>{
 	
 	// 시큐리티 로그인 + 권한 체크 --> 한 명의 직원과 그 부서를 SELECT 
 	@Query("SELECT e FROM EmployeeVO e INNER JOIN e.dept d "

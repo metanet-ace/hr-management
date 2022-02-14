@@ -4,19 +4,32 @@
 	<update id="updateEmp" parameterType="com.metanet.domain.EmployeeVO">
 		UPDATE EMPLOYEE
 		<choose>
-			<when test="dept.deptNo != null and pos.posNo != null">
-				SET DEPT_NO = #{dept.deptNo},
-				POS_NO = #{pos.posNo}
+			<when test="batisDeptNo != null and batisPosNo != null">
+				SET DEPT_NO = #{batisDeptNo},
+				POS_NO = #{batisPosNo}
 			</when>
-			<when test="dept.deptNo != null and pos.posNo == null">
-				SET DEPT_NO = #{dept.deptNo},
+			<when test="batisDeptNo != null and batisPosNo == null">
+				SET DEPT_NO = #{batisDeptNo},
 			</when>
-			<when test="dept.deptNo == null and pos.posNo != null">
-				SET POS_NO = #{pos.posNo}
+			<when test="batisDeptNo == null and batisPosNo != null">
+				SET POS_NO = #{batisPosNo}
 			</when>
 			<otherwise>
 			</otherwise>
 		</choose>
 		WHERE EMP_NO = #{empNo}
 	</update>
+	
+	<insert id="saveHistory">
+		INSERT INTO EMP_HISTORY
+		VALUES (SEQ_EMP_HISNO.nextval, #{empNo}, #{posNo}, #{beforePos}, #{deptNo}, #{beforeDept}, #{issuedDate}, #{issuedOrder}, #{issuedContent} )
+	</insert>
+	
+	<select id="findByEmpNo" resultType="com.metanet.domain.EmployeeVO">
+		SELECT EMP_NO, DEPT_NO AS BATIS_DEPT_NO, POS_NO AS BATIS_POS_NO, EMP_NAME, EMP_GENDER, EMP_PHONE, EMP_SAL, EMP_EMAIL, EMP_HIREDATE, EMP_RETDATE,
+		EMP_SSC, EMP_DEGREE, EMP_CAREER, EMP_PWD, EMP_PHOTO, EMP_MIL
+		FROM EMPLOYEE
+		WHERE EMP_NO = #{value}
+	</select>
+		
 </mapper>

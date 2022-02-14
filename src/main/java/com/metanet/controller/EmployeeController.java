@@ -72,9 +72,12 @@ public class EmployeeController {
 	public ResponseEntity<String> updateHumanResource(@RequestBody HashMap<String, Object> map) {
 		int deptNo = 0;
 		int posNo = 0;
+		String reason = (String) map.get("reason");
 		System.out.println(map.get("deptData"));
 		System.out.println(map.get("posData"));
+		System.out.println(map.get("reason"));
 		Object targetEmpList = map.get("targetEmps");
+		 
 		if(map.get("deptData") != "") {
 			deptNo = Integer.parseInt((String) map.get("deptData"));			
 		}
@@ -89,11 +92,11 @@ public class EmployeeController {
 		for(Object result : (List) targetEmpList) {
 			int targetNo = Integer.parseInt((String) result);
 			if(deptNo != 0 && posNo != 0) {
-				empService.updateEmpDeptAndPos(targetNo, deptNo, posNo);
+				empService.updateEmpDeptAndPos(targetNo, deptNo, posNo, reason);
 			} else if(deptNo != 0 && posNo == 0){
-				empService.updateEmpDept(targetNo, deptNo);
+				empService.updateEmpDept(targetNo, deptNo, reason);
 			} else if(deptNo == 0 && posNo != 0) {
-				empService.updateEmpPos(targetNo, posNo);
+				empService.updateEmpPos(targetNo, posNo, reason);
 			} else {
 				return new ResponseEntity<String>("오류 발생", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
