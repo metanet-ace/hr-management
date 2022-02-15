@@ -10,7 +10,7 @@
 	
 	<select id="eduDetail" parameterType="Integer" resultType="com.metanet.domain.EduVO">
 		SELECT EDU_NO, EDU_TITLE, EDU_DESC, EDU_LOC, EDU_TIME, EDU_TEACHER, EDU_PEOPLE, EDU_TARGET,
-		TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END, EDU_COST
+		TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END, EDU_COST, EDU_FILE, EDU_REFILE
 		FROM EDU
 		WHERE EDU_NO = #{EDU_NO}
 	</select>
@@ -22,6 +22,14 @@
 	</delete>
 	
 	<update id="eduUpdate" parameterType="com.metanet.domain.EduVO">
+		UPDATE EDU SET EDU_TITLE=#{eduTitle}, EDU_DESC=#{eduDesc}, EDU_LOC=#{eduLoc}, EDU_TIME=#{eduTime},
+		EDU_TEACHER=#{eduTeacher}, EDU_PEOPLE=#{eduPeople}, EDU_TARGET=#{eduTarget}, 
+		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD'), EDU_COST=#{eduCost},
+		EDU_FILE=#{eduFile}, EDU_REFILE=#{eduRefile} 
+		WHERE EDU_NO=#{eduNo}
+	</update>
+	
+	<update id="eduUpdateNoModifyFile" parameterType="com.metanet.domain.EduVO">
 		UPDATE EDU SET EDU_TITLE=#{eduTitle}, EDU_DESC=#{eduDesc}, EDU_LOC=#{eduLoc}, EDU_TIME=#{eduTime},
 		EDU_TEACHER=#{eduTeacher}, EDU_PEOPLE=#{eduPeople}, EDU_TARGET=#{eduTarget}, 
 		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD'), EDU_COST=#{eduCost}
@@ -106,4 +114,23 @@
     		</when>
     	</choose>
     </select>
+    
+    <insert id ="eduAdd" parameterType="com.metanet.domain.EduVO">
+    	INSERT INTO edu
+        VALUES (seq_edu_no.nextval, 
+        		#{eduTitle}, 
+        		#{eduDesc}, 
+        		#{eduLoc}, 
+        		#{eduTime}, 
+        		#{eduTeacher}, 
+        		#{eduPeople}, 
+        		#{eduTarget}, 
+        		#{eduStart}, 
+        		#{eduEnd},
+        		0, 
+        		#{eduCost},
+        		#{eduFile},
+        		#{eduRefile})
+        		
+    </insert>
 </mapper>

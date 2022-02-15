@@ -7,46 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- Favicon icon -->
-<link rel="icon" type="image/png" sizes="16x16"
-	href="/assets/images/favicon.png">
-<!-- Daterange picker -->
-<link
-	href="/assets/vendor/bootstrap-daterangepicker/daterangepicker.css"
-	rel="stylesheet">
-<!-- Clockpicker -->
-<link
-	href="/assets/vendor/clockpicker/css/bootstrap-clockpicker.min.css"
-	rel="stylesheet">
-<!-- asColorpicker -->
-<link
-	href="/assets/vendor/jquery-asColorPicker/css/asColorPicker.min.css"
-	rel="stylesheet">
-<!-- Material color picker -->
-<link
-	href="/assets/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css"
-	rel="stylesheet">
-<!-- Pick date -->
-<link rel="stylesheet"
-	href="/assets/vendor/pickadate/themes/default.css">
-<link rel="stylesheet"
-	href="/assets/vendor/pickadate/themes/default.date.css">
-<!-- Custom Stylesheet -->
-<link href="/assets/css/style.css" rel="stylesheet">
-<script type="text/javascript">
-	function previous(no){
-			location.href="./detail?edu_no="+no;
-	}
-	
-	function update(no){
-		if(confirm("해당 교육과정을 수정하시겠습니까?")){
-			location.href="./update?edu_no="+no;
-		}
-	}
-</script>
 </head>
 <body>
 	<!--**********************************
@@ -59,12 +19,11 @@
 				<div class="col-lg-12">
 					<div class="card">
 						<div class="card-header">
-							<h4 class="card-title">교육 과정 수정</h4>
+							<h4 class="card-title">교육 과정 추가</h4>
 						</div>
 						<div class="card-body">
 							<div class="form-validation">
-								<form class="form-valide" action="/edu/update" method="post" enctype="multipart/form-data">
-									<input type="hidden" name="eduNo" value="${detail.eduNo}">
+								<form class="form-valide" action="./addFile" method="post" enctype="multipart/form-data">
 									<div class="row">
 										<div class="col-xl-6">
 											<div class="form-group row">
@@ -73,7 +32,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTitle"
-														name="eduTitle" value="${detail.eduTitle }">
+														name="eduTitle" placeholder="교육명">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -81,8 +40,9 @@
 													상세 <span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<textarea class="form-control" id="eduDesc" name="eduDesc"
-														rows="5">${detail.eduDesc }</textarea>
+													<textarea class="form-control" id="eduDesc"
+														name="eduDesc" rows="5"
+														placeholder=""></textarea>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -91,7 +51,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduLoc"
-														name="eduLoc" value="${detail.eduLoc }">
+														name="eduLoc" placeholder="장소">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -100,7 +60,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTime"
-														name="eduTime" value="${detail.eduTime }">
+														name="eduTime" placeholder="총이수시간">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -109,7 +69,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTeacher"
-														name="eduTeacher" value="${detail.eduTeacher }">
+														name="eduTeacher" placeholder="교육 상세">
 												</div>
 											</div>
 										</div>
@@ -120,7 +80,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduPeople"
-														name="eduPeople" value="${detail.eduPeople }">
+														name="eduPeople" placeholder="인원">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -129,7 +89,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTarget"
-														name="eduTarget" value="${detail.eduTarget }">
+														name="eduTarget" placeholder="대상">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -138,7 +98,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="date" class="form-control" id="eduStart"
-														name="eduStart" value="${detail.eduStart }">
+															name="eduStart">												
 												</div>
 											</div>
 											<div class="form-group row">
@@ -147,7 +107,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="date" class="form-control" id="eduEnd"
-														name="eduEnd" value="${detail.eduEnd }">
+														name="eduEnd">
 												</div>
 											</div>
 											<div class="form-group row">
@@ -156,38 +116,22 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduCost"
-														name="eduCost" value="${detail.eduCost }">
+														name="eduCost" placeholder="비용">
 												</div>
 											</div>
 											<div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="uploadfile">첨부파일
-													<span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<c:choose>
-														<c:when test="${detail.eduFile eq null}">
-                                                    			파일이 없습니다.
-                                                    			<input
-																type="file" class="form-control" id="uploadfile"
-																name="uploadfile">
-														</c:when>
-														<c:otherwise>
-                                                    			${detail.eduFile}
-                                                    			<input type="hidden" name=eduRefile value="${detail.eduRefile}">
-                                                    			<input
-																type="file" class="form-control" id="uploadfile"
-																name="uploadfile">
-														</c:otherwise>
-													</c:choose>
-												</div>
-											</div>
+                                                    <label class="col-lg-4 col-form-label" for="uploadfile">첨부파일
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6">
+                                                        <input type="file" class="form-control" id="uploadfile" name="uploadfile">
+                                                    </div>
+                                                </div>
 
 
 											<div class="form-group row">
 												<div class="col-lg-8 ml-auto">
-													<button type="submit" class="btn btn-primary">수정</button>
-													<button type="button" onclick="previous( ${detail.eduNo})"
-														class="btn btn-primary">돌아가기</button>
+													<button type="submit" class="btn btn-primary">등록</button>
 												</div>
 											</div>
 										</div>

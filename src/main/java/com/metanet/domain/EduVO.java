@@ -19,6 +19,8 @@ public class EduVO {
 	private String eduEnd;
 	private int eduCost;
 	private int eduProgress;
+	private String eduFile;
+	private String eduRefile;
 	
 	
 	

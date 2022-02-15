@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
@@ -160,6 +161,22 @@
 														name="eduCost" value="${detail.eduCost }" readonly>
 												</div>
 											</div>
+											<div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="uploadfile">첨부파일
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6">
+                                                    	<c:choose>
+                                                    		<c:when test="${detail.eduFile eq null}">
+                                                    			파일이 없습니다.
+                                                    		</c:when>
+                                                    		<c:otherwise>
+                                                    		<input type="text" class="form-control" id="uploadfile" name="uploadfile" value="${detail.eduFile }" readonly>
+                                                        <a href="./download?uuid=${uuid }&fileName=${detail.eduFile}">[download]</a>
+                                                    		</c:otherwise>
+                                                    	</c:choose>
+                                                    </div>
+                                                </div>
 
 
 											<div class="form-group row">
