@@ -6,7 +6,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class EduHistoryVO {
-	
+	private int eduNo;
 	private String eduTitle;
 	private int empNo;
 	private String empName;

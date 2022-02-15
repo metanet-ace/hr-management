@@ -26,88 +26,102 @@ form {
 	text-align: center;
 }
 </style>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script type="text/javascript">
-function ajaxExample(){
-    
-    // name이 같은 체크박스의 값들을 배열에 담는다.
-    var checkboxValues = [];
-    $("input[name='empNo']:checked").each(function(i) {
-        checkboxValues.push($(this).val());
-    });
-     
-    // 사용자 ID(문자열)와 체크박스 값들(배열)을 name/value 형태로 담는다.
-    var allData = { "userId": userId, "checkArray": checkboxValues };
-     
-    $.ajax({
-        url:"edu/allocation2",
-        type:'POST',
-        data: checkBoxValues,
-
-
-      //데이터 전송이 완료되면 출력되는 메시지
-
-        success:function(data){
-            alert("완료!");
-            window.opener.location.reload();
-            self.close();
-        },
-
-       //에러가 발생되면 출력되는 메시지
-
-        error:function(jqXHR, textStatus, errorThrown){
-            alert("에러 발생~~ \n" + textStatus + " : " + errorThrown);
-            self.close();
-        }
-    });
+<script>
+function eduAllocation(){
+	var empNo = [];
+	$("input[name='empNo']:checked").each(function(i){
+		empNo.push($(this).val());
+	});
+	var eduNo = ${eduNo}
+	var data ={empNo: empNo,
+			eduNo: eduNo}
+	console.log("allocation: "+empNo);
+	console.log(${eduNo})
+	console.log("function allocation");
+	$.ajax({
+		type: "POST",
+		url: "/edu/allocation2",
+		data: JSON.stringify(data),
+		contentType: "application/json; charset=UTF-8",
+		success: function(){
+			alert("교육배정이 완료되었습니다.");
+		},
+		error: function(e) {
+			alert("교육 배정 과정에서 문제가 발생했습니다. 다시 시도해주세요"+e);
+		}
+	});
 }
 </script>
 </head>
 <body>
+<div class="content-body">
+	<div class="container-fluid">
+		<form id="search_form" action="/edu/allocation2/${eduNo}" method="post">
+			<select name="keyword" size="1">
+				<option value="deptName">부서</option>
+				<option value="posName">직급</option>
+			</select> 
+			<input type="text" id="kwd" name="searchContent" value=""> 
+			<input type="submit" value="찾기">
+		</form>
+		<br>
+		<div style='width: 80px; float: right;'>
+			<input type='button' class='btn' name='btn' value='교육 배정' onclick="eduAllocation();">
+		</div>
+		<table class="table table-striped" border=1>
+			<thead>
+				<tr>
+					<th>선택</th>
+					<th>사원번호</th>
+					<th>성명</th>
+					<th>직급</th>
+					<th>부서</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${list }" var="list">
+					<tr>
+						<td><input type="checkbox" name="empNo" value="${list.empNo }"></td>
+						<td>${list.empNo }</td>
+						<td>${list.empName }</td>
+						<td>${list.posName }</td>
+						<td>${list.deptName }</td>
+					</tr>
+				</c:forEach>
+			<tbody>
+		</table>
+		
+		<!-- 페이지네이션  -->
+			<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+				<c:if test="${paging.hasPrev }">
+					<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}?pageNum=${paging.startPage-1}&keyword=${pageInfo.keyword }&searchContent=${pageInfo.searchContent}">이전</a></li>
+				</c:if>
 
-	<h1>교육 인원 할당</h1>
-	<hr>
-	<div class="content-body">
-		<div class="container-fluid">
+				<c:forEach var="p" begin="${paging.startPage }" end="${paging.endPage }" step="1">
+					<c:choose>
+						<c:when test="${p == tempPageNum }" >
+							<li class="page-item active"><a class="page-link" href="#">${p}</a>
+						</c:when>
+						<c:otherwise>
+							<c:choose>
+								<c:when test="${empty pageInfo.keyword}">
+									<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}?pageNum=${p}">${p}</a>
+								</c:when>
+								<c:otherwise>
+									<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}?pageNum=${p}&keyword=${pageInfo.keyword }&searchContent=${pageInfo.searchContent}">${p}</a>
+								</c:otherwise>
+							</c:choose>
+							
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
 
-			<form id="search_form" action="/mysite/board" method="post">
-				<input type="hidden" name="a" value="list"> <select
-					name="keyField" size="1">
-					<option value="deptName">부서</option>
-					<option value="posName">직급</option>
-				</select> <input type="text" id="kwd" name="keyWord" value=""> <input
-					type="submit" value="찾기">
-			</form>
-			<br>
-			<form action="/edu/allocation2" method="post">
-				<div style='width: 80px; float: right;'>
-					<input type='submit' class='btn' name='btn' value='교육배정'>
-				</div>
-				<table border=1>
-					<thead>
-						<tr>
-							<th>선택</th>
-							<th>사원번호</th>
-							<th>성명</th>
-							<th>직급</th>
-							<th>부서</th>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach items="${empList }" var="list">
-							<tr>
-								<td><input type="checkbox" name="cox{"
-									value="${list.empNo }"></td>
-								<td>${list.empNo }</td>
-								<td>${list.empName }</td>
-								<td>${list.posName }</td>
-								<td>${list.deptName }</td>
-							</tr>
-						</c:forEach>
-					<tbody>
-				</table>
-			</form>
+				<c:if test="${paging.hasNext }">
+					<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}?pageNum=${paging.endPage+1}&keyword=${pageInfo.keyword }&searchContent=${pageInfo.searchContent}">다음</a></li>
+				</c:if>
+			</ul>
+			</nav>
 		</div>
 	</div>
 	<c:import url="/WEB-INF/views/include/footer.jsp" />

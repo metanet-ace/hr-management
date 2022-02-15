@@ -23,4 +23,6 @@ public interface suinEduMapper {
 
 	public List<EduHistoryVO> eduHistoryListSelectByKey(Map<String, String> map);
 
+	public void eduHistroyInsert(Map<String, Object> param);
+
 }
