@@ -61,10 +61,10 @@
 						<div class="card-header">
 							<h4 class="card-title">교육 과정 수정</h4>
 						</div>
-						<div class="card-body">
+<div class="card-body">
 							<div class="form-validation">
-								<form class="form-valide" action="/edu/update" method="post" enctype="multipart/form-data">
-									<input type="hidden" name="eduNo" value="${detail.eduNo}">
+								<form class="form-valide" action="./update" method="post" enctype="multipart/form-data">
+									<input type="hidden" name="eduNo" value="${eduVO.eduNo}">
 									<div class="row">
 										<div class="col-xl-6">
 											<div class="form-group row">
@@ -73,7 +73,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTitle"
-														name="eduTitle" value="${detail.eduTitle }">
+														name="eduTitle" value="${eduVO.eduTitle }" placeholder="교육명을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTitle}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -81,8 +82,8 @@
 													상세 <span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<textarea class="form-control" id="eduDesc" name="eduDesc"
-														rows="5">${detail.eduDesc }</textarea>
+													<textarea class="form-control" id="eduDesc" name="eduDesc" rows="5" placeholder="교육 상세를 입력해주세요.">${eduVO.eduDesc }</textarea>
+														<span style="color: #ff0000;">${valid_eduDesc}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -91,7 +92,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduLoc"
-														name="eduLoc" value="${detail.eduLoc }">
+														name="eduLoc" value="${eduVO.eduLoc }" placeholder="장소를 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduLoc}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -100,7 +102,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTime"
-														name="eduTime" value="${detail.eduTime }">
+														name="eduTime" value="${eduVO.eduTime }" placeholder="총 이수 시간을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTime}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -109,7 +112,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTeacher"
-														name="eduTeacher" value="${detail.eduTeacher }">
+														name="eduTeacher" value="${eduVO.eduTeacher }" placeholder="담당 강사를 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTeacher}</span>
 												</div>
 											</div>
 										</div>
@@ -120,7 +124,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduPeople"
-														name="eduPeople" value="${detail.eduPeople }">
+														name="eduPeople" value="${eduVO.eduPeople }" placeholder="인원을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduPeople}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -129,7 +134,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTarget"
-														name="eduTarget" value="${detail.eduTarget }">
+														name="eduTarget" value="${eduVO.eduTarget }"placeholder="대상을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTarget}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -137,8 +143,9 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduStart"
-														name="eduStart" value="${detail.eduStart }">
+													<input type="date" class="form-control" id="eduStart" value="${eduVO.eduStart }"
+															name="eduStart">
+													<span style="color: #ff0000;">${valid_eduStart}</span>												
 												</div>
 											</div>
 											<div class="form-group row">
@@ -146,8 +153,9 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduEnd"
-														name="eduEnd" value="${detail.eduEnd }">
+													<input type="date" class="form-control" id="eduEnd" value="${eduVO.eduEnd }"
+														name="eduEnd">
+													<span style="color: #ff0000;">${valid_eduEnd}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -155,8 +163,9 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduCost"
-														name="eduCost" value="${detail.eduCost }">
+													<input type="text" class="form-control" id="eduCost" value="${eduVO.eduCost }"
+														name="eduCost" placeholder="비용을 입력해주세요.">
+													<span style="color: #ff0000;">${valid_eduCost}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -165,15 +174,14 @@
 												</label>
 												<div class="col-lg-6">
 													<c:choose>
-														<c:when test="${detail.eduFile eq null}">
+														<c:when test="${eduVO.eduFile eq null}">
                                                     			파일이 없습니다.
                                                     			<input
 																type="file" class="form-control" id="uploadfile"
 																name="uploadfile">
 														</c:when>
 														<c:otherwise>
-                                                    			${detail.eduFile}
-                                                    			<input type="hidden" name=eduRefile value="${detail.eduRefile}">
+                                                    			${eduVO.eduFile}
                                                     			<input
 																type="file" class="form-control" id="uploadfile"
 																name="uploadfile">
@@ -186,7 +194,7 @@
 											<div class="form-group row">
 												<div class="col-lg-8 ml-auto">
 													<button type="submit" class="btn btn-primary">수정</button>
-													<button type="button" onclick="previous( ${detail.eduNo})"
+													<button type="button" onclick="previous( ${eduVO.eduNo})"
 														class="btn btn-primary">돌아가기</button>
 												</div>
 											</div>

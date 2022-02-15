@@ -3,6 +3,10 @@ package com.metanet.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
+import org.springframework.validation.Errors;
+
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
@@ -31,4 +35,8 @@ public interface WonwooEduService {
 	public void eduAdd(EduVO eduVO);
 
 	public void eduUpdateNoModifyFile(EduVO eduVO);
+
+	public Map<String, String> validateHandling(Errors errors); //유효성검사
+
+	public void eduAddNoFile(@Valid EduVO eduVO);
 }

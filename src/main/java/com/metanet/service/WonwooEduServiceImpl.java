@@ -1,10 +1,15 @@
 package com.metanet.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
@@ -74,6 +79,24 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 	@Override
 	public void eduUpdateNoModifyFile(EduVO eduVO) {
 		wonwooEduMapper.eduUpdateNoModifyFile(eduVO);		
+	}
+	
+	// 유효성 검사에 실패한 필드가 있다면, Service 게층으로 Errors 객체를 전달하여 비즈니스 로직을 구현
+	@Override
+	public Map<String, String> validateHandling(Errors errors) {
+		Map<String, String> validatorResult = new HashMap<>();
+
+        for (FieldError error : errors.getFieldErrors()) {
+            String validKeyName = String.format("valid_%s", error.getField());
+            validatorResult.put(validKeyName, error.getDefaultMessage());
+        }
+
+        return validatorResult;
+	}
+
+	@Override
+	public void eduAddNoFile(@Valid EduVO eduVO) {
+		wonwooEduMapper.eduAddNoFile(eduVO);	
 	}
 
 }
