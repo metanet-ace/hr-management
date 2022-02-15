@@ -2,6 +2,7 @@ package com.metanet.domain;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -22,6 +23,7 @@ import lombok.ToString;
 @Table(name="EMPLOYEE")
 public class EmployeeVO {
 	@Id
+	@Column(name="EMP_NO")
 	private int empNo;
 //	private int posNo;
 //	private int deptNo;

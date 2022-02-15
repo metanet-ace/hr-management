@@ -7,6 +7,23 @@
 <script>
 $(document).ready(function() {
 	getPage(1);
+	
+	$("#searchBtn1").on("click", function(e){
+		e.preventDefault();
+	
+		var empName = $("#empName").val();
+		getPage(1, empName);
+	})
+	
+	$("#searchBtn2").on("click", function(e){
+		e.preventDefault();
+	
+		var begin = $("input[name=begin]").val();
+		var end = $("input[name=end]").val();
+		console.log(end);
+		const date = new Map([['시작일', begin], ['종료일', end]]);
+		getPage(1, date);
+	})
 });
 </script>
 
@@ -18,11 +35,12 @@ $(document).ready(function() {
 		<div class="row">
 			<div class="col-lg-2 col-sm-1">
 				<div class="form-group row justify-content-start"
-					style="margin-top: 4.2em;">
-					<p>게시판 목록 갯수</p>
-					<div class="w100" style="padding-right: 10px">
-						<select id="listSize" class="form-control form-control-sm">
-							<option value="10">5 개</option>
+					style="margin-top: 3.2em; margin-bottom: 0.2em">
+					<p style="margin-top: 1.3em;">게시판 목록 갯수</p>
+					<div class="w100" style="padding-right: 10px; margin-top: 1.3em;">
+						<select id="listSize" class="form-control form-control-sm"
+							onchange="getPage(1)">
+							<option value="5">5 개</option>
 							<option value="15">10 개</option>
 							<option value="20">20 개</option>
 						</select>
@@ -31,45 +49,58 @@ $(document).ready(function() {
 			</div>
 			<div class="col-lg-10 col-sm-11">
 				<form class="form-inline d-flex justify-content-end"
-					style="margin-top: 3.2em;" action="/admin/emp" method="get">
-					<select name="field" id="field"
-						class="form-control form-control-sm" onchange="changeForm();">
-						<option value="empNo">사원번호로 검색</option>
+					style="margin-top: 3.2em;" action="" method="get">
+					<select name="field" id="field" style=" margin-top: 2em"
+						class="form-control form-control-sm" onchange="changeForm(this);">
+						<option value="empName">사원이름로 검색</option>
 						<option value="issuedDate">변경일로 검색</option>
-					</select> <input type="text" id="word" name="word" value=""
-						class="form-control form-cotrol-sm" style="margin: 10px">
-					<input type="submit" class="btn btn-outline-info btn-sm" value="검색">
+					</select> 
+					
+					<div id="empNameDiv" >
+					<input type="text" id="empName" name="empName" value=""
+						class="form-control form-cotrol-sm" style="margin-top: 2em">
+					<input type="submit" class="btn btn-outline-info btn-sm" id="searchBtn1" style=" margin-top: 2em" value="검색">
+					</div>	
+					
+					<div id="issuedDateDiv"  style="display:none; margin-top: 2em">
+					 <input class="form-control form-cotrol-sm" type="date" name="begin"> ~ <input class="form-control form-cotrol-sm" type="date" name="end">
+						
+					<input type="submit" class="btn btn-outline-info btn-sm" id="searchBtn2" value="검색">
+					</div>	
+								
 				</form>
 			</div>
 		</div>
+		
+		<br>
+		<table class="table table-striped" border=1>
+			<thead>
+				<tr>
+					<th>사원이름</th>
+					<th>사원번호</th>
+					<th>변경전직급</th>
+					<th>변경후직급</th>
+					<th>변경전부서</th>
+					<th>변경후부서</th>
+					<th>비고</th>
+					<th>변경일</th>
+				</tr>
+			</thead>
+			<tbody id="dataSection">
+			<tbody>
+		</table>
+
+		<!-- 페이지네이션  -->
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center" id="paginationBox">
+
+		
+
+
+
+			</ul>
+		</nav>
 	</div>
-	<br>
-	<table class="table table-striped" border=1>
-		<thead>
-			<tr>
-				<th>사원번호</th>
-				<th>변경후직급</th>
-				<th>변경전직급</th>
-				<th>변경후부서</th>
-				<th>변경전부서</th>
-				<th>비고</th>
-				<th>변경일</th>
-			</tr>
-		</thead>
-		<tbody id="dataSection">
-		<tbody>
-	</table>
-
-	<!-- 페이지네이션  -->
-	<nav aria-label="Page navigation example">
-		<ul class="pagination justify-content-center" id="paginationBox">
-
-
-
-
-
-		</ul>
-	</nav>
 </div>
 
 <!--**********************************
@@ -77,25 +108,42 @@ $(document).ready(function() {
         ***********************************-->
 <script>
 
-function getPage(pageNum){
+function getPage(pageNum, keyword){
+	// 페이지 사이즈 정보 
+	var pageSize = $("#listSize option:selected").val();
+
+	if(keyword instanceof Map){
+		if(keyword.get('시작일') === '' || keyword.get('종료일') === ''){
+			alert("시작일과 종료일을 설정해주세요");
+		}
+		var data = {pageSize: pageSize, 
+					startDate: keyword.get('시작일'),
+					endDate: keyword.get('종료일')};
+	} else {
+		var data = {pageSize: pageSize, 
+					empName: keyword};
+	}
 	
 	$.ajax({
 		url: "/admin/emp/history/" + pageNum,
-		data: {},
+		data: JSON.stringify(data),
+		type: "POST",
+		contentType : 'application/json',
 		success: function(result){
 			const list = result['content'];
-			
+			console.log(list);
 			var data = "";
 			var block = "";
 			
 			// 테이블 정보
 			for(var i = 0; i < list.length; i++) {
 				data += "<tr id='empHistoryList'>";
-				data += "<td>" + list[i]['empNo'] + "</td>";
-				data += "<td>" + posView(list[i]['posNo']) + "</td>";
-				data += "<td>" + posView(list[i]['beforePos']) + "</td>";
-				data += "<td>" + deptView(list[i]['deptNo']) + "</td>";
-				data += "<td>" + deptView(list[i]['beforeDept']) + "</td>";
+				data += "<td>" + list[i]['emp'].empName + "</td>";
+				data += "<td>" + list[i]['emp'].empNo + "</td>";
+				data += "<td>" + list[i]['beforePos'] + "</td>";
+				data += "<td>" + list[i]['emp'].pos.posName + "</td>"
+				data += "<td>" + list[i]['beforeDept'] + "</td>";
+				data += "<td>" + list[i]['emp'].dept.deptName + "</td>"
 				data += "<td>" + list[i]['issuedOrder'] + "</td>";
 				data += "<td>" + list[i]['issuedDate'] + "</td>";
 			}
@@ -142,42 +190,16 @@ function getPage(pageNum){
 	})
 }
 
-function deptView(no){
-	switch(no){
-	case 1:
-		return "인사팀"
-	case 2:
-		return "마케팅팀"
-	case 3: 
-		return "경영팀"
-	case 4:
-		return "개발팀"
-	case 5:
-		return "기획팀"
-	case 6:
-		return "법무팀"
+function changeForm(item){
+	if($(item).val() == "empName"){
+		$("#empNameDiv").css("display", "inline-block");
+		$("#issuedDateDiv").css("display", "none");
 	}
-}
-
-function posView(no){
-	switch(no){
-	case 1:
-		return "사원"
-	case 2:
-		return "대리"
-	case 3: 
-		return "과장"
-	case 4:
-		return "차장"
-	case 5:
-		return "부장"
-	case 6:
-		return "사장"
-	}
-}
-
-function changeForm(){
 	
+	if($(item).val() == "issuedDate"){
+		$("#empNameDiv").css("display", "none");
+		$("#issuedDateDiv").css("display", "inline-block");
+	}
 }
 </script>
 <c:import url="/WEB-INF/views/include/footer.jsp" />

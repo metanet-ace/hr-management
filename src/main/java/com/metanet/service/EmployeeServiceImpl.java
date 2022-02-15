@@ -1,7 +1,9 @@
 package com.metanet.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,12 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.metanet.domain.EmpHistoryVO;
 import com.metanet.domain.EmployeeVO;
-import com.metanet.domain.SearchDTO;
 import com.metanet.persistence.EmployeeHistoryRepository;
 import com.metanet.persistence.EmployeeMapper;
 import com.metanet.persistence.EmployeeRepository;
 import com.metanet.persistence.QuerydslRepository;
-import com.querydsl.core.Tuple;
 
 @Service
 public class EmployeeServiceImpl {
@@ -59,12 +59,12 @@ public class EmployeeServiceImpl {
 	
 	// 사원의 부서, 직급이동(UPDATE)
 	public int updateEmpDeptAndPos(int empNo, int deptNo, int posNo, String reason){
-		EmployeeVO emp = empMapper.findByEmpNo(empNo);
+		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 
 		// 사원의 기존 부서, 직급 정보 저장 
 		EmpHistoryVO empHis = new EmpHistoryVO();
-		empHis.setBeforeDept(emp.getBatisDeptNo()); 
-		empHis.setBeforePos(emp.getBatisPosNo());
+		empHis.setBeforeDept(emp.getDept().getDeptName()); 
+		empHis.setBeforePos(emp.getPos().getPosName());
 		
 		// 부서, 직급 변경 
 		emp.setBatisDeptNo(deptNo);
@@ -83,15 +83,17 @@ public class EmployeeServiceImpl {
 	}
 	// 사원의 부서이동(UPDATE)
 	public int updateEmpDept(int empNo, int deptNo, String reason)	{
-		EmployeeVO emp = empMapper.findByEmpNo(empNo);
+		EmployeeVO emp = empRepo.findByEmpNo(empNo);
+		System.out.println("+++++++++++++++++++++++++++" + emp);
 		// 사원의 기존 부서, 직급 정보 저장 
 		EmpHistoryVO empHis = new EmpHistoryVO();
-		empHis.setBeforeDept(emp.getBatisDeptNo());
-		empHis.setBeforePos(emp.getBatisPosNo());
+		empHis.setBeforeDept(emp.getDept().getDeptName());
+		empHis.setBeforePos(emp.getPos().getPosName());
 		empHis.setPosNo(emp.getBatisPosNo());
 		
 		// 부서 변경
 		emp.setBatisDeptNo(deptNo);
+		emp.setBatisPosNo(emp.getPos().getPosNo());
 		empMapper.updateEmp(emp);
 		
 		// 히스토리 테이블 정보 입력
@@ -106,15 +108,16 @@ public class EmployeeServiceImpl {
 	
 	// 사원의 직급이동(UPDATE)
 	public int updateEmpPos(int empNo, int posNo, String reason)	{
-		EmployeeVO emp = empMapper.findByEmpNo(empNo);
+		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 		// 사원의 기존 부서, 직급 정보 저장 
 		EmpHistoryVO empHis = new EmpHistoryVO();
-		empHis.setBeforeDept(emp.getBatisDeptNo());
-		empHis.setBeforePos(emp.getBatisPosNo());
+		empHis.setBeforeDept(emp.getDept().getDeptName());
+		empHis.setBeforePos(emp.getPos().getPosName());
 		empHis.setDeptNo(emp.getBatisDeptNo());
 		
 		// 직급 변경
 		emp.setBatisPosNo(posNo);
+		emp.setBatisDeptNo(emp.getDept().getDeptNo());
 		empMapper.updateEmp(emp);
 		
 		// 히스토리 테이블 정보 입력
@@ -132,17 +135,24 @@ public class EmployeeServiceImpl {
 		return empHisRepo.findAll(pageable);
 	}
 	// 페이징 + 조건) 히스토리 리스트
-	public Page<EmpHistoryVO> getEmpHistoryList(SearchDTO search, Pageable pageable){
+	public Page<EmpHistoryVO> getEmpHistoryList(HashMap<String, String> data, Pageable pageable){
 		
-		if(search.getSearchCondition() == null) {
-			search.setSearchCondition("");
+		if(data.get("empName") != null) {
+			return empHisRepo.findByEmpEmpNameContaining(data.get("empName"), pageable);
+		} else if (data.get("startDate") != null && data.get("endDate") != null) {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			try {
+				Date startDate = sdf.parse(data.get("startDate"));
+				Date endDate = sdf.parse(data.get("endDate"));
+				endDate.setDate(endDate.getDate()+1);
+				System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + endDate);
+				return empHisRepo.findByIssuedDateBetween(startDate, endDate, pageable);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		if(search.getSearchKeyword() == null) {
-			search.setSearchKeyword("");
-		}
-		
-		
 		
 		return empHisRepo.findAll(pageable);
 	}

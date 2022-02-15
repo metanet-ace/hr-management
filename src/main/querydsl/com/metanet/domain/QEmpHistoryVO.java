@@ -18,15 +18,17 @@ public class QEmpHistoryVO extends EntityPathBase<EmpHistoryVO> {
 
     private static final long serialVersionUID = 1737901836L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QEmpHistoryVO empHistoryVO = new QEmpHistoryVO("empHistoryVO");
 
-    public final NumberPath<Integer> beforeDept = createNumber("beforeDept", Integer.class);
+    public final StringPath beforeDept = createString("beforeDept");
 
-    public final NumberPath<Integer> beforePos = createNumber("beforePos", Integer.class);
+    public final StringPath beforePos = createString("beforePos");
 
     public final NumberPath<Integer> deptNo = createNumber("deptNo", Integer.class);
 
-    public final ListPath<EmployeeVO, QEmployeeVO> emp = this.<EmployeeVO, QEmployeeVO>createList("emp", EmployeeVO.class, QEmployeeVO.class, PathInits.DIRECT2);
+    public final QEmployeeVO emp;
 
     public final NumberPath<Integer> empHisno = createNumber("empHisno", Integer.class);
 
@@ -39,15 +41,24 @@ public class QEmpHistoryVO extends EntityPathBase<EmpHistoryVO> {
     public final NumberPath<Integer> posNo = createNumber("posNo", Integer.class);
 
     public QEmpHistoryVO(String variable) {
-        super(EmpHistoryVO.class, forVariable(variable));
+        this(EmpHistoryVO.class, forVariable(variable), INITS);
     }
 
     public QEmpHistoryVO(Path<? extends EmpHistoryVO> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QEmpHistoryVO(PathMetadata metadata) {
-        super(EmpHistoryVO.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QEmpHistoryVO(PathMetadata metadata, PathInits inits) {
+        this(EmpHistoryVO.class, metadata, inits);
+    }
+
+    public QEmpHistoryVO(Class<? extends EmpHistoryVO> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.emp = inits.isInitialized("emp") ? new QEmployeeVO(forProperty("emp"), inits.get("emp")) : null;
     }
 
 }
