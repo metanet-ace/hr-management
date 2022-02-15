@@ -6,7 +6,7 @@
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
 <style>
 textarea {
-	width: 80%;
+	width: 100%;
 	height: 4.25em;
 	border: none;
 	resize: none;
@@ -71,7 +71,60 @@ textarea {
 			}
 		});
 		
+		// 사원 퇴사 처리
+		$("#updateRetire").on("click", function(e){
+			e.preventDefault();
+			
+			if (confirm("정말로 변경하시겠습니까?") == true) {
+
+				var array = [];
+
+				$('input:checkbox[name="checkbox"]').each(function() {
+					if ($(this).is(":checked")) {
+						array.push(this.value);
+					}
+				});
+
+				if (array.length === 0) {
+					alert("선택된 인원이 없습니다.");
+					return;
+				}
+
+				var retireReason = $("#retireReason").val();
 		
+				if (retireReason === "") {
+					alert("사유를 입력해주세요.");
+					return;
+				}
+
+				var data = {
+					targetEmps : array,
+					retireReason : retireReason
+				};
+				console.log(data.retireReason);
+				$.ajax({
+					url : '/admin/retire',
+					data : JSON.stringify(data),
+					contentType : 'application/json',
+					type : 'POST',
+					dataType : 'text',
+					success : function(result) {
+						console.log(result);
+						alert("성공적으로 처리되었습니다.");
+						window.location.reload();
+					},
+					error : function(error) {
+						console.log(error);
+					}
+				});
+			} else {
+
+			}
+			
+		})
+		
+		
+		// 체크박스 한번에 선택
 		$("#selectAll").on("click", function(e){
 			 
 			if($('input[name="checkbox"]').is(":checked")){
@@ -131,7 +184,15 @@ textarea {
 					</c:url>
 						<td id="empNo"><input type="checkbox" name="checkbox" value="${list.empNo }"></td>
 						<td><a href="${detail}">${list.empNo }</a></td>
-						<td><a href="${detail}">${list.empName }</a></td>
+						
+						<c:choose>
+							<c:when test="${empty list.empRetdate }">
+								<td><a href="${detail}">${list.empName }</a></td>
+							</c:when>
+							<c:otherwise>
+								<td><a href="${detail}">${list.empName } (퇴사)</a></td>
+							</c:otherwise>
+						</c:choose>
 						<td><a href="${detail}">${list.pos.posName }</a></td>
 						<td><a href="${detail}">${list.dept.deptName }</a></td>
 					</tr>
@@ -174,173 +235,80 @@ textarea {
 		</nav>
 
 		<!-- 발령 처리 -->
-		<div class="card text-center bg-dark text-white">
-			<div class="card-header">발령처리</div>
-			<div class="card-body">
-				<h1 class="text-white">선택한 인원 발령처리</h1>
-				<br>
-				<br>
-				<br>
-				<form class="form-inline justify-content-right" action="/admin/emp"
-					method="post">
-					<label class="col-lg-3 col-form-label" for="changeDept">부서<span
-						class="text-danger">*</span>
-					</label>
-					<div class="col-lg-3">
-						<select class="form-control" id="changeDept" name="changeDept">
-							<option value="">변경사항 없음</option>									
-							<option value=1>인사팀</option>
-							<option value=2>마케팅팀</option>
-							<option value=3>경영팀</option>
-							<option value=4>개발팀</option>
-							<option value=5>기획팀</option>
-							<option value=6>법무팀</option>
-						</select>
-					</div>
-					<label class="col-lg-3 col-form-label" for="changePos">직급 <span
-						class="text-danger">*</span>
-					</label>
-					<div class="col-lg-3">
-						<select class="form-control" id="changePos" name="changePos">
-							<option value="">변경사항 없음</option>
-							<option value=1>사원</option>
-							<option value=2>대리</option>
-							<option value=3>과장</option>
-							<option value=4>차장</option>
-							<option value=5>부장</option>
-							<option value=6>사장</option>
-						</select>
-					</div>
-					<label class="col-lg-3 col-form-label" for="reason">사유<span
-						class="text-danger">*</span></label>
-					<div class="col-lg-9" style="margin-top: 2em;">
-						<textarea rows="1" cols="100" id="reason" name="reason"></textarea>
-					</div>
-					<div class="col-lg-4"></div>
+		<div class="row">
+			<div class="card text-center bg-dark text-white col-lg-8">
+				<div class="card-header">발령처리</div>
+				<div class="card-body">
+					<h1 class="text-white">선택한 인원 발령처리</h1>
+					<br> <br> <br>
+					<form class="form-inline justify-content-right" action="/admin/emp"
+						method="post">
+						<label class="col-lg-3 col-form-label" for="changeDept">부서<span
+							class="text-danger">*</span>
+						</label>
+						<div class="col-lg-3">
+							<select class="form-control" id="changeDept" name="changeDept">
+								<option value="">변경사항 없음</option>
+								<option value=1>인사팀</option>
+								<option value=2>마케팅팀</option>
+								<option value=3>경영팀</option>
+								<option value=4>개발팀</option>
+								<option value=5>기획팀</option>
+								<option value=6>법무팀</option>
+							</select>
+						</div>
+						<label class="col-lg-3 col-form-label" for="changePos">직급
+							<span class="text-danger">*</span>
+						</label>
+						<div class="col-lg-3">
+							<select class="form-control" id="changePos" name="changePos">
+								<option value="">변경사항 없음</option>
+								<option value=1>사원</option>
+								<option value=2>대리</option>
+								<option value=3>과장</option>
+								<option value=4>차장</option>
+								<option value=5>부장</option>
+								<option value=6>사장</option>
+							</select>
+						</div>
+						<label class="col-lg-3 col-form-label" for="reason">사유<span
+							class="text-danger">*</span></label>
+						<div class="col-lg-9" style="margin-top: 2em;">
+							<textarea rows="1" cols="100" id="reason" name="reason"></textarea>
+						</div>
+						<div class="col-lg-4"></div>
 						<div class="col-lg-4">
-						<input type="submit" class="btn btn-outline-info btn-xl" id="updateHumanResource" style="margin-top:30px;" value="확인">
-					</div>	
-					<div class="col-lg-4"></div>
-				</form>
+							<input type="submit" class="btn btn-outline-info btn-xl"
+								id="updateHumanResource" style="margin-top: 30px;" value="확인">
+						</div>
+						<div class="col-lg-4"></div>
+					</form>
+				</div>
+			</div>
+
+			<!--퇴사 처리 -->
+			<div class="card text-center bg-danger text-white col-lg-4">
+				<div class="card-header">퇴사자 등록</div>
+				<div class="card-body">
+					<h1 class="text-white">선택한 인원 퇴사처리</h1>
+					<br> <br>
+					<form class="form-inline justify-content-right" action="/admin/emp"
+						method="post">
+						<label class=" col-lg-2 col-form-label" for="retireReason">사유<span
+							class="text-white">*</span></label>
+						<div class="col-lg-10" >
+							<textarea rows="3" cols="200" id="retireReason" name="retireReason"></textarea>
+						</div>
+						<div class="col-lg-4"></div>
+						<div class="col-lg-4">
+							<input type="submit" class="btn btn-outline-info btn-xl"
+								id="updateRetire" style="margin-top: 5em;" value="확인">
+						</div>
+						<div class="col-lg-4"></div>
+					</form>
+				</div>
 			</div>
 		</div>
-
-		<%-- 
-
-		<div class="row">
-			<div class="col-12">
-				<div class="card">
-					<div class="card-header">
-						<h4 class="card-title">Basic Datatable</h4>
-					</div>
-					<div class="card-body">
-						<div class="table-responsive">
-							<table id="example" class="display" style="min-width: 845px">
-								<thead>
-									<tr>
-										<th>이름</th>
-										<th>직급</th>
-										<th>부서</th>
-										<th>이메일</th>
-										<th>입사일</th>
-										<th>연봉</th>
-									</tr>
-								</thead>
-								<tbody>
-									<c:forEach items="${emplist }" var="list">
-										<tr>
-											<td>${list.empName }</td>
-											<td>${list.pos.posName }</td>
-											<td>${list.dept.deptName }</td>
-											<td>${list.empEmail }</td>
-											<td>${list.empHiredate }</td>
-											<td>${list.empSal }</td>
-										</tr>
-									</c:forEach>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-12">
-				<div class="card">
-					<div class="card-header">
-						<h4 class="card-title">Datatable</h4>
-					</div>
-					<div class="card-body">
-						<div class="table-responsive">
-							<table id="example2" class="display" style="width: 100%">
-								<thead>
-									<tr>
-										<th>Name</th>
-										<th>Position</th>
-										<th>Office</th>
-										<th>Age</th>
-										<th>Start date</th>
-										<th>Salary</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>Tiger Nixon</td>
-										<td>System Architect</td>
-										<td>Edinburgh</td>
-										<td>61</td>
-										<td>2011/04/25</td>
-										<td>$320,800</td>
-									</tr>
-									<tr>
-										<td>Garrett Winters</td>
-										<td>Accountant</td>
-										<td>Tokyo</td>
-										<td>63</td>
-										<td>2011/07/25</td>
-										<td>$170,750</td>
-									</tr>
-									<tr>
-										<td>Ashton Cox</td>
-										<td>Junior Technical Author</td>
-										<td>San Francisco</td>
-										<td>66</td>
-										<td>2009/01/12</td>
-										<td>$86,000</td>
-									</tr>
-									<tr>
-										<td>Michael Bruce</td>
-										<td>Javascript Developer</td>
-										<td>Singapore</td>
-										<td>29</td>
-										<td>2011/06/27</td>
-										<td>$183,000</td>
-									</tr>
-									<tr>
-										<td>Donna Snider</td>
-										<td>Customer Support</td>
-										<td>New York</td>
-										<td>27</td>
-										<td>2011/01/25</td>
-										<td>$112,000</td>
-									</tr>
-								</tbody>
-								<tfoot>
-									<tr>
-										<th>Name</th>
-										<th>Position</th>
-										<th>Office</th>
-										<th>Age</th>
-										<th>Start date</th>
-										<th>Salary</th>
-									</tr>
-								</tfoot>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div> --%>
-
 	</div>
 </div>
 

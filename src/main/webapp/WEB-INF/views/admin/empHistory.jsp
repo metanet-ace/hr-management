@@ -24,6 +24,7 @@ $(document).ready(function() {
 		const date = new Map([['시작일', begin], ['종료일', end]]);
 		getPage(1, date);
 	})
+	
 });
 </script>
 
@@ -87,6 +88,7 @@ $(document).ready(function() {
 				</tr>
 			</thead>
 			<tbody id="dataSection">
+			
 			<tbody>
 		</table>
 
@@ -94,12 +96,26 @@ $(document).ready(function() {
 		<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-center" id="paginationBox">
 
-		
-
-
 
 			</ul>
 		</nav>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal" id="reasonModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">변동 상세 사유</h5>
+				</div>
+				<div class="modal-body">...</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" onClick='closeBtn();'
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -107,6 +123,14 @@ $(document).ready(function() {
             Content body end
         ***********************************-->
 <script>
+function reasonModal(reason){
+	$(".modal-body").html(reason);
+	$("#reasonModal").modal("show");
+}
+
+function closeBtn(){
+	$("#reasonModal").modal("hide");
+}
 
 function getPage(pageNum, keyword){
 	// 페이지 사이즈 정보 
@@ -137,13 +161,28 @@ function getPage(pageNum, keyword){
 			
 			// 테이블 정보
 			for(var i = 0; i < list.length; i++) {
+				var reason = list[i]['issuedContent'];
 				data += "<tr id='empHistoryList'>";
-				data += "<td>" + list[i]['emp'].empName + "</td>";
+				data += "<td><a href='#' onclick=reasonModal('" + reason + "');>" + list[i]['emp'].empName + "</td>";
 				data += "<td>" + list[i]['emp'].empNo + "</td>";
-				data += "<td>" + list[i]['beforePos'] + "</td>";
-				data += "<td>" + list[i]['emp'].pos.posName + "</td>"
-				data += "<td>" + list[i]['beforeDept'] + "</td>";
-				data += "<td>" + list[i]['emp'].dept.deptName + "</td>"
+				if(list[i]['emp'].pos.posName === list[i]['beforePos']) {
+					data += "<td colspan='2' align='center'>" + list[i]['beforePos'] + "</td>";
+				} else if (list[i]['beforePos'] === "-"){
+					data += "<td colspan='2' align='center'>" + "-" + "</td>";
+				} else {
+					data += "<td>" + list[i]['emp'].pos.posName + "</td>"
+					data += "<td>" + list[i]['beforePos'] + "</td>";
+				}
+				
+				if(list[i]['beforeDept'] === list[i]['emp'].dept.deptName ){
+					data += "<td colspan='2' align='center'>" + list[i]['beforeDept'] + "</td>";
+				} else if(list[i]['beforeDept'] === "-") {
+					data += "<td colspan='2' align='center'>" + "-" + "</td>";
+				} else {
+					data += "<td>" + list[i]['beforeDept'] + "</td>";
+					data += "<td>" + list[i]['emp'].dept.deptName + "</td>"
+				}
+				
 				data += "<td>" + list[i]['issuedOrder'] + "</td>";
 				data += "<td>" + list[i]['issuedDate'] + "</td>";
 			}
@@ -201,5 +240,6 @@ function changeForm(item){
 		$("#issuedDateDiv").css("display", "inline-block");
 	}
 }
+
 </script>
 <c:import url="/WEB-INF/views/include/footer.jsp" />

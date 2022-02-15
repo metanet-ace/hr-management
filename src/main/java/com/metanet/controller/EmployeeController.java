@@ -109,6 +109,22 @@ public class EmployeeController {
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	} 
 	
+	// 퇴사자 처리 컨트롤러
+	@PostMapping("/admin/retire")
+	@ResponseBody
+	public ResponseEntity<String> updateRetire(@RequestBody HashMap<String, Object> map){
+		String retireReason = (String) map.get("retireReason");
+		Object targetEmpList = map.get("targetEmps");
+		
+		for(Object result : (List) targetEmpList) {
+			int targetNo = Integer.parseInt((String) result);
+			empService.updateRetire(targetNo, retireReason);
+		}
+		
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
+	
 	@GetMapping("/admin/emp/history")
 	public String empHistoryListView() {
 		return "/admin/empHistory";
