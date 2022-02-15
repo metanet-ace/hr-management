@@ -31,4 +31,8 @@ public interface WonwooEduMapper{
 	public List<EduHistoryVO> getEduEmpHistroyList(int empNo);
 
 	public List<EduHistoryVO> getEduEmpHistroyListByKey(Map<String, Object> map);
+
+	public void eduAdd(EduVO eduVO);
+
+	public void eduUpdateNoModifyFile(EduVO eduVO);
 }

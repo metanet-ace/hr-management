@@ -65,4 +65,15 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 		 
 	}
 
+	@Override
+	public void eduAdd(EduVO eduVO) {
+		wonwooEduMapper.eduAdd(eduVO);
+		
+	}
+
+	@Override
+	public void eduUpdateNoModifyFile(EduVO eduVO) {
+		wonwooEduMapper.eduUpdateNoModifyFile(eduVO);		
+	}
+
 }
