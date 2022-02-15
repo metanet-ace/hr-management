@@ -1,6 +1,7 @@
 package com.metanet.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,9 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.metanet.domain.EmpHistoryVO;
 import com.metanet.domain.EmployeeVO;
+import com.metanet.domain.SearchDTO;
 import com.metanet.persistence.EmployeeHistoryRepository;
 import com.metanet.persistence.EmployeeMapper;
 import com.metanet.persistence.EmployeeRepository;
+import com.metanet.persistence.QuerydslRepository;
+import com.querydsl.core.Tuple;
 
 @Service
 public class EmployeeServiceImpl {
@@ -24,6 +28,9 @@ public class EmployeeServiceImpl {
 	
 	@Autowired 
 	EmployeeHistoryRepository empHisRepo;
+	
+	@Autowired
+	QuerydslRepository qdslRepo;
 	
 	// 세션에 로그인 된 사원 정보 넣어주기
 	public EmployeeVO getLoginedEmp(int empNo) {
@@ -65,11 +72,11 @@ public class EmployeeServiceImpl {
 		empMapper.updateEmp(emp);
 		
 		// 히스토리 테이블 정보 입력
-		empHis.setEmpNo(empNo);
+		empHis.setBatisEmpNo(empNo);
 		empHis.setDeptNo(deptNo);
 		empHis.setPosNo(posNo);
 		empHis.setIssuedDate(new Date());
-		empHis.setIssuedOrder("부서이동");
+		empHis.setIssuedOrder("인사이동");
 		empHis.setIssuedContent(reason);
 		
 		return empMapper.saveHistory(empHis); 
@@ -88,7 +95,7 @@ public class EmployeeServiceImpl {
 		empMapper.updateEmp(emp);
 		
 		// 히스토리 테이블 정보 입력
-		empHis.setEmpNo(empNo);
+		empHis.setBatisEmpNo(empNo);
 		empHis.setDeptNo(deptNo);
 		empHis.setIssuedDate(new Date());
 		empHis.setIssuedOrder("부서이동");
@@ -111,12 +118,36 @@ public class EmployeeServiceImpl {
 		empMapper.updateEmp(emp);
 		
 		// 히스토리 테이블 정보 입력
-		empHis.setEmpNo(empNo);
+		empHis.setBatisEmpNo(empNo);
 		empHis.setPosNo(posNo);
 		empHis.setIssuedDate(new Date());
-		empHis.setIssuedOrder("부서이동");
+		empHis.setIssuedOrder("직급변경");
 		empHis.setIssuedContent(reason);
 		
 		return empMapper.saveHistory(empHis); 
 	}	
+	
+	// 페이징 + 전체) 히스토리 리스트
+	public Page<EmpHistoryVO> getAllEmpHistory(Pageable pageable){
+		return empHisRepo.findAll(pageable);
+	}
+	// 페이징 + 조건) 히스토리 리스트
+	public Page<EmpHistoryVO> getEmpHistoryList(SearchDTO search, Pageable pageable){
+		
+		if(search.getSearchCondition() == null) {
+			search.setSearchCondition("");
+		}
+		
+		if(search.getSearchKeyword() == null) {
+			search.setSearchKeyword("");
+		}
+		
+		
+		
+		return empHisRepo.findAll(pageable);
+	}
+	
+	public void querydslTest() {
+		
+	}
 }

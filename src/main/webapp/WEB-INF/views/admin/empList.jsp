@@ -165,7 +165,7 @@ textarea {
 				<c:choose>
 					<c:when test="${emplist.last ne true }">
 						<li class="page-item"><a class="page-link" href="/admin/emp?page=${emplist.number+1}">다음</a></li>
-						<li class="page-item"><a class="page-link" href="/admin/emp?page=${emplist.totalPages-1}">마지막</a></li>
+						<li class="page-item"><a class="page-link" href="/admin/emp?page=${emplist.totalPages-1}">끝</a></li>
 					</c:when>
 					<c:otherwise>
 					</c:otherwise>

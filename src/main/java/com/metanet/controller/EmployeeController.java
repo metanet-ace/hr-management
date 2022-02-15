@@ -1,10 +1,13 @@
 package com.metanet.controller;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -15,17 +18,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.metanet.domain.EmpHistoryVO;
 import com.metanet.domain.EmployeeVO;
-import com.metanet.persistence.EmployeeRepository;
+import com.metanet.domain.SearchDTO;
 import com.metanet.service.EmployeeServiceImpl;
-import com.metanet.service.SecurityService;
 
 @SessionAttributes("sessionEmp")
 @Controller
@@ -33,6 +36,9 @@ public class EmployeeController {
 	
 	@Autowired
 	EmployeeServiceImpl empService;
+	
+	@Autowired
+	suinEduController batchCtrl;
 	
 	@GetMapping("/admin/emp")
 	public String userList(Model model, @PageableDefault(size = 3, sort = "empNo",
@@ -105,6 +111,21 @@ public class EmployeeController {
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	} 
 	
+	@GetMapping("/admin/emp/history")
+	public String empHistoryListView() {
+		return "/admin/empHistory";
+	}
+	
+	@GetMapping(value = "/admin/emp/history/{page}", produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<Page<EmpHistoryVO>> empHistoryList(@PathVariable("page") int pageNum, SearchDTO search) {
+		
+		Pageable pageable = PageRequest.of(pageNum-1, 5, Sort.Direction.DESC, "empHisno");
+		
+		Page<EmpHistoryVO> empHistoryPage = empService.getEmpHistoryList(search, pageable);
+		return new ResponseEntity<>(empHistoryPage, HttpStatus.OK);
+	}
+	
 	// 시큐리티 사용한 로그인 화면
 	@GetMapping("/signin")
 	public String loginView() {
@@ -117,6 +138,11 @@ public class EmployeeController {
 	    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 	    EmployeeVO emp = empService.getLoginedEmp(Integer.parseInt(userDetails.getUsername()));
 		model.addAttribute("sessionEmp", emp );
+		try {
+			batchCtrl.schedulerTest();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		return "redirect:/main";
 	}
 	
