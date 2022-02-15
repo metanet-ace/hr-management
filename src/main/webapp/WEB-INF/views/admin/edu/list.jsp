@@ -36,7 +36,7 @@ form {
                         <div class="card1">
                             <div class="card-body1">
                                 <div class="table-responsive1">
-                                    <table id="" class="table table-striped" >
+                                    <table class="table table-striped" border=1>
                                         <thead>
                                             <tr>
                                                 <th>교육명</th>
@@ -45,7 +45,7 @@ form {
                                                 <th>교육시작일</th>
                                                 <th>교육종료일</th>
                                                 <th>진행상태</th>
-                                                <th></th>
+                                                <th>교육배정</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -63,7 +63,7 @@ form {
 														<c:otherwise>진행종료</c:otherwise>
 													</c:choose>
                                                 </td>
-                                                <td><button type="button" onclick="location.href='./allocation2/${list.eduNo }'">인원할당</button></td>
+                                                <td><button type="button" class="btn btn-primary" onclick="location.href='./allocation2/${list.eduNo }'">교육배정</button></td>
                                             </tr>
                                        		 </c:forEach> 
                                         </tbody>

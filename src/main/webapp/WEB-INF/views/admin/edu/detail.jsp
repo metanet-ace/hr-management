@@ -184,6 +184,7 @@
 												<div class="col-lg-8 ml-auto">
 													<button onclick="update(${detail.eduNo})" class="btn btn-primary">수정</button>
 													<button onclick="del('${detail.eduNo}', '${detail.eduRefile}')" class="btn btn-primary">삭제</button>
+													<button type="button" onclick="location.href='./list';" class="btn btn-primary">리스트로</button>
 												</div>
 											</div>
 										</div>
