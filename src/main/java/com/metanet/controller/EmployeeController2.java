@@ -7,18 +7,28 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.EmployeeVO2;
+import com.metanet.domain.PasswordVO;
 import com.metanet.service.EmployeeService2;
 
 @Controller
@@ -26,6 +36,9 @@ public class EmployeeController2 {
 
 	@Autowired
 	EmployeeService2 service;
+	
+	@Autowired
+	PasswordEncoder encoder;
 
 	// 사원등록페이지 이동(인사팀)
 	@GetMapping("/admin/emp/insertEmpPage")
@@ -217,7 +230,45 @@ public class EmployeeController2 {
 
 		return "/empUpPwd";
 	}
-
-	// 비밀번호 변경(공통)
-
+	
+	@PostMapping("/emp/pwCheck")
+	@ResponseBody
+	public int pwCheck(HttpSession session, EmployeeVO2 emp) {
+		EmployeeVO empInfo = (EmployeeVO) session.getAttribute("sessionEmp");
+		System.out.println(empInfo);
+		System.out.println("empNo 확인" + empInfo.getEmpNo());
+		String empPwd = service.pwCheck(empInfo.getEmpNo());
+		
+		System.out.println("emp.getEmpPwd() 확인" + emp.getEmpPwd());
+		System.out.println("empPwd 확인" + empPwd);
+		
+		if(!encoder.matches(emp.getEmpPwd(), empPwd)) {
+			return 0;
+		}
+		return 1;
+	}
+	
+	@PostMapping("/emp/pwUpdate")
+	public String pwUpdate(@Valid PasswordVO pass, Errors errors, Model model, int empNo, String pw1, RedirectAttributes rttr, HttpSession session) {
+		String hashedPw = "{bcrypt}" + BCrypt.hashpw(pw1, BCrypt.gensalt());
+		// 유효성 검사
+		
+				// 유효성 통과 못한 필드와 메시지를 핸들링 
+				if(errors.hasErrors()) {
+					// 사원등록 실패시, 입력 데이터를 유지
+					model.addAttribute("pass", pass);
+					// 유효성 통과 못한 필드와 메시지를 핸들링
+					Map<String, String> validatorResult = service.validateHandling(errors);
+					for(String key : validatorResult.keySet()) {
+						model.addAttribute(key, validatorResult.get(key));
+					}
+					return "/empUpPwd";
+				}
+		System.out.println("hashedPw = " + hashedPw);
+		service.pwUpdate(empNo, hashedPw);
+		session.invalidate();
+		rttr.addFlashAttribute("msg", "비밀번호 수정이 완료되었습니다. 다시 로그인해주세요.");
+		
+		return "redirect:/logout";
+	}
 }

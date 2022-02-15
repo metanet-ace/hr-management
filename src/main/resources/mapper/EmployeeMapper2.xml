@@ -35,4 +35,18 @@
 		set emp_pwd = #{empPwd}
 		where emp_no = #{empNo}
 	</update>
+	
+	<!-- 비밀번호 수정 중 현재비밀번호와 일치 확인 -->
+	<select id="pwCheck" resultType="String">
+		select emp_pwd
+		from employee
+		where emp_no = #{empNo}
+	</select>
+	
+	<!-- 비밀번호 수정 -->
+	<update id="pwUpdate" parameterType="com.metanet.domain.EmployeeVO2">
+		update employee
+		set emp_pwd = #{empPwd}
+		where emp_no = #{empNo}
+	</update>
 </mapper>
