@@ -25,4 +25,6 @@ public interface suinEduMapper {
 
 	public void eduHistroyInsert(Map<String, Object> param);
 
+	public void eduScoreUpdate(List<EduHistoryVO> list);
+
 }
