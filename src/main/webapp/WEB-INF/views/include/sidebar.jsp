@@ -32,7 +32,7 @@
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                                 class="icon icon-chart-bar-33"></i><span class="nav-text">교육 관리</span></a>
                         <ul aria-expanded="false">
-                            <li><a href="/edu/add">교육 추가</a></li>
+                            <li><a href="/edu/addFile">교육 추가</a></li>
                             <li><a href="/edu/list">교육 일정 조회</a></li>
                             <li><a href="/edu/admin/history">교육 결과</a></li>
                         </ul>

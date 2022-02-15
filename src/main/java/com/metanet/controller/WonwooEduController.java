@@ -16,7 +16,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.integration.IntegrationProperties.Error;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -58,7 +57,8 @@ public class WonwooEduController {
 		model.addAttribute("title", "교육과정 전체 리스트");
 		return "/admin/edu/list";
 	}
-
+	
+	//인사팀용 교육과정 상세페이지
 	@GetMapping("/detail")
 	public String eduDetail(Model model, HttpServletRequest request) {
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
@@ -76,6 +76,26 @@ public class WonwooEduController {
 		model.addAttribute("title", "교육과정 상세조회");
 
 		return "/admin/edu/detail";
+	}
+	
+	//사원용 교육과정 상세페이지
+	@GetMapping("/eduEmpDetail")
+	public String eduEmpDetail(Model model, HttpServletRequest request) {
+		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
+		EduVO eduVO = wonwooEduService.eduDetail(edu_no);
+
+		if (eduVO.getEduRefile() != null) {
+			String eduRefile = eduVO.getEduRefile();
+			System.out.println(eduRefile);
+			String[] eduRefileSplitUuid = eduRefile.split("_");
+			System.out.println(eduRefileSplitUuid[0]);
+			model.addAttribute("uuid", eduRefileSplitUuid[0]);
+		}
+
+		model.addAttribute("detail", eduVO);
+		model.addAttribute("title", "교육과정 상세조회");
+
+		return "/admin/empEduDetail";
 	}
 
 	@GetMapping("/update")
@@ -124,7 +144,7 @@ public class WonwooEduController {
 			eduVO.setEduRefile(eduRefile);
 
 			if (errors.hasErrors()) {
-				// 사원등록 실패시, 입력 데이터를 유지
+				// 교육수정 실패시, 입력 데이터를 유지
 				model.addAttribute("eduVO", eduVO2);
 				// 유효성 통과 못한 필드와 메시지를 핸들링
 				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);
@@ -137,7 +157,7 @@ public class WonwooEduController {
 			return "redirect:/edu/detail?edu_no=" + Integer.parseInt(request.getParameter("eduNo"));
 		} else {
 			if (errors.hasErrors()) {
-				// 사원등록 실패시, 입력 데이터를 유지
+				// 교육수정 실패시, 입력 데이터를 유지
 				model.addAttribute("eduVO", eduVO2);
 				// 유효성 통과 못한 필드와 메시지를 핸들링
 				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);

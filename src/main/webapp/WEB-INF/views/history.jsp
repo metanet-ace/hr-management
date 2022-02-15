@@ -34,7 +34,7 @@
 				</c:if>
 				<c:forEach items="${eduEmpHistoyList}" var="list">
 					<tr>
-						<td>${list.eduTitle }</td>
+						<td><a href="./eduEmpDetail?edu_no=${list.eduNo }">${list.eduTitle }</a></td>
 						<td>${list.attendance }%</td>
 						<td>${list.score }</td>
 					</tr>
