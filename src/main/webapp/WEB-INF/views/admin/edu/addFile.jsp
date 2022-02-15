@@ -32,7 +32,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTitle"
-														name="eduTitle" placeholder="교육명">
+														name="eduTitle" value="${eduVO.eduTitle }" placeholder="교육명을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTitle}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -40,9 +41,8 @@
 													상세 <span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<textarea class="form-control" id="eduDesc"
-														name="eduDesc" rows="5"
-														placeholder=""></textarea>
+													<textarea class="form-control" id="eduDesc" name="eduDesc" rows="5" placeholder="교육 상세를 입력해주세요.">${eduVO.eduDesc }</textarea>
+														<span style="color: #ff0000;">${valid_eduDesc}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -51,7 +51,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduLoc"
-														name="eduLoc" placeholder="장소">
+														name="eduLoc" value="${eduVO.eduLoc }" placeholder="장소를 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduLoc}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -60,7 +61,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTime"
-														name="eduTime" placeholder="총이수시간">
+														name="eduTime" value="${eduVO.eduTime }" placeholder="총 이수 시간을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTime}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -69,7 +71,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTeacher"
-														name="eduTeacher" placeholder="교육 상세">
+														name="eduTeacher" value="${eduVO.eduTeacher }" placeholder="담당 강사를 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTeacher}</span>
 												</div>
 											</div>
 										</div>
@@ -80,7 +83,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduPeople"
-														name="eduPeople" placeholder="인원">
+														name="eduPeople" value="${eduVO.eduPeople }" placeholder="인원을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduPeople}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -89,7 +93,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTarget"
-														name="eduTarget" placeholder="대상">
+														name="eduTarget" value="${eduVO.eduTarget }"placeholder="대상을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTarget}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -97,8 +102,9 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduStart"
-															name="eduStart">												
+													<input type="date" class="form-control" id="eduStart" value="${eduVO.eduStart }"
+															name="eduStart">
+													<span style="color: #ff0000;">${valid_eduStart}</span>												
 												</div>
 											</div>
 											<div class="form-group row">
@@ -106,8 +112,9 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduEnd"
+													<input type="date" class="form-control" id="eduEnd" value="${eduVO.eduEnd }"
 														name="eduEnd">
+													<span style="color: #ff0000;">${valid_eduEnd}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -115,8 +122,9 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduCost"
-														name="eduCost" placeholder="비용">
+													<input type="text" class="form-control" id="eduCost" value="${eduVO.eduCost }"
+														name="eduCost" placeholder="비용을 입력해주세요.">
+													<span style="color: #ff0000;">${valid_eduCost}</span>
 												</div>
 											</div>
 											<div class="form-group row">

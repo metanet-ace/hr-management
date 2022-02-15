@@ -1,5 +1,7 @@
 package com.metanet.domain;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -8,20 +10,41 @@ import lombok.ToString;
 
 public class EduVO {
 	private int eduNo;
+	
+	@NotBlank(message="교육명을 입력해주세요.")
 	private String eduTitle;
+	
+	@NotBlank(message="교육 상세를 입력해주세요.")
 	private String eduDesc;
+	
+	@NotBlank(message="장소를 입력해주세요.")
 	private String eduLoc;
-	private int eduTime;
+	
+	@NotBlank(message="총 이수 시간을 입력해주세요.")
+	private String eduTime;
+	
+	@NotBlank(message="담당 강사를 입력해주세요.")
 	private String eduTeacher;
-	private int eduPeople;
+	
+	@NotBlank(message="인원을 입력해주세요.")
+	private String eduPeople;
+	
+	@NotBlank(message="대상을 입력해주세요.")
 	private String eduTarget;
+	
+	@NotBlank(message="시작일을 입력해주세요")
 	private String eduStart;
+	
+	@NotBlank(message="종료일을 입력해주세요")
 	private String eduEnd;
-	private int eduCost;
+	
+	@NotBlank(message="비용을 입력해주세요.")
+	private String eduCost;
+	
 	private int eduProgress;
+	
 	private String eduFile;
+	
 	private String eduRefile;
-	
-	
 	
 }

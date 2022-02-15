@@ -38,9 +38,9 @@
 <!-- Custom Stylesheet -->
 <link href="/assets/css/style.css" rel="stylesheet">
 <script type="text/javascript">
-	function del(no){
+	function del(no, fileName){
 		if(confirm("해당 교육과정을 삭제하시겠습니까?")){
-			location.href="./delete?edu_no="+no;
+			location.href="./delete?edu_no="+no+"&edu_refile="+fileName;
 		}
 	}
 	
@@ -171,6 +171,7 @@
                                                     			파일이 없습니다.
                                                     		</c:when>
                                                     		<c:otherwise>
+                                                    		<input type="hidden" name="eduRefile" value=${detail.eduRefile }>
                                                     		<input type="text" class="form-control" id="uploadfile" name="uploadfile" value="${detail.eduFile }" readonly>
                                                         <a href="./download?uuid=${uuid }&fileName=${detail.eduFile}">[download]</a>
                                                     		</c:otherwise>
@@ -182,7 +183,7 @@
 											<div class="form-group row">
 												<div class="col-lg-8 ml-auto">
 													<button onclick="update(${detail.eduNo})" class="btn btn-primary">수정</button>
-													<button onclick="del(${detail.eduNo})" class="btn btn-primary">삭제</button>
+													<button onclick="del('${detail.eduNo}', '${detail.eduRefile}')" class="btn btn-primary">삭제</button>
 												</div>
 											</div>
 										</div>

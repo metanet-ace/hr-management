@@ -95,7 +95,7 @@
 	</select>
 	
 	<select id="getEduEmpHistroyList" resultType="com.metanet.domain.EduHistoryVO">
-		select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score, h.edu_fin
+		select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h 
     	where e.emp_no = #{empNo} 
     	and e.emp_no = h.emp_no
@@ -127,10 +127,29 @@
         		#{eduTarget}, 
         		#{eduStart}, 
         		#{eduEnd},
-        		0, 
         		#{eduCost},
+        		0, 
         		#{eduFile},
         		#{eduRefile})
+        		
+    </insert>
+    
+    <insert id ="eduAddNoFile" parameterType="com.metanet.domain.EduVO">
+    	INSERT INTO edu
+        VALUES (seq_edu_no.nextval, 
+        		#{eduTitle}, 
+        		#{eduDesc}, 
+        		#{eduLoc}, 
+        		#{eduTime}, 
+        		#{eduTeacher}, 
+        		#{eduPeople}, 
+        		#{eduTarget}, 
+        		#{eduStart}, 
+        		#{eduEnd},
+        		#{eduCost},
+        		0, 
+        		NULL,
+        		NULL)
         		
     </insert>
 </mapper>

@@ -3,6 +3,8 @@ package com.metanet.persistence;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.metanet.domain.EduHistoryVO;
@@ -35,4 +37,6 @@ public interface WonwooEduMapper{
 	public void eduAdd(EduVO eduVO);
 
 	public void eduUpdateNoModifyFile(EduVO eduVO);
+
+	public void eduAddNoFile(@Valid EduVO eduVO);
 }

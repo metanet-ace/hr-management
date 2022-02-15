@@ -12,9 +12,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.Error;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -23,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -78,15 +81,16 @@ public class WonwooEduController {
 	@GetMapping("/update")
 	public String eduUpdateView(Model model, HttpServletRequest request) {
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
-		model.addAttribute("detail", wonwooEduService.eduDetail(edu_no));
+		model.addAttribute("eduVO", wonwooEduService.eduDetail(edu_no));
 		System.out.println("getRefile : " + wonwooEduService.eduDetail(edu_no).getEduRefile());
 		model.addAttribute("title", "교육과정 수정");
 		return "/admin/edu/update";
 	}
 
 	@PostMapping("/update")
-	public String eduUpdateAction(@ModelAttribute("eduVO") EduVO eduVO, @RequestParam MultipartFile uploadfile,
-			FileDTO fileDTO, HttpServletRequest request) throws IllegalStateException, IOException {
+	public String eduUpdateAction(@ModelAttribute("eduVO") EduVO eduVO, @Valid EduVO eduVO2, Errors errors,
+			@RequestParam MultipartFile uploadfile, FileDTO fileDTO, HttpServletRequest request, Model model)
+			throws IllegalStateException, IOException {
 		// System.out.println(eduVO.getEduRefile());
 
 		// 새로운 파일이 들어온다면
@@ -119,15 +123,48 @@ public class WonwooEduController {
 			System.out.println(eduRefile);
 			eduVO.setEduRefile(eduRefile);
 
+			if (errors.hasErrors()) {
+				// 사원등록 실패시, 입력 데이터를 유지
+				model.addAttribute("eduVO", eduVO2);
+				// 유효성 통과 못한 필드와 메시지를 핸들링
+				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);
+				for (String key : validatorResult.keySet()) {
+					model.addAttribute(key, validatorResult.get(key));
+				}
+				return "/admin/edu/update";
+			}
 			wonwooEduService.eduUpdate(eduVO);
+			return "redirect:/edu/detail?edu_no=" + Integer.parseInt(request.getParameter("eduNo"));
+		} else {
+			if (errors.hasErrors()) {
+				// 사원등록 실패시, 입력 데이터를 유지
+				model.addAttribute("eduVO", eduVO2);
+				// 유효성 통과 못한 필드와 메시지를 핸들링
+				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);
+				for (String key : validatorResult.keySet()) {
+					model.addAttribute(key, validatorResult.get(key));
+				}
+				return "/admin/edu/update";
+			}
+			wonwooEduService.eduUpdateNoModifyFile(eduVO);
+			return "redirect:/edu/detail?edu_no=" + Integer.parseInt(request.getParameter("eduNo"));
 		}
-		wonwooEduService.eduUpdateNoModifyFile(eduVO);
-
-		return "redirect:/edu/detail?edu_no=" + Integer.parseInt(request.getParameter("eduNo"));
 	}
 
 	@GetMapping("/delete")
 	public String eduDelete(HttpServletRequest request) {
+		// 해당경로 이전 파일 삭제
+		String eduRefile = request.getParameter("edu_refile");
+		System.out.println("eduRefile");
+		//System.out.println(eduVO.toString());
+		if (eduRefile != null) {
+			File file = new File(filePath + "\\" + eduRefile);
+			// System.out.println("file : " + file);
+
+			if (file.exists()) {
+				file.delete(); // 파일 삭제
+			}
+		}
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
 		wonwooEduService.eduDelete(edu_no);
 		return "redirect:/edu/list";
@@ -177,10 +214,14 @@ public class WonwooEduController {
 	}
 
 	@GetMapping("/history")
-	public String eduEmpHistoyList(Model model, @SessionAttribute("sessionEmp") EmployeeVO empVO) {
-		int empNo = empVO.getEmpNo();
-		model.addAttribute("eduEmpHistoyList", wonwooEduService.getEduEmpHistroyList(empNo));
-		return "/history";
+	public String eduEmpHistoyList(Model model, @RequestParam("empNo") String empNo) {
+		if (empNo == null || empNo == "") {
+			return "redirect:/signin";
+		} else {
+			System.out.println(Integer.parseInt(empNo));
+			model.addAttribute("eduEmpHistoyList", wonwooEduService.getEduEmpHistroyList(Integer.parseInt(empNo)));
+			return "/history";
+		}
 	}
 
 	@PostMapping("/history")
@@ -220,8 +261,8 @@ public class WonwooEduController {
 	}
 
 	@PostMapping("/addFile")
-	public String eduAdd(@ModelAttribute("eduVO") EduVO eduVO, @RequestParam MultipartFile uploadfile, FileDTO fileDTO)
-			throws IllegalStateException, IOException {
+	public String eduAdd(@Valid EduVO eduVO, Errors errors, Model model, @RequestParam MultipartFile uploadfile,
+			FileDTO fileDTO) throws IllegalStateException, IOException {
 		if (!uploadfile.isEmpty()) {
 			String eduFile = uploadfile.getOriginalFilename();
 			System.out.println(eduFile);
@@ -236,10 +277,35 @@ public class WonwooEduController {
 			String eduRefile = newFileName.getName();
 			System.out.println(eduRefile);
 			eduVO.setEduRefile(eduRefile);
-		}
-		wonwooEduService.eduAdd(eduVO);
-		System.out.println("교육 과정 추가");
-		return "redirect:/edu/list";
-	}
 
+			if (errors.hasErrors()) {
+				// 사원등록 실패시, 입력 데이터를 유지
+				model.addAttribute("eduVO", eduVO);
+				// 유효성 통과 못한 필드와 메시지를 핸들링
+				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);
+				for (String key : validatorResult.keySet()) {
+					model.addAttribute(key, validatorResult.get(key));
+				}
+				return "/admin/edu/addFile";
+			}
+			wonwooEduService.eduAdd(eduVO);
+			System.out.println("교육 과정 추가");
+			return "redirect:/edu/list";
+
+		} else {
+			if (errors.hasErrors()) {
+				// 사원등록 실패시, 입력 데이터를 유지
+				model.addAttribute("eduVO", eduVO);
+				// 유효성 통과 못한 필드와 메시지를 핸들링
+				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);
+				for (String key : validatorResult.keySet()) {
+					model.addAttribute(key, validatorResult.get(key));
+				}
+				return "/admin/edu/addFile";
+			}
+			wonwooEduService.eduAddNoFile(eduVO);
+			System.out.println("교육 과정 추가");
+			return "redirect:/edu/list";
+		}
+	}
 }
