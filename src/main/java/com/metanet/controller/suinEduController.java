@@ -1,6 +1,7 @@
 package com.metanet.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.metanet.domain.EduHistoryVO;
@@ -129,11 +129,31 @@ public class suinEduController {
 		map.put("keyField", request.getParameter("keyField"));
 		map.put("keyword", request.getParameter("keyword"));
 		model.addAttribute("eduHistoryList", service.getEduHistoryListByKey(map));
+		model.addAttribute("keyField", request.getParameter("keyField"));
+		model.addAttribute("keyword", request.getParameter("keyword"));
 		return "/admin/edu/history";
+	}
+	
+	@ResponseBody
+	@PostMapping("/score")
+	public void eduScore(@RequestBody Map<String, String[]> map) {
+		System.out.println(map.get("score"));
+		System.out.println(map.get("eduHisno"));
+		System.out.println("map.isEmpty(): "+map.isEmpty());
+		List<EduHistoryVO> list = new ArrayList<EduHistoryVO>();
+		for(int i = 0; i < map.get("score").length; i++) {
+			EduHistoryVO vo = new EduHistoryVO();
+			vo.setEduHisno(Integer.parseInt(map.get("eduHisno")[i]));
+			vo.setScore(map.get("score")[i]);
+			list.add(vo);
+		}
+		System.out.println(list);
+		service.eduScoreUpdate(list);
 	}
 	
 	@GetMapping("/ajax")
 	public String ajaxTest() {
 		return "admin/edu/ajaxTest";
 	}
+	
 }

@@ -42,14 +42,15 @@
     </update>
     
     <select id="eduHistoryListSelect" resultType="com.metanet.domain.EduHistoryVO">
-    	select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	select h.edu_hisno, d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h
     	where e.emp_no = h.emp_no
     	and d.edu_no = h.edu_no
+    	order by h.edu_hisno DESC
     </select>
     
     <select id="eduHistoryListSelectByKey" parameterType="Map" resultType="com.metanet.domain.EduHistoryVO">
-    	select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	select h.edu_hisno, d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h
     	where e.emp_no = h.emp_no
     	and d.edu_no = h.edu_no
@@ -64,6 +65,7 @@
     			and e.emp_name like '%' || #{keyword} || '%'
     		</when>
     	</choose>
+    	order by h.edu_hisno DESC
     </select>
     
     <insert id="eduHistroyInsert" parameterType="Map">
@@ -71,4 +73,12 @@
     	insert into edu_history values(SEQ_EDU_HISNO.NEXTVAL, #{eduNo}, #{value}, 0, null)
     </foreach>
     </insert>
+    
+    <update id="eduScoreUpdate" parameterType="List">
+    	<foreach collection="list" item="vo" separator=";" open="DECLARE BEGIN" close="; END;">
+    	update edu_history
+    	set score = #{vo.score}
+    	where edu_hisno = #{vo.eduHisno}
+    	</foreach>
+    </update>
 </mapper>	

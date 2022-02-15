@@ -68,4 +68,9 @@ public class suinEduServiceImpl implements suinEduService {
 		mapper.eduHistroyInsert(param);
 	}
 
+	@Override
+	public void eduScoreUpdate(List<EduHistoryVO> list) {
+		mapper.eduScoreUpdate(list);
+	}
+
 }
