@@ -32,9 +32,10 @@ public class EmployeeVO2 {
 	@Positive(message="연봉을 입력해주세요.")
 	private String empSal;
 	
-	@Pattern(regexp="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message="이메일 형식에 맞지 않습니다.")
+	@Pattern(regexp="^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$", message="이메일 형식에 맞지 않습니다.")
 	private String empEmail;
 	
+	@NotBlank(message="날짜를 입력해주세요.")
 	private String empHiredate;
 	
 	private String empRetdate;

@@ -58,5 +58,18 @@ public class EmployeeServiceImpl2 implements EmployeeService2{
         }
 
         return validatorResult;
-    }
+    }	
+	
+	@Override
+	public String pwCheck(int empNo) {
+		return empMapper.pwCheck(empNo);
+	}
+	
+	@Override
+	public void pwUpdate(int empNo, String hashedPw) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("empNo", empNo);
+		map.put("empPwd", hashedPw);
+		empMapper.pwUpdate(map);
+	}
 }
