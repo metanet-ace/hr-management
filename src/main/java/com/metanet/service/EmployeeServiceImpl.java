@@ -3,24 +3,19 @@ package com.metanet.service;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.metanet.domain.EmpHistoryVO;
 import com.metanet.domain.EmployeeVO;
-import com.metanet.domain.QEmpHistoryVO;
 import com.metanet.domain.SearchDTO;
 import com.metanet.persistence.EmployeeHistoryRepository;
 import com.metanet.persistence.EmployeeMapper;
 import com.metanet.persistence.EmployeeRepository;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.metanet.persistence.QuerydslRepository;
+import com.querydsl.core.Tuple;
 
 @Service
 public class EmployeeServiceImpl {
@@ -35,9 +30,7 @@ public class EmployeeServiceImpl {
 	EmployeeHistoryRepository empHisRepo;
 	
 	@Autowired
-	EntityManager em;
-	
-	JPAQueryFactory queryFactory;
+	QuerydslRepository qdslRepo;
 	
 	// 세션에 로그인 된 사원 정보 넣어주기
 	public EmployeeVO getLoginedEmp(int empNo) {
@@ -79,7 +72,7 @@ public class EmployeeServiceImpl {
 		empMapper.updateEmp(emp);
 		
 		// 히스토리 테이블 정보 입력
-		empHis.setEmpNo(empNo);
+		empHis.setBatisEmpNo(empNo);
 		empHis.setDeptNo(deptNo);
 		empHis.setPosNo(posNo);
 		empHis.setIssuedDate(new Date());
@@ -102,7 +95,7 @@ public class EmployeeServiceImpl {
 		empMapper.updateEmp(emp);
 		
 		// 히스토리 테이블 정보 입력
-		empHis.setEmpNo(empNo);
+		empHis.setBatisEmpNo(empNo);
 		empHis.setDeptNo(deptNo);
 		empHis.setIssuedDate(new Date());
 		empHis.setIssuedOrder("부서이동");
@@ -125,7 +118,7 @@ public class EmployeeServiceImpl {
 		empMapper.updateEmp(emp);
 		
 		// 히스토리 테이블 정보 입력
-		empHis.setEmpNo(empNo);
+		empHis.setBatisEmpNo(empNo);
 		empHis.setPosNo(posNo);
 		empHis.setIssuedDate(new Date());
 		empHis.setIssuedOrder("직급변경");
@@ -140,16 +133,21 @@ public class EmployeeServiceImpl {
 	}
 	// 페이징 + 조건) 히스토리 리스트
 	public Page<EmpHistoryVO> getEmpHistoryList(SearchDTO search, Pageable pageable){
-		BooleanBuilder builder = new BooleanBuilder();
 		
-		QEmpHistoryVO qEmpHistory = QEmpHistoryVO.empHistoryVO;
-		
-		if(search.getSearchCondition().equals("사원번호로 검색")) {
-			builder.and(qEmpHistory.empNo.eq(Integer.parseInt(search.getSearchKeyword())));
-		} else {
-			builder.and(qEmpHistory.issuedOrder.like("%" + search.getSearchCondition() + "%"));
+		if(search.getSearchCondition() == null) {
+			search.setSearchCondition("");
 		}
 		
-		return empHisRepo.findAll(builder, pageable);
+		if(search.getSearchKeyword() == null) {
+			search.setSearchKeyword("");
+		}
+		
+		
+		
+		return empHisRepo.findAll(pageable);
+	}
+	
+	public void querydslTest() {
+		
 	}
 }

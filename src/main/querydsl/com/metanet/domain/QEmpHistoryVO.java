@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -25,9 +26,9 @@ public class QEmpHistoryVO extends EntityPathBase<EmpHistoryVO> {
 
     public final NumberPath<Integer> deptNo = createNumber("deptNo", Integer.class);
 
-    public final NumberPath<Integer> empHisno = createNumber("empHisno", Integer.class);
+    public final ListPath<EmployeeVO, QEmployeeVO> emp = this.<EmployeeVO, QEmployeeVO>createList("emp", EmployeeVO.class, QEmployeeVO.class, PathInits.DIRECT2);
 
-    public final NumberPath<Integer> empNo = createNumber("empNo", Integer.class);
+    public final NumberPath<Integer> empHisno = createNumber("empHisno", Integer.class);
 
     public final StringPath issuedContent = createString("issuedContent");
 

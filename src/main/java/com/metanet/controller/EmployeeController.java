@@ -122,7 +122,7 @@ public class EmployeeController {
 		
 		Pageable pageable = PageRequest.of(pageNum-1, 5, Sort.Direction.DESC, "empHisno");
 		
-		Page<EmpHistoryVO> empHistoryPage = empService.getAllEmpHistory(pageable);
+		Page<EmpHistoryVO> empHistoryPage = empService.getEmpHistoryList(search, pageable);
 		return new ResponseEntity<>(empHistoryPage, HttpStatus.OK);
 	}
 	
