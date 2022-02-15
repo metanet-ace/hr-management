@@ -78,10 +78,8 @@ public class EmployeeController {
 	public ResponseEntity<String> updateHumanResource(@RequestBody HashMap<String, Object> map) {
 		int deptNo = 0;
 		int posNo = 0;
+		
 		String reason = (String) map.get("reason");
-		System.out.println(map.get("deptData"));
-		System.out.println(map.get("posData"));
-		System.out.println(map.get("reason"));
 		Object targetEmpList = map.get("targetEmps");
 		 
 		if(map.get("deptData") != "") {
@@ -116,13 +114,19 @@ public class EmployeeController {
 		return "/admin/empHistory";
 	}
 	
-	@GetMapping(value = "/admin/emp/history/{page}", produces = "application/json")
+	@PostMapping(value = "/admin/emp/history/{page}", produces = "application/json")
 	@ResponseBody
-	public ResponseEntity<Page<EmpHistoryVO>> empHistoryList(@PathVariable("page") int pageNum, SearchDTO search) {
+	public ResponseEntity<Page<EmpHistoryVO>> empHistoryList(@PathVariable("page") int pageNum, @RequestBody HashMap<String, String> data) {
+		int pageSize = 0;
+		if(data.get("pageSize") != null) {
+			pageSize = Integer.parseInt(data.get("pageSize"));
+		} else {
+			pageSize = 5; // 기본값
+		}
+		Pageable pageable = PageRequest.of(pageNum-1, pageSize, Sort.Direction.DESC, "empHisno");
 		
-		Pageable pageable = PageRequest.of(pageNum-1, 5, Sort.Direction.DESC, "empHisno");
+		Page<EmpHistoryVO> empHistoryPage = empService.getEmpHistoryList(data, pageable);
 		
-		Page<EmpHistoryVO> empHistoryPage = empService.getEmpHistoryList(search, pageable);
 		return new ResponseEntity<>(empHistoryPage, HttpStatus.OK);
 	}
 	
@@ -138,7 +142,7 @@ public class EmployeeController {
 	    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 	    EmployeeVO emp = empService.getLoginedEmp(Integer.parseInt(userDetails.getUsername()));
 		model.addAttribute("sessionEmp", emp );
-		try {
+		try { 
 			batchCtrl.schedulerTest();
 		} catch (ParseException e) {
 			e.printStackTrace();
