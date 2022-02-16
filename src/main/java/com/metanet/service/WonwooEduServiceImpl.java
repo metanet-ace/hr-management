@@ -99,4 +99,25 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 		wonwooEduMapper.eduAddNoFile(eduVO);	
 	}
 
+	@Override
+	public List<EduVO> getPagingEmpEduList(Map<String, Object> map) {
+		return wonwooEduMapper.getPagingEmpEduList(map);
+	}
+
+	@Override
+	public int EmpEduTotalCount(Map<String, Object> map) {
+		return wonwooEduMapper.EmpEduTotalCount(map);
+	}
+
+	@Override
+	public List<EduVO> getPagingEduList(PageDTO pdto) {
+		return wonwooEduMapper.getPagingEduList(pdto);
+	}
+
+	@Override
+	public int EduTotalCount(PageDTO pdto) {
+		return wonwooEduMapper.EduTotalCount(pdto);
+	}
+
+
 }

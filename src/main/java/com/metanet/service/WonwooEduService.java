@@ -24,7 +24,15 @@ public interface WonwooEduService {
 	
 	public List<EmpListVO> getPagingList(PageDTO pdto);
 
+	public List<EduVO> getPagingEmpEduList(Map<String, Object> map);
+	
+	public List<EduVO> getPagingEduList(PageDTO pdto);
+	
 	public int totalCount(PageDTO pdto);
+	
+	public int EmpEduTotalCount(Map<String, Object> map);
+	
+	public int EduTotalCount(PageDTO pdto);
 
 	public List<EmpListVO> empList();
 

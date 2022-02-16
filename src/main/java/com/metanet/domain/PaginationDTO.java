@@ -34,7 +34,7 @@ public class PaginationDTO {
 	      //System.out.println(hasPrev + "    " + hasNext);
 	   }
 
-	   public int getTotal() {
+	public int getTotal() {
 	      return total;
 	   }
 

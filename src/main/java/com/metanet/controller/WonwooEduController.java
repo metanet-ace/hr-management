@@ -51,14 +51,50 @@ public class WonwooEduController {
 	@Autowired
 	WonwooEduService wonwooEduService;
 
-	@GetMapping("/list")
-	public String eduList(Model model) {
-		model.addAttribute("eduList", wonwooEduService.eduList());
-		model.addAttribute("title", "교육과정 전체 리스트");
-		return "/admin/edu/list";
+	@RequestMapping("/list")
+	public String eduList(Model model, HttpServletRequest request) {
+		int pageNum = 1;
+		String keyField = "";
+		String keyword = "";
+
+		// 현재 페이지 넘버
+		if (request.getParameter("pageNum") != null) {
+			pageNum = Integer.parseInt((request.getParameter("pageNum")).trim());
+		}
+		model.addAttribute("tempPageNum", pageNum);
+
+		// 키워드(작성자/작성내용 등)
+		if (request.getParameter("keyField") != null && request.getParameter("keyField") != "") {
+			keyField = request.getParameter("keyField");
+		}
+
+		if (request.getParameter("keyword") != null && request.getParameter("keyword") != "") {
+			keyword = request.getParameter("keyword");
+		}
+
+		// 페이지 관련 정보
+		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
+		model.addAttribute("pageInfo", pdto);
+
+		// 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
+		List<EduVO> list = wonwooEduService.getPagingEduList(pdto);
+		model.addAttribute("list", list);
+
+		// 페이징 처리된 숫자그룹(뷰에서)
+		int total = wonwooEduService.EduTotalCount(pdto);
+		PaginationDTO pageDto = new PaginationDTO(total, pdto);
+
+		model.addAttribute("paging", pageDto);
+		model.addAttribute("title", "교육 전체리스트");
+
+		/*
+		 * model.addAttribute("eduList", wonwooEduService.eduList());
+		 * model.addAttribute("title", "교육과정 전체 리스트");
+		 */
+		return "admin/edu/list";
 	}
-	
-	//인사팀용 교육과정 상세페이지
+
+	// 인사팀용 교육과정 상세페이지
 	@GetMapping("/detail")
 	public String eduDetail(Model model, HttpServletRequest request) {
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
@@ -73,12 +109,12 @@ public class WonwooEduController {
 		}
 
 		model.addAttribute("detail", eduVO);
-		model.addAttribute("title", "교육과정 상세조회");
+		model.addAttribute("title", "교육 상세조회");
 
 		return "/admin/edu/detail";
 	}
-	
-	//사원용 교육과정 상세페이지
+
+	// 사원용 교육과정 상세페이지
 	@GetMapping("/eduEmpDetail")
 	public String eduEmpDetail(Model model, HttpServletRequest request) {
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
@@ -93,7 +129,7 @@ public class WonwooEduController {
 		}
 
 		model.addAttribute("detail", eduVO);
-		model.addAttribute("title", "교육과정 상세조회");
+		model.addAttribute("title", "교육 상세조회");
 
 		return "/admin/empEduDetail";
 	}
@@ -103,7 +139,7 @@ public class WonwooEduController {
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
 		model.addAttribute("eduVO", wonwooEduService.eduDetail(edu_no));
 		System.out.println("getRefile : " + wonwooEduService.eduDetail(edu_no).getEduRefile());
-		model.addAttribute("title", "교육과정 수정");
+		model.addAttribute("title", "교육 정보수정");
 		return "/admin/edu/update";
 	}
 
@@ -151,8 +187,10 @@ public class WonwooEduController {
 				for (String key : validatorResult.keySet()) {
 					model.addAttribute(key, validatorResult.get(key));
 				}
+				model.addAttribute("title", "교육 정보수정");
 				return "/admin/edu/update";
 			}
+			model.addAttribute("title", "교육 정보수정");
 			wonwooEduService.eduUpdate(eduVO);
 			return "redirect:/edu/detail?edu_no=" + Integer.parseInt(request.getParameter("eduNo"));
 		} else {
@@ -164,8 +202,10 @@ public class WonwooEduController {
 				for (String key : validatorResult.keySet()) {
 					model.addAttribute(key, validatorResult.get(key));
 				}
+				model.addAttribute("title", "교육 정보수정");
 				return "/admin/edu/update";
 			}
+			model.addAttribute("title", "교육 정보수정");
 			wonwooEduService.eduUpdateNoModifyFile(eduVO);
 			return "redirect:/edu/detail?edu_no=" + Integer.parseInt(request.getParameter("eduNo"));
 		}
@@ -176,7 +216,7 @@ public class WonwooEduController {
 		// 해당경로 이전 파일 삭제
 		String eduRefile = request.getParameter("edu_refile");
 		System.out.println("eduRefile");
-		//System.out.println(eduVO.toString());
+		// System.out.println(eduVO.toString());
 		if (eduRefile != null) {
 			File file = new File(filePath + "\\" + eduRefile);
 			// System.out.println("file : " + file);
@@ -193,8 +233,8 @@ public class WonwooEduController {
 	@RequestMapping("/allocation")
 	public String eduAllocation(Model model, HttpServletRequest request) {
 		int pageNum = 1;
+		String keyField = "";
 		String keyword = "";
-		String searchContent = "";
 		/* int edu_no = Integer.parseInt(request.getParameter("edu_no")); */
 
 		System.out.println(request.getParameter("pageNum"));
@@ -206,18 +246,18 @@ public class WonwooEduController {
 		model.addAttribute("tempPageNum", pageNum);
 
 		// 키워드(작성자/작성내용 등)
+		if (request.getParameter("keyField") != null && request.getParameter("keyField") != "") {
+			keyField = request.getParameter("keyField");
+		}
+
 		if (request.getParameter("keyword") != null && request.getParameter("keyword") != "") {
 			keyword = request.getParameter("keyword");
 		}
 
-		if (request.getParameter("searchContent") != null && request.getParameter("searchContent") != "") {
-			searchContent = request.getParameter("searchContent");
-		}
-
+		System.out.println(keyField);
 		System.out.println(keyword);
-		System.out.println(searchContent);
 		// 페이지 관련 정보
-		PageDTO pdto = new PageDTO(pageNum, keyword, searchContent);
+		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
 		model.addAttribute("pageInfo", pdto);
 
 		// 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
@@ -229,32 +269,76 @@ public class WonwooEduController {
 		PaginationDTO pageDto = new PaginationDTO(total, pdto);
 
 		model.addAttribute("paging", pageDto);
-		model.addAttribute("title", "교육 인원할당");
+		model.addAttribute("title", "교육배정");
 		return "/admin/edu/allocation";
 	}
 
-	@GetMapping("/history")
-	public String eduEmpHistoyList(Model model, @RequestParam("empNo") String empNo) {
+	@RequestMapping("/history")
+	public String eduEmpHistoyList(Model model, @RequestParam("empNo") String empNo, HttpServletRequest request) {
 		if (empNo == null || empNo == "") {
 			return "redirect:/signin";
 		} else {
-			System.out.println(Integer.parseInt(empNo));
-			model.addAttribute("eduEmpHistoyList", wonwooEduService.getEduEmpHistroyList(Integer.parseInt(empNo)));
+			int pageNum = 1;
+			String keyField = "";
+			String keyword = "";
+
+			System.out.println(request.getParameter("pageNum"));
+
+			// 현재 페이지 넘버
+			if (request.getParameter("pageNum") != null) {
+				pageNum = Integer.parseInt((request.getParameter("pageNum")).trim());
+			}
+			model.addAttribute("tempPageNum", pageNum);
+
+			// 키워드(작성자/작성내용 등)
+			if (request.getParameter("keyField") != null && request.getParameter("keyField") != "") {
+				keyField = request.getParameter("keyField");
+			}
+
+			if (request.getParameter("keyword") != null && request.getParameter("keyword") != "") {
+				keyword = request.getParameter("keyword");
+			}
+
+			System.out.println(keyField);
+			System.out.println(keyword);
+			// 페이지 관련 정보
+			PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("startNum", pdto.getStartNum());
+			map.put("endNum", pdto.getEndNum());
+			map.put("keyword", pdto.getkeyword());
+			map.put("empNo", Integer.parseInt(empNo));
+			map.put("keyField", pdto.getkeyField());
+			model.addAttribute("pageInfo", map);
+
+			// 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
+			List<EduVO> list = wonwooEduService.getPagingEmpEduList(map);
+			model.addAttribute("list", list);
+
+			// 페이징 처리된 숫자그룹(뷰에서)
+			int total = wonwooEduService.EmpEduTotalCount(map);
+			PaginationDTO pageDto = new PaginationDTO(total, pdto);
+
+			model.addAttribute("paging", pageDto);
+			model.addAttribute("title", "사원 교육 히스토리");
+
+//			System.out.println(Integer.parseInt(empNo));
+//			model.addAttribute("eduEmpHistoyList", wonwooEduService.getEduEmpHistroyList(Integer.parseInt(empNo)));
 			return "/history";
 		}
 	}
 
-	@PostMapping("/history")
-	public String eduEmpHistoyListBykeyword(Model model, HttpServletRequest request,
-			@SessionAttribute("sessionEmp") EmployeeVO empVO) {
-		int empNo = empVO.getEmpNo();
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("empNo", empNo);
-		map.put("keyField", request.getParameter("keyField"));
-		map.put("keyword", request.getParameter("keyword"));
-		model.addAttribute("eduEmpHistoyList", wonwooEduService.getEduEmpHistroyListByKey(map));
-		return "/history";
-	}
+	/*
+	 * @PostMapping("/history") public String eduEmpHistoyListBykeyField(Model model,
+	 * HttpServletRequest request,
+	 * 
+	 * @SessionAttribute("sessionEmp") EmployeeVO empVO) { int empNo =
+	 * empVO.getEmpNo(); Map<String, Object> map = new HashMap<String, Object>();
+	 * map.put("empNo", empNo); map.put("keyField",
+	 * request.getParameter("keyField")); map.put("keyField",
+	 * request.getParameter("keyField")); model.addAttribute("eduEmpHistoyList",
+	 * wonwooEduService.getEduEmpHistroyListByKey(map)); return "/history"; }
+	 */
 
 	@GetMapping("/download")
 	public ResponseEntity<Resource> download(@ModelAttribute FileDTO dto) throws IOException {
@@ -275,7 +359,7 @@ public class WonwooEduController {
 
 	@GetMapping("/addFile")
 	public String eduAdd(Model model) {
-		model.addAttribute("title", "교육 과정 추가");
+		model.addAttribute("title", "교육 등록");
 		System.out.println("교육 추가 페이지 출력");
 		return "/admin/edu/addFile";
 	}
