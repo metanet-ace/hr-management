@@ -14,4 +14,5 @@ public interface suinEduService {
 	public List<EduHistoryVO> getEduHistoryListByKey(Map<String, String> map);
 	public void eduHistoryAdd(Map<String, Object> param);
 	public void eduScoreUpdate(List<EduHistoryVO> list);
+	public void eduProgress() throws ParseException;
 }

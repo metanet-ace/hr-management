@@ -57,10 +57,12 @@ public class suinEduController {
 	}
 	
 	
-	@Scheduled(cron="0 0 0 * * ?", zone="Asia/Seoul")
+	//@Scheduled(cron="0 0 0 * * ?", zone="Asia/Seoul")
+	@Scheduled(fixedDelay=3000)
 	public void schedulerTest() throws ParseException {
 		System.out.println("Scheduler Test..." + new Date());
 		service.eduAttendance();
+		service.eduProgress();
 	}
 	
 	@GetMapping("/allocation2/{eduNo}")
@@ -150,10 +152,4 @@ public class suinEduController {
 		System.out.println(list);
 		service.eduScoreUpdate(list);
 	}
-	
-	@GetMapping("/ajax")
-	public String ajaxTest() {
-		return "admin/edu/ajaxTest";
-	}
-	
 }

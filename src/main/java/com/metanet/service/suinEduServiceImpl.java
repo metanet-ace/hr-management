@@ -2,6 +2,7 @@ package com.metanet.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,7 +38,7 @@ public class suinEduServiceImpl implements suinEduService {
 		for(AttendanceVO vo : list) {
 			Date startD = new SimpleDateFormat("yyyyMMdd").parse(vo.getEduStart());
 			Date endD = new SimpleDateFormat("yyyyMMdd").parse(vo.getEduEnd());
-			
+			System.out.println(vo.getEduHisno() +" : "+ startD);
 			Calendar start = Calendar.getInstance();
 			Calendar end = Calendar.getInstance();
 			
@@ -71,6 +72,27 @@ public class suinEduServiceImpl implements suinEduService {
 	@Override
 	public void eduScoreUpdate(List<EduHistoryVO> list) {
 		mapper.eduScoreUpdate(list);
+	}
+
+	@Override
+	public void eduProgress() throws ParseException {
+		List<EduVO> list = mapper.eduProgressList();
+
+		Date today = new Date();
+		
+		for(EduVO vo : list) {
+			Date startD = new SimpleDateFormat("yyyy-MM-dd").parse(vo.getEduStart());
+			Date endD = new SimpleDateFormat("yyyy-MM-dd").parse(vo.getEduEnd());
+
+			if(today.before(startD)) {
+				vo.setEduProgress("pre");
+			} else if (today.after(endD)) {
+				vo.setEduProgress("post");
+			} else {
+				vo.setEduProgress("ing");
+			}
+		}
+		mapper.eduProgressUpdate(list);
 	}
 
 }

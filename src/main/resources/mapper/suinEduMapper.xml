@@ -81,4 +81,18 @@
     	where edu_hisno = #{vo.eduHisno}
     	</foreach>
     </update>
+    
+    <select id="eduProgressList" resultType="com.metanet.domain.EduVO">
+    	select edu_no, edu_start, edu_end
+    	from edu
+    	where edu_end+1 > SYSDATE
+    </select>
+    
+    <update id="eduProgressUpdate" parameterType="List">
+     	<foreach item="item" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
+    		update edu
+    		set edu_progress = #{item.eduProgress}
+    		where edu_no = #{item.eduNo}
+    	</foreach>
+    </update>
 </mapper>	

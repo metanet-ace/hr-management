@@ -58,8 +58,8 @@ form {
                                                 <td>${list.eduEnd }</td>
                                                 <td>
                                                 	<c:choose>
-														<c:when test="${list.eduProgress eq 0}">진행예정</c:when>
-														<c:when test="${list.eduProgress eq 1}">진행중</c:when>
+														<c:when test="${list.eduProgress eq 'pre'}">진행예정</c:when>
+														<c:when test="${list.eduProgress eq 'ing'}">진행중</c:when>
 														<c:otherwise>진행종료</c:otherwise>
 													</c:choose>
                                                 </td>
