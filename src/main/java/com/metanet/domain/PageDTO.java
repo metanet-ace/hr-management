@@ -9,18 +9,18 @@ public class PageDTO {
 	   private int startNum; // 시작하는 게시글 번호 (Between 사이 값)
 	   private int endNum; // 끝나는 게시글 번호 (Between 사이 값)   
 	   
+	   private String keyField;
 	   private String keyword;
-	   private String searchContent;
 	   
 	   // 기본 1페이지 생성자
 	   public PageDTO() {}
 	   
-	   public PageDTO(int pageNum, String keyword, String searchContent) {
+	   public PageDTO(int pageNum, String keyField, String keyword) {
 	      this.pageNum = pageNum;
 	      this.startNum = ((pageNum-1)*PAGE_PER_GROUP) + 1;  
 	      this.endNum = pageNum*PAGE_PER_GROUP;
+	      this.keyField = keyField;
 	      this.keyword = keyword;
-	      this.searchContent = searchContent;
 	   }
 	   
 	   public static int getPagePerGroup() {
@@ -51,19 +51,19 @@ public class PageDTO {
 	      this.pageNum = pageNum;
 	   }
 
-	   public String getKeyword() {
+	   public String getkeyField() {
+	      return keyField;
+	   }
+
+	   public void setkeyField(String keyField) {
+	      this.keyField = keyField;
+	   }
+
+	   public String getkeyword() {
 	      return keyword;
 	   }
 
-	   public void setKeyword(String keyword) {
+	   public void setkeyword(String keyword) {
 	      this.keyword = keyword;
-	   }
-
-	   public String getSearchContent() {
-	      return searchContent;
-	   }
-
-	   public void setSearchContent(String searchContent) {
-	      this.searchContent = searchContent;
 	   }
 	}

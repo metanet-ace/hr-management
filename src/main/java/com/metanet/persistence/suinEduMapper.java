@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.metanet.domain.AttendanceVO;
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
+import com.metanet.domain.PageDTO;
 
 @Mapper
 public interface suinEduMapper {
@@ -19,7 +20,7 @@ public interface suinEduMapper {
 
 	public ArrayList<AttendanceVO> eduHistorySelect();
 
-	public List<EduHistoryVO> eduHistoryListSelect();
+	public List<EduHistoryVO> eduHistoryListSelect(PageDTO dto);
 
 	public List<EduHistoryVO> eduHistoryListSelectByKey(Map<String, String> map);
 
@@ -30,5 +31,7 @@ public interface suinEduMapper {
 	public List<EduVO> eduProgressList();
 	
 	public void eduProgressUpdate(List<EduVO> list);
+	
+	public int eduHistorytotalCount(Map<String,String> map);
 
 }

@@ -64,12 +64,12 @@ public class suinEduController {
 		service.eduProgress();
 	}
 	
-	@GetMapping("/allocation2/{eduNo}")
+	@RequestMapping("/allocation2/{eduNo}")
 	public String eduAllocation(@PathVariable("eduNo") int eduNo, 
 								Model model, HttpServletRequest request) {	
 		int pageNum=1;
+		String keyField = "";
 		String keyword = "";
-		String searchContent = "";
 		/* int edu_no = Integer.parseInt(request.getParameter("edu_no")); */
 		
 		
@@ -82,18 +82,18 @@ public class suinEduController {
 		model.addAttribute("tempPageNum", pageNum);
         
         // 키워드(작성자/작성내용 등)
+        if(request.getParameter("keyField") != null && request.getParameter("keyField") != ""){
+        	keyField = request.getParameter("keyField");	
+		}
+        
         if(request.getParameter("keyword") != null && request.getParameter("keyword") != ""){
-        	keyword = request.getParameter("keyword");	
+        	keyword = request.getParameter("keyword");
 		}
         
-        if(request.getParameter("searchContent") != null && request.getParameter("searchContent") != ""){
-        	searchContent = request.getParameter("searchContent");
-		}
-        
+        System.out.println(keyField);
         System.out.println(keyword);
-        System.out.println(searchContent);
         // 페이지 관련 정보
-        PageDTO pdto = new PageDTO(pageNum, keyword, searchContent);
+        PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
         model.addAttribute("pageInfo", pdto);
         
         // 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
@@ -118,20 +118,56 @@ public class suinEduController {
 		service.eduHistoryAdd(param);
 	}
 	
-	@GetMapping("/admin/history")
-	public String eduHistoryList(Model model) {
-		model.addAttribute("eduHistoryList", service.getEduHistoryList());
-		return "/admin/edu/history";
-	}
+//	@GetMapping("/admin/history")
+//	public String eduHistoryList(Model model) {
+//		model.addAttribute("eduHistoryList", service.getEduHistoryList());
+//		return "/admin/edu/history";
+//	}
 	
-	@PostMapping("/admin/history")
-	public String eduHistoryListByKeyword(Model model, HttpServletRequest request) {
+	@RequestMapping(value={"/admin/history", "/admin/history/{pageNum}", "/admin/history/{pageNum}/{keyField}/{keyword}"})
+	public String eduHistoryListByKeyword(@PathVariable(value="pageNum", required=false) Integer p, 
+										  @PathVariable(value="keyField", required=false) String keyField,
+										  @PathVariable(value="keyword", required=false) String keyword,
+										  Model model, HttpServletRequest request) {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("keyField", request.getParameter("keyField"));
-		map.put("keyword", request.getParameter("keyword"));
-		model.addAttribute("eduHistoryList", service.getEduHistoryListByKey(map));
-		model.addAttribute("keyField", request.getParameter("keyField"));
-		model.addAttribute("keyword", request.getParameter("keyword"));
+		System.out.println("keyField: " + keyField +" keyword: " + keyword);
+		
+		if(request.getParameter("keyField") != null) {
+			keyField = request.getParameter("keyField");
+			keyword = request.getParameter("keyword");
+		}
+		
+		int pageNum=1;
+
+		// 현재 페이지 넘버
+		if (p != null) {
+			pageNum = p;
+		}
+		model.addAttribute("tempPageNum", pageNum);
+
+		System.out.println(keyField);
+		System.out.println(keyword);
+		// 페이지 관련 정보
+		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
+		model.addAttribute("pageInfo", pdto);
+
+		// 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
+		//model.addAttribute("list", service.getEduHistoryList(pdto));
+		
+		map.put("keyField", keyField);
+		map.put("keyword", keyword);
+
+		// 페이징 처리된 숫자그룹(뷰에서)
+		int total = service.eduHistoryTotalCount(map);
+		PaginationDTO pageDto = new PaginationDTO(total, pdto);
+
+		model.addAttribute("paging", pageDto);
+		
+		map.put("keyField", keyField);
+		map.put("keyword", keyword);
+		model.addAttribute("eduHistoryList", service.getEduHistoryList(pdto));
+		model.addAttribute("keyField", keyField);
+		model.addAttribute("keyword", keyword);
 		return "/admin/edu/history";
 	}
 	

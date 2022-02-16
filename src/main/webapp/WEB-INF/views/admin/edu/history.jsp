@@ -18,6 +18,11 @@
 $(document).ready(function(){
 	console.log("ready");
 });
+function showKeyField(){
+	console.log("123");
+	console.log(${keyField});
+}
+
 function activeInput(){
 	$("input[name='score2']").attr("readonly",false);
 	$("input[name='score']").attr("readonly",false);
@@ -46,9 +51,9 @@ function modifyScore(){
 		contentType: "application/json; charset=UTF-8",
 		success: function(){
 			alert("점수 반영이 완료되었습니다.");
-			document.location.href="/edu/admin/history";
-			/* $("input[name='score']").attr("readonly",true);
-			$("input[name='btnScore']").attr("hidden",true); */
+			$("input[name='score']").attr("readonly",true);
+			$("input[name='score2']").attr("readonly",true);
+			$("input[name='btnScore']").attr("hidden",true);
 		},
 		error: function(e) {
 			alert("점수 반영 과정에서 문제가 발생했습니다. 다시 시도해주세요");
@@ -63,14 +68,13 @@ function modifyScore(){
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 교육 히스토리 리스트 출력 -->
-		<form id="search_form" action="history" method="post">
-			<input type="hidden" name="a" value="list"> 
-			<select name="keyField" size="1" >
+		<form id="search_form" action="/edu/admin/history" method="post">
+			<select name="keyField" size="1">
 				<option value="eduTitle">교육명</option>
 				<option value="empNo">사원번호</option>
 				<option value="empName">사원이름</option>
-			</select> 
-			<input type="text" id="kwd" name="keyword" value="${keyword}"> 
+			</select>
+			<input type="text" id="kwd" name="keyword" value="${pageInfo.keyword}"> 
 			<input	type="submit" value="찾기">
 		</form>
 		<br>
@@ -116,6 +120,37 @@ function modifyScore(){
 			<input type="button" class="btn-primary" name="btnScore" value="점수반영" hidden="hidden" onclick="modifyScore();">
 		</div>
 		</form>
+		<!-- 페이지네이션  -->
+			<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+				<c:if test="${paging.hasPrev }">
+					<li class="page-item"><a class="page-link" href="/edu/allocation2/${paging.startPage-1}?keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">이전</a></li>
+				</c:if>
+
+				<c:forEach var="p" begin="${paging.startPage }" end="${paging.endPage }" step="1">
+					<c:choose>
+						<c:when test="${p == tempPageNum }" >
+							<li class="page-item active"><a class="page-link" href="#">${p}</a>
+						</c:when>
+						<c:otherwise>
+							<c:choose>
+								<c:when test="${empty pageInfo.keyField}">
+									<li class="page-item"><a class="page-link" href="/edu/admin/history/${p}">${p}</a>
+								</c:when>
+								<c:otherwise>
+									<li class="page-item"><a class="page-link" href="/edu/admin/history/${p}/${pageInfo.keyField }/${pageInfo.keyword}">${p}</a>
+								</c:otherwise>
+							</c:choose>
+							
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+
+				<c:if test="${paging.hasNext }">
+					<li class="page-item"><a class="page-link" href="/edu/allocation2/${paging.endPage+1}?keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
+				</c:if>
+			</ul>
+			</nav>
 	</div>
 </div>
 

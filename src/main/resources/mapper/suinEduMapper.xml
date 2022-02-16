@@ -42,13 +42,25 @@
     </update>
     
     <select id="eduHistoryListSelect" resultType="com.metanet.domain.EduHistoryVO">
-    	select h.edu_hisno, d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	select * from (select rownum rn, total_list.*
+    	from (select h.edu_hisno, d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h
     	where e.emp_no = h.emp_no
     	and d.edu_no = h.edu_no
-    	order by h.edu_hisno DESC
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			and d.edu_title like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"empNo".equals(keyField) '>
+    			and h.emp_no = #{keyword}
+    		</when>
+    		<when test='"empName".equals(keyField) '>
+    			and e.emp_name like '%' || #{keyword} || '%'
+    		</when>
+    	</choose>) total_list) WHERE rn BETWEEN #{startNum} AND #{endNum}
     </select>
     
+    <!-- 삭제 예정 -->
     <select id="eduHistoryListSelectByKey" parameterType="Map" resultType="com.metanet.domain.EduHistoryVO">
     	select h.edu_hisno, d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h
@@ -66,6 +78,24 @@
     		</when>
     	</choose>
     	order by h.edu_hisno DESC
+    </select>
+    
+    <select id="eduHistorytotalCount" parameterType="Map" resultType="Integer">
+    	select count(*)
+    	from employee e, edu d, edu_history h
+    	where e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			and d.edu_title like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"empNo".equals(keyField) '>
+    			and h.emp_no = #{keyword}
+    		</when>
+    		<when test='"empName".equals(keyField) '>
+    			and e.emp_name like '%' || #{keyword} || '%'
+    		</when>
+    	</choose>
     </select>
     
     <insert id="eduHistroyInsert" parameterType="Map">

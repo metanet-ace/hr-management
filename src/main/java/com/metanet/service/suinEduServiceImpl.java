@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.metanet.domain.AttendanceVO;
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
+import com.metanet.domain.PageDTO;
 import com.metanet.persistence.suinEduMapper;
 
 
@@ -54,8 +55,8 @@ public class suinEduServiceImpl implements suinEduService {
 	}
 
 	@Override
-	public List<EduHistoryVO> getEduHistoryList() {
-		return mapper.eduHistoryListSelect();
+	public List<EduHistoryVO> getEduHistoryList(PageDTO dto) {
+		return mapper.eduHistoryListSelect(dto);
 		 
 	}
 
@@ -93,6 +94,11 @@ public class suinEduServiceImpl implements suinEduService {
 			}
 		}
 		mapper.eduProgressUpdate(list);
+	}
+
+	@Override
+	public int eduHistoryTotalCount(Map<String, String> map) {
+		return mapper.eduHistorytotalCount(map);
 	}
 
 }
