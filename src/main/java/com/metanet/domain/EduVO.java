@@ -41,7 +41,7 @@ public class EduVO {
 	@NotBlank(message="비용을 입력해주세요.")
 	private String eduCost;
 	
-	private int eduProgress;
+	private String eduProgress;
 	
 	private String eduFile;
 	
