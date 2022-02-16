@@ -45,4 +45,5 @@ public class EmpHistoryVO {
 	@ManyToOne
 	@JoinColumn(name="EMP_NO")
 	private EmployeeVO emp; 
+	
 }
