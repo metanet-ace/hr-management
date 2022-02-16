@@ -170,8 +170,8 @@ function getPage(pageNum, keyword){
 				} else if (list[i]['beforePos'] === "-"){
 					data += "<td colspan='2' align='center'>" + "-" + "</td>";
 				} else {
-					data += "<td>" + list[i]['emp'].pos.posName + "</td>"
 					data += "<td>" + list[i]['beforePos'] + "</td>";
+					data += "<td>" + list[i]['emp'].pos.posName + "</td>"
 				}
 				
 				if(list[i]['beforeDept'] === list[i]['emp'].dept.deptName ){

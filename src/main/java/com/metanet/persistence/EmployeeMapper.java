@@ -1,5 +1,8 @@
 package com.metanet.persistence;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.metanet.domain.EmpHistoryVO;
@@ -15,4 +18,6 @@ public interface EmployeeMapper {
 	
 	// 사원 부서, 직급 업데이트 히스토리 저장
 	public int saveHistory(EmpHistoryVO empHis);
+	
+	public List<Map<String, Object>> findWorkingDate(Map<String, String> map);
 }

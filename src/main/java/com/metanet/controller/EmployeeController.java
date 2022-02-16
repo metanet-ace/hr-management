@@ -25,9 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.EmpHistoryVO;
 import com.metanet.domain.EmployeeVO;
-import com.metanet.domain.SearchDTO;
+import com.metanet.domain.PositionVO;
 import com.metanet.service.EmployeeServiceImpl;
 
 @SessionAttributes("sessionEmp")
@@ -40,6 +41,7 @@ public class EmployeeController {
 	@Autowired
 	suinEduController batchCtrl;
 	
+	// 인사이동 페이징 컨트롤러
 	@GetMapping("/admin/emp")
 	public String userList(Model model, @PageableDefault(size = 3, sort = "empNo",
 				direction = Sort.Direction.DESC ) Pageable pageable,
@@ -63,7 +65,14 @@ public class EmployeeController {
 		int startBlockPage = (pageNumber/pageBlock)*pageBlock+1;
 		int endBlockPage = startBlockPage + pageBlock-1;
 		endBlockPage = totalPages < endBlockPage ? totalPages : endBlockPage;
-
+		
+		// 부서 전체 이름 출력
+		List<DepartmentVO> deptList = empService.getDeptList();
+		// 직급 전체 이름 출력
+		List<PositionVO> posList = empService.getPosList();
+		
+		model.addAttribute("deptList", deptList);
+		model.addAttribute("posList", posList);
 		model.addAttribute("startBlockPage", startBlockPage);
 		model.addAttribute("endBlockPage", endBlockPage);
 		model.addAttribute("emplist", emp);
@@ -130,6 +139,7 @@ public class EmployeeController {
 		return "/admin/empHistory";
 	}
 	
+	// 인사 이동 히스토리 페이징 컨트롤러 
 	@PostMapping(value = "/admin/emp/history/{page}", produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<Page<EmpHistoryVO>> empHistoryList(@PathVariable("page") int pageNum, @RequestBody HashMap<String, String> data) {
@@ -144,6 +154,27 @@ public class EmployeeController {
 		Page<EmpHistoryVO> empHistoryPage = empService.getEmpHistoryList(data, pageable);
 		
 		return new ResponseEntity<>(empHistoryPage, HttpStatus.OK);
+	}
+	
+	// 출근 시간 기록 컨트롤러 
+	@PostMapping("/emp/recordTime")
+	@ResponseBody
+	public ResponseEntity<String> workingTimeRecoder(@RequestBody HashMap<String, String> data){
+		
+		int empNo = Integer.parseInt(data.get("empNo"));
+		empService.insertStartTime(empNo);
+		
+		return new ResponseEntity<>("success", HttpStatus.OK);
+	}
+	
+	// 근무 시간 보여주기
+	@PostMapping("/emp/workingTimeList")
+	@ResponseBody
+	public ResponseEntity<List<Map<String, Object>>> workingTimeViewer(@RequestBody EmployeeVO emp){
+		int empNo = emp.getEmpNo();
+		
+		List<Map<String, Object>> result = empService.selectWorkingTime(empNo);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	// 시큐리티 사용한 로그인 화면

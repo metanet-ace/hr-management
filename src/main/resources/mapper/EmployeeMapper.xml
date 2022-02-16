@@ -31,5 +31,13 @@
 		FROM EMPLOYEE
 		WHERE EMP_NO = #{value}
 	</select>
-		
+	
+	<select id="findWorkingDate" resultType="map">
+		SELECT * 
+		FROM EMP_WORKINGHOUR ew, EMPLOYEE e 
+		WHERE ew.EMP_NO = e.EMP_NO
+		AND ew.EMP_NO = #{empNo}
+		AND ew.WORK_START BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD')
+		AND TO_DATE(#{enddate}, 'YYYYMMDD') 
+	</select>	
 </mapper>

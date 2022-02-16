@@ -4,7 +4,12 @@
 
 	<c:import url="/WEB-INF/views/include/header.jsp" />
 	<c:import url="/WEB-INF/views/include/sidebar.jsp" />
-  
+ 
+  	<script>
+  		$(document).ready(function(){
+  			calendarView();
+  		})
+  	</script>
         <!--**********************************
             Content body start
         ***********************************-->
@@ -12,7 +17,34 @@
             <!-- row -->
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-3 col-sm-6">
+                	<div class="col-lg-9 col-sm-10">
+	                	<div id="calendar">
+                		<!-- 달력 출력 -->
+                		</div>
+                	</div>
+                	
+					<div class="col-lg-3 col-sm-2 text-center">
+						<div class="card text-center border-dark mb-3" style="height: 50%;">
+							<div class="card-header text-center" style="display: block; font-size: 1.5em; color: black;">근태관리</div>
+							<div class="card-body">
+								<button type="button" class="btn btn-outline-danger" id="startTime" onclick='recordTime();'>출근하기</button>
+								<button type="button" class="btn btn-outline-danger" id="endTime">퇴근하기</button>
+								<br><br>
+								
+								<h4>금일 출근시간</h4>
+								<h5>2022-02-16 08:50:32</h5>
+								<h4>금일 퇴근시간</h4>
+								<h5></h5>
+								<h4>이번주 누적근무 시간</h4>
+								<h5>10시간</h5>
+							</div>
+							<div class="card-footer"></div>
+						</div>
+					</div>
+	
+	
+	
+				<!--   <div class="col-lg-3 col-sm-6">
                         <div class="card">
                             <div class="stat-widget-two card-body">
                                 <div class="stat-content">
@@ -63,12 +95,12 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- /# card -->
+                        /# card
                     </div>
-                    <!-- /# column -->
+                    /# column -->
                 </div>
                 <div class="row">
-                    <div class="col-xl-8 col-lg-8 col-md-8">
+              <!--       <div class="col-xl-8 col-lg-8 col-md-8">
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Sales Overview</h4>
@@ -100,10 +132,10 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row">
-                    <div class="col-lg-4">
+                <!--     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Project</h4>
@@ -250,7 +282,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- /# card -->
+                        /# card
                     </div>
                     <div class="col-lg-6">
                         <div class="card">
@@ -353,10 +385,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row">
-                    <div class="col-lg-6 col-xl-4 col-xxl-6 col-md-6">
+                 <%--    <div class="col-lg-6 col-xl-4 col-xxl-6 col-md-6">
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Timeline</h4>
@@ -573,7 +605,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --%>
                 </div>
 
             </div>
@@ -581,5 +613,68 @@
         <!--**********************************
             Content body end
         ***********************************-->
-        
+ 	<script>
+	function calendarView(){
+		
+		var empNo = ${sessionEmp.empNo}; 
+		var data = {empNo: empNo};
+		
+		$.ajax({
+			url: "/emp/workingTimeList",
+			type: "POST",
+			data: JSON.stringify(data),
+			contentType : 'application/json',
+			dataType: 'JSON',
+			success: function(result){
+				console.log(result);
+			var calendarEl = document.getElementById('calendar');
+			var calendar = new FullCalendar.Calendar(calendarEl, {
+				initialView : 'dayGridMonth',
+				locale : "ko",
+				dateClick : function(info) {
+					console.log(info);
+				},
+				//navLinks: true,
+				editable : true,
+				events : [ {
+					title : '테스트',
+					start : '2022-02-16'
+				} ]
+			});
+			calendar.render();
+			
+			},
+			error: function(err){
+				alert(err);
+			}
+		});
+		
+	
+	}
+	</script>
+ 	<script>
+ 		// 출근 시간 등록 
+		function recordTime() {
+			
+			// var startTime = $("#startTime").val();
+			// var data = {startTime: startTime};
+			var empNo = ${sessionEmp.empNo}; 
+			var data = {empNo: empNo};
+			
+			$.ajax({
+				url: "/emp/recordTime",
+				data: JSON.stringify(data),
+				type: "POST",
+				contentType : 'application/json',
+				success: function(result){
+					calendarView();
+				},
+				error: function(err){
+					alert(err);
+				}
+			});
+		}
+	</script>
+	
         <c:import url="/WEB-INF/views/include/footer.jsp" />
+        
