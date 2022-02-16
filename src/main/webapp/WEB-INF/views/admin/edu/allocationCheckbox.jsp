@@ -65,8 +65,8 @@ function eduAllocation(){
 			<input type="submit" value="찾기">
 		</form>
 		<br>
-		<div style='width: 80px; float: right;'>
-			<input type='button' class='btn' name='btn' value='교육 배정' onclick="eduAllocation();">
+		<div style='width: 80px; float: right; margin-bottom: 0.5em;'>
+			<input type='button' class="btn btn-primary" name='btn' value='교육배정' onclick="eduAllocation();">
 		</div>
 		<table class="table table-striped" border=1>
 			<thead>

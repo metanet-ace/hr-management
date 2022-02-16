@@ -130,6 +130,25 @@ public class EmployeeServiceImpl {
 		return empMapper.saveHistory(empHis); 
 	}	
 	
+	// 퇴사자 처리
+	public void updateRetire(int empNo, String retireReason) {
+		EmployeeVO emp = empRepo.findByEmpNo(empNo);
+		emp.setEmpRetdate(new Date());
+		EmployeeVO updatedEmp = empRepo.save(emp);
+		
+		EmpHistoryVO empHis = new EmpHistoryVO();
+		// 영속성 컨텍스트가 아닌 자바 객체 상에서 연관 관계를 사용하려면 setter로 값을 주입시켜주어야 한다.
+		empHis.setEmp(updatedEmp);
+		empHis.getEmp().setEmpNo(empNo);
+		empHis.setBeforeDept("-");
+		empHis.setBeforePos("-");
+		empHis.setIssuedContent(retireReason);
+		empHis.setIssuedDate(new Date());
+		empHis.setIssuedOrder("퇴사");
+		
+		empHisRepo.save(empHis);
+	}
+	
 	// 페이징 + 전체) 히스토리 리스트
 	public Page<EmpHistoryVO> getAllEmpHistory(Pageable pageable){
 		return empHisRepo.findAll(pageable);
@@ -153,7 +172,7 @@ public class EmployeeServiceImpl {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return empHisRepo.findAll(pageable);
 	}
 	

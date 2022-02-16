@@ -1,12 +1,42 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Favicon icon -->
+<link rel="icon" type="image/png" sizes="16x16"
+	href="/assets/images/favicon.png">
+<!-- Daterange picker -->
+<link
+	href="/assets/vendor/bootstrap-daterangepicker/daterangepicker.css"
+	rel="stylesheet">
+<!-- Clockpicker -->
+<link
+	href="/assets/vendor/clockpicker/css/bootstrap-clockpicker.min.css"
+	rel="stylesheet">
+<!-- asColorpicker -->
+<link
+	href="/assets/vendor/jquery-asColorPicker/css/asColorPicker.min.css"
+	rel="stylesheet">
+<!-- Material color picker -->
+<link
+	href="/assets/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css"
+	rel="stylesheet">
+<!-- Pick date -->
+<link rel="stylesheet"
+	href="/assets/vendor/pickadate/themes/default.css">
+<link rel="stylesheet"
+	href="/assets/vendor/pickadate/themes/default.date.css">
+<!-- Custom Stylesheet -->
+<link href="/assets/css/style.css" rel="stylesheet">
 </head>
 <body>
 	<!--**********************************
@@ -19,11 +49,11 @@
 				<div class="col-lg-12">
 					<div class="card">
 						<div class="card-header">
-							<h4 class="card-title">교육 과정 추가</h4>
+							<h4 class="card-title">교육 과정 조회</h4>
 						</div>
 						<div class="card-body">
 							<div class="form-validation">
-								<form class="form-valide" action="./addFile" method="post" enctype="multipart/form-data">
+								<div class="form-valide">
 									<div class="row">
 										<div class="col-xl-6">
 											<div class="form-group row">
@@ -32,8 +62,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTitle"
-														name="eduTitle" value="${eduVO.eduTitle }" placeholder="교육명을 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduTitle}</span>
+														name="eduTitle" value="${detail.eduTitle }" readonly>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -41,8 +70,8 @@
 													상세 <span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<textarea class="form-control" id="eduDesc" name="eduDesc" rows="5" placeholder="교육 상세를 입력해주세요.">${eduVO.eduDesc }</textarea>
-														<span style="color: #ff0000;">${valid_eduDesc}</span>
+													<textarea class="form-control" id="eduDesc"
+														name="eduDesc" rows="5" readonly>${detail.eduDesc }</textarea>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -51,8 +80,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduLoc"
-														name="eduLoc" value="${eduVO.eduLoc }" placeholder="장소를 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduLoc}</span>
+														name="eduLoc" value="${detail.eduLoc }" readonly>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -61,8 +89,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTime"
-														name="eduTime" value="${eduVO.eduTime }" placeholder="총 이수 시간을 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduTime}</span>
+														name="eduTime" value="${detail.eduTime }" readonly>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -71,8 +98,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTeacher"
-														name="eduTeacher" value="${eduVO.eduTeacher }" placeholder="담당 강사를 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduTeacher}</span>
+														name="eduTeacher" value="${detail.eduTeacher }" readonly>
 												</div>
 											</div>
 										</div>
@@ -83,8 +109,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduPeople"
-														name="eduPeople" value="${eduVO.eduPeople }" placeholder="인원을 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduPeople}</span>
+														name="eduPeople" value="${detail.eduPeople }" readonly>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -93,8 +118,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTarget"
-														name="eduTarget" value="${eduVO.eduTarget }"placeholder="대상을 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduTarget}</span>
+														name="eduTarget" value="${detail.eduTarget }" readonly>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -102,9 +126,8 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduStart" value="${eduVO.eduStart }"
-															name="eduStart">
-													<span style="color: #ff0000;">${valid_eduStart}</span>												
+													<input type="text" class="form-control" id="eduStart"
+														name="eduStart" value="${detail.eduStart }" readonly>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -112,19 +135,8 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduEnd" value="${eduVO.eduEnd }"
-														name="eduEnd">
-													<span style="color: #ff0000;">${valid_eduEnd}</span>
-												</div>
-											</div>
-											<div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="eduCost">비용
-													<span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduCost" value="${eduVO.eduCost }"
-														name="eduCost" placeholder="비용을 입력해주세요.">
-													<span style="color: #ff0000;">${valid_eduCost}</span>
+													<input type="text" class="form-control" id="eduEnd"
+														name="eduEnd" value="${detail.eduEnd }" readonly>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -132,20 +144,28 @@
                                                         <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="file" class="form-control" id="uploadfile" name="uploadfile">
+                                                    	<c:choose>
+                                                    		<c:when test="${detail.eduFile eq null}">
+                                                    			파일이 없습니다.
+                                                    		</c:when>
+                                                    		<c:otherwise>
+                                                    		<input type="hidden" name="eduRefile" value=${detail.eduRefile }>
+                                                    		<input type="text" class="form-control" id="uploadfile" name="uploadfile" value="${detail.eduFile }" readonly>
+                                                        <a href="./download?uuid=${uuid }&fileName=${detail.eduFile}">[download]</a>
+                                                    		</c:otherwise>
+                                                    	</c:choose>
                                                     </div>
                                                 </div>
 
 
 											<div class="form-group row">
 												<div class="col-lg-8 ml-auto">
-													<button type="submit" class="btn btn-primary">등록</button>
-													<button type="button" onclick="location.href='./list';" class="btn btn-primary">취소</button>
+													<button type="button" onclick="location.href='./history?empNo=${sessionEmp.empNo}';" class="btn btn-primary">리스트로</button>
 												</div>
 											</div>
 										</div>
 									</div>
-								</form>
+								</div>
 							</div>
 						</div>
 					</div>

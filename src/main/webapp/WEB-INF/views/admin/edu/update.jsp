@@ -41,9 +41,11 @@
 			location.href="./detail?edu_no="+no;
 	}
 	
-	function update(no){
+	function updateCheck(){
 		if(confirm("해당 교육과정을 수정하시겠습니까?")){
-			location.href="./update?edu_no="+no;
+			return true;
+		}else{
+			return false;
 		}
 	}
 </script>
@@ -63,7 +65,7 @@
 						</div>
 <div class="card-body">
 							<div class="form-validation">
-								<form class="form-valide" action="./update" method="post" enctype="multipart/form-data">
+								<form class="form-valide" action="./update" method="post" onsubmit="return updateCheck()" enctype="multipart/form-data">
 									<input type="hidden" name="eduNo" value="${eduVO.eduNo}">
 									<div class="row">
 										<div class="col-xl-6">

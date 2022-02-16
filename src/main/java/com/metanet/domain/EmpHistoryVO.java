@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -32,17 +32,18 @@ public class EmpHistoryVO {
 //	private int empNo;
 	private int posNo;
 	private int deptNo;
-	private int beforePos;
-	private int beforeDept;
+	private String beforePos;
+	private String beforeDept;
 	@Temporal(TemporalType.DATE)
 	private Date issuedDate;
 	private String issuedOrder;
 	private String issuedContent;
 	
 	@Transient
-	private int batisEmpNo;
+	private int batisEmpNo; 
 	
-	@OneToMany
-	@JoinColumn(name="empNo")
-	private List<EmployeeVO> emp; 
+	@ManyToOne
+	@JoinColumn(name="EMP_NO")
+	private EmployeeVO emp; 
+	
 }

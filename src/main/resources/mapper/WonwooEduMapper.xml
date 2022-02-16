@@ -95,7 +95,7 @@
 	</select>
 	
 	<select id="getEduEmpHistroyList" resultType="com.metanet.domain.EduHistoryVO">
-		select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+		select d.edu_title, d.edu_no, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h 
     	where e.emp_no = #{empNo} 
     	and e.emp_no = h.emp_no
@@ -103,7 +103,7 @@
 	</select>
 	
 	<select id="getEduEmpHistroyListByKey" parameterType="Map" resultType="com.metanet.domain.EduHistoryVO">
-    	select d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	select d.edu_title, d.edu_no, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h 
     	where e.emp_no = #{empNo} 
     	and e.emp_no = h.emp_no
