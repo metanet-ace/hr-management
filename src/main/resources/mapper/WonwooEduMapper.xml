@@ -1,12 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.metanet.persistence.WonwooEduMapper">
+
 	<select id="eduList" resultType="com.metanet.domain.EduVO">
 		SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
 		TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
 		EDU_PROGRESS
 		FROM EDU
 	</select>
+	
+	<select id ="getPagingEduList" resultType="com.metanet.domain.EduVO">
+		<choose>
+			<when test="keyField =='eduTitle' and keyword != null and keyword !=''">
+				<![CDATA[
+				SELECT * 
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+				TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+				EDU_PROGRESS FROM EDU
+				WHERE edu_title like '%'||#{keyword}||'%' ORDER BY edu_no desc) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+				]]>
+			</when>
+			<when test="keyField =='eduTarget' and keyword != null and keyword !=''">
+				<![CDATA[
+			SELECT * 
+			FROM (SELECT rownum rnum, a.*
+			FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+			TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+			EDU_PROGRESS FROM EDU 
+			WHERE edu_target like '%'||#{keyword}||'%' ORDER BY edu_no desc) a )
+			WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			]]>
+			</when>
+			<when test="keyField =='eduProgress' and keyword != null and keyword !=''">
+				<choose>
+					<when test="keyword == '진행상태'">
+					<![CDATA[
+					SELECT * 
+					FROM (SELECT rownum rnum, a.*
+					FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+					TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+					EDU_PROGRESS FROM EDU
+					WHERE edu_progress like '%'||'pre'||'%' ORDER BY edu_no desc) a )
+					WHERE rnum BETWEEN #{startNum} AND #{endNum}
+					]]>
+					</when>
+					<when test="keyword == '진행중'">
+					<![CDATA[
+					SELECT * 
+					FROM (SELECT rownum rnum, a.*
+					FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+					TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+					EDU_PROGRESS FROM EDU
+					WHERE edu_progress like '%'||'ing'||'%' ORDER BY edu_no desc) a )
+					WHERE rnum BETWEEN #{startNum} AND #{endNum}
+					]]>
+					</when>
+					<when test="keyword == '진행종료'">
+					<![CDATA[
+					SELECT * 
+					FROM (SELECT rownum rnum, a.*
+					FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+					TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+					EDU_PROGRESS FROM EDU
+					WHERE edu_progress like '%'||'post'||'%' ORDER BY edu_no desc) a )
+					WHERE rnum BETWEEN #{startNum} AND #{endNum}
+					]]>
+				</when>
+				<otherwise>
+				<![CDATA[
+				SELECT * 
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+				TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+				EDU_PROGRESS FROM EDU ORDER BY edu_no desc) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			]]>
+				</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+			<![CDATA[
+			SELECT * 
+			FROM (SELECT rownum rnum, a.*
+			FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+			TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+			EDU_PROGRESS FROM EDU ORDER BY edu_no desc) a )
+			WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			]]>
+			</otherwise>
+			</choose>
+	</select>
+	
+	<select id="EduTotalCount" parameterType="Map" resultType="Integer">
+		SELECT COUNT(*) FROM EDU
+		<choose>
+			<when test="keyField =='eduTitle' and keyword != null and keyword !=''">
+				WHERE edu_title like '%'||#{keyword}||'%'
+			</when>
+			<when test="keyField =='eduTarget' and keyword != null and keyword !=''">
+				WHERE edu_target like '%'||#{keyword}||'%'
+			</when>
+		</choose> 
+	</select>
+	
 	
 	<select id="eduDetail" parameterType="Integer" resultType="com.metanet.domain.EduVO">
 		SELECT EDU_NO, EDU_TITLE, EDU_DESC, EDU_LOC, EDU_TIME, EDU_TEACHER, EDU_PEOPLE, EDU_TARGET,
@@ -43,26 +141,26 @@
 		
 	<select id="getPagingList" resultType="com.metanet.domain.EmpListVO">
 		<choose>
-			<when test="keyword =='deptName' and searchContent != null and searchContent !=''">
+			<when test="keyField =='deptName' and keyword != null and keyword !=''">
 			<![CDATA[
 				SELECT * 
 		FROM (SELECT rownum rnum, a.*
 	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
 				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
 				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
-				and dept_name like '%'||#{searchContent}||'%'
+				and dept_name like '%'||#{keyword}||'%'
 				ORDER BY e.emp_no desc) a )
 		WHERE rnum BETWEEN #{startNum} AND #{endNum} 
 			]]>
 			</when>
-			<when test="keyword =='posName' and searchContent != null and searchContent !=''">
+			<when test="keyField =='posName' and keyword != null and keyword !=''">
 			<![CDATA[
 				SELECT * 
 		FROM (SELECT rownum rnum, a.*
 	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
 				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
 				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
-				and pos_name like '%'||#{searchContent}||'%'
+				and pos_name like '%'||#{keyword}||'%'
 				ORDER BY e.emp_no desc) a )
 		WHERE rnum BETWEEN #{startNum} AND #{endNum} 
 			]]>
@@ -85,16 +183,16 @@
 	SELECT COUNT(*) FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p
 		WHERE e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
 		<choose>
-			<when test="keyword =='deptName' and searchContent != null and searchContent !=''">
-					and d.dept_name like '%'||#{searchContent}||'%'
+			<when test="keyField =='deptName' and keyword != null and keyword !=''">
+					and d.dept_name like '%'||#{keyword}||'%'
 				</when>
-			<when test="keyword =='posName' and searchContent != null and searchContent !=''">
-					and p.pos_name like '%'||#{searchContent}||'%'
+			<when test="keyField =='posName' and keyword != null and keyword !=''">
+					and p.pos_name like '%'||#{keyword}||'%'
 			</when>
 		</choose>
 	</select>
 	
-	<select id="getEduEmpHistroyList" resultType="com.metanet.domain.EduHistoryVO">
+	<!-- <select id="getEduEmpHistroyList" resultType="com.metanet.domain.EduHistoryVO">
 		select d.edu_title, d.edu_no, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h 
     	where e.emp_no = #{empNo} 
@@ -110,6 +208,52 @@
     	and d.edu_no = h.edu_no
     	<choose>
     		<when test='"eduTitle".equals(keyField) '>
+    			and d.edu_title like '%' || #{keyField} || '%'
+    		</when>
+    	</choose>
+    </select> -->
+    
+    <select id="getPagingEmpEduList" parameterType="map" resultType="com.metanet.domain.EduHistoryVO">
+    	<choose>
+			<when test="keyField =='eduTitle' and keyword != null and keyword !=''">
+			<![CDATA[
+			SELECT * 
+		FROM (SELECT rownum rnum, a.*
+	    FROM (SELECT d.edu_title, d.edu_no, e.emp_no, e.emp_name, h.attendance, h.score 
+				FROM  employee e, edu d, edu_history h 
+				where e.emp_no = #{empNo} 
+    			and e.emp_no = h.emp_no
+    			and d.edu_no = h.edu_no
+				and d.edu_title like '%'||#{keyword}||'%'
+				ORDER BY d.edu_no desc) a )
+		WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			]]>
+			</when>
+			<otherwise>
+			<![CDATA[
+			SELECT * 
+		FROM (SELECT rownum rnum, a.*
+	    FROM (SELECT d.edu_title, d.edu_no, e.emp_no, e.emp_name, h.attendance, h.score 
+				FROM  employee e, edu d, edu_history h 
+				where e.emp_no = #{empNo} 
+    			and e.emp_no = h.emp_no
+    			and d.edu_no = h.edu_no
+				ORDER BY d.edu_no desc) a )
+		WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			]]>
+			</otherwise>
+			</choose>
+    
+    </select>
+    
+    <select id="EmpEduTotalCount" parameterType="Map" resultType="Integer">
+    	select count(*)
+    	from employee e, edu d, edu_history h 
+    	where e.emp_no = #{empNo} 
+    	and e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+    	<choose>
+    		<when test="keyField =='eduTitle' and keyword != null and keyword !=''">
     			and d.edu_title like '%' || #{keyword} || '%'
     		</when>
     	</choose>

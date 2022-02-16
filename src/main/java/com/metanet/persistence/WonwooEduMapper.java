@@ -39,4 +39,12 @@ public interface WonwooEduMapper{
 	public void eduUpdateNoModifyFile(EduVO eduVO);
 
 	public void eduAddNoFile(@Valid EduVO eduVO);
+
+	public List<EduVO> getPagingEmpEduList(Map<String, Object> map);
+
+	public int EmpEduTotalCount(Map<String, Object> map);
+
+	public List<EduVO> getPagingEduList(PageDTO pdto);
+
+	public int EduTotalCount(PageDTO pdto);
 }
