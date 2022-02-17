@@ -42,16 +42,18 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empName">이름</label>
+                                                    <label class="col-lg-4 col-form-label" for="empName">이름<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empName" name="empName" value="${emp.empName }" placeholder="이름을 입력해주세요.">
+                                                        <input type="text" class="form-control" id="empName" name="empName" value="${emp.empName }">
                                                     	<span style="color: #ff0000;">${valid_empName}</span>
                                                     </div>
                                                 </div>
                                                   
                                                 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label">성별</label>
+                                                    <label class="col-lg-4 col-form-label">성별<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-8">
                                                            <c:choose>
                                                        <c:when test="${emp.empGender eq '여'}">
@@ -67,27 +69,31 @@
                                                            <input type="radio" name="empGender" value="남"> 남자
                                                         </c:otherwise>
                                                         </c:choose>
+                                                        <br>
 
                                                         	<span style="color: #ff0000;">${valid_empGender}</span>
                                                     </div>
                                                 </div>
                                                 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empPhone">전화번호</label>
+                                                    <label class="col-lg-4 col-form-label" for="empPhone">전화번호<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empPhone" name="empPhone" value="${emp.empPhone }" placeholder="xxx-(x)xxx-xxxx">
+                                                        <input type="text" class="form-control" id="empPhone" name="empPhone" value="${emp.empPhone }" placeholder="'-' 포함 입력">
                                                         <span style="color: #ff0000;">${valid_empPhone}</span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empEmail">이메일</label>
+                                                    <label class="col-lg-4 col-form-label" for="empEmail">이메일<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empEmail" name="empEmail" value="${emp.empEmail }" placeholder="xxx@xxx.xxx">
+                                                        <input type="text" class="form-control" id="empEmail" name="empEmail" value="${emp.empEmail }" placeholder="xxx@xxxxx.xxx">
                                                         <span style="color: #ff0000;">${valid_empEmail}</span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empHiredate">입사일</label>
+                                                    <label class="col-lg-4 col-form-label" for="empHiredate">입사일<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
                                                         <input type="date" class="form-control" id="empHiredate" name="empHiredate" value="${emp.empHiredate }">
                                                         <span style="color: #ff0000;">${valid_empHiredate}</span>
@@ -96,9 +102,10 @@
                                             
                                             
                                             <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empSsc">주민번호 </label>
+                                                    <label class="col-lg-4 col-form-label" for="empSsc">주민번호 <span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empSsc" name="empSsc" placeholder="xxxxxx-xxxxxxx" value="${emp.empSsc }">
+                                                        <input type="text" class="form-control" id="empSsc" name="empSsc" placeholder="xxxxxx-xxxxxxx" value="${emp.empSsc }" placeholder="'-' 포함 입력">
                                                         <span style="color: #ff0000;">${valid_empSsc}</span>
                                                     </div>
                                             </div>
@@ -106,7 +113,8 @@
                                                 
                                             <div class="col-xl-6">
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empDegree">최종학력</label>
+                                                    <label class="col-lg-4 col-form-label" for="empDegree">최종학력<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
                                                     <c:choose>
                                                       <c:when test="${ emp.empDegree eq '고졸'}">
@@ -160,7 +168,8 @@
                                                 </div>
                                                 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label">신입/경력 </label>
+                                                    <label class="col-lg-4 col-form-label">신입/경력 <span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-8">
                                                     <c:choose>
                                                     	<c:when test="${emp.empCareer eq '신입' }">
@@ -182,93 +191,24 @@
                                                 </div>
                                                 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="deptNo">부서</label>
+                                                    <label class="col-lg-4 col-form-label" for="deptNo">부서<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
-                                                    <c:choose>
-                                                      <c:when test="${ emp.deptNo eq 1}">
+                                                    
                                                         <select class="form-control" id="deptNo" name="deptNo">
+                                                        	
                                                             <option value="">부서를 선택해주세요</option>
-                                                            <option value=1 selected>인사팀</option>
-                                                            <option value=2>마케팅팀</option>
-                                                            <option value=3>경영팀</option>
-                                                            <option value=4>개발팀</option>
-                                                            <option value=5>기획팀</option>
-                                                            <option value=6>법무팀</option>
+                                                            <c:forEach items="${dept }" var="dept">
+                                                            <option value="${dept.deptNo }" <c:if test="${dept.deptNo eq emp.deptNo}">selected</c:if>>${dept.deptName }</option>
+                                                            </c:forEach>
                                                         </select>
-                                                      </c:when>
-                                                      <c:when test="${ emp.deptNo eq 2}">
-                                                        <select class="form-control" id="deptNo" name="deptNo">
-                                                            <option value="">부서를 선택해주세요</option>
-                                                            <option value=1>인사팀</option>
-                                                            <option value=2 selected>마케팅팀</option>
-                                                            <option value=3>경영팀</option>
-                                                            <option value=4>개발팀</option>
-                                                            <option value=5>기획팀</option>
-                                                            <option value=6>법무팀</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:when test="${ emp.deptNo eq 3}">
-                                                        <select class="form-control" id="deptNo" name="deptNo">
-                                                            <option value="">부서를 선택해주세요</option>
-                                                            <option value=1>인사팀</option>
-                                                            <option value=2>마케팅팀</option>
-                                                            <option value=3 selected>경영팀</option>
-                                                            <option value=4>개발팀</option>
-                                                            <option value=5>기획팀</option>
-                                                            <option value=6>법무팀</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:when test="${ emp.deptNo eq 4}">
-                                                        <select class="form-control" id="deptNo" name="deptNo">
-                                                            <option value="">부서를 선택해주세요</option>
-                                                            <option value=1>인사팀</option>
-                                                            <option value=2>마케팅팀</option>
-                                                            <option value=3>경영팀</option>
-                                                            <option value=4 selected>개발팀</option>
-                                                            <option value=5>기획팀</option>
-                                                            <option value=6>법무팀</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:when test="${ emp.deptNo eq 5}">
-                                                        <select class="form-control" id="deptNo" name="deptNo">
-                                                            <option value="">부서를 선택해주세요</option>
-                                                            <option value=1>인사팀</option>
-                                                            <option value=2>마케팅팀</option>
-                                                            <option value=3>경영팀</option>
-                                                            <option value=4>개발팀</option>
-                                                            <option value=5 selected>기획팀</option>
-                                                            <option value=6>법무팀</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:when test="${ emp.deptNo eq 6}">
-                                                        <select class="form-control" id="deptNo" name="deptNo">
-                                                            <option value="">부서를 선택해주세요</option>
-                                                            <option value=1>인사팀</option>
-                                                            <option value=2>마케팅팀</option>
-                                                            <option value=3>경영팀</option>
-                                                            <option value=4>개발팀</option>
-                                                            <option value=5>기획팀</option>
-                                                            <option value=6 selected>법무팀</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:otherwise>
-                                                        <select class="form-control" id="deptNo" name="deptNo">
-                                                            <option value="">부서를 선택해주세요</option>
-                                                            <option value=1>인사팀</option>
-                                                            <option value=2>마케팅팀</option>
-                                                            <option value=3>경영팀</option>
-                                                            <option value=4>개발팀</option>
-                                                            <option value=5>기획팀</option>
-                                                            <option value=6>법무팀</option>
-                                                        </select>
-                                                      </c:otherwise>
-                                                    </c:choose>
                                                         <span style="color: #ff0000;">${valid_deptNo}</span>
                                                     </div>
                                                 </div>
                                                 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="posNo">직급</label>
+                                                    <label class="col-lg-4 col-form-label" for="posNo">직급<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
                                                     <c:choose>
                                                       <c:when test="${emp.posNo eq 1}">
@@ -354,17 +294,20 @@
                                                 </div>
                                                 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empSal">연봉</label>
+                                                    <label class="col-lg-4 col-form-label" for="empSal">연봉<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-4">
-                                                        <input type="text" class="form-control" id="empSal" name="empSal" placeholder="숫자만 입력해주세요." value="${emp.empSal }">
-                                                    </div>
-                                                    <div>만 원</div>
-                                                    <span style="color: #ff0000;">${valid_empSal}</span>
+                                                        <input type="text" class="form-control" id="empSal" name="empSal" placeholder="숫자만 입력" value="${emp.empSal }">
+                                                    	<span style="color: #ff0000;">${valid_empSal}</span>
+                                                    </div>만 원
+                                                    
+                                                    
                                                 </div>
                                                
                                                 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empMil">병역</label>
+                                                    <label class="col-lg-4 col-form-label" for="empMil">병역<span
+                                                            class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
                                                     <c:choose>
                                                       <c:when test="${emp.empMil eq '미필' }">

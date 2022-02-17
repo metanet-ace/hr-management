@@ -26,24 +26,24 @@ public class EmployeeVO2 {
 	@NotBlank(message="성별을 선택해주세요.")
 	private String empGender;
 	
-	@Pattern(regexp="^\\d{2,3}-\\d{3,4}-\\d{4}$", message="전화번호 양식과 맞지 않습니다. 01x-xxx(x)-xxxx")
+	@Pattern(regexp="^\\d{2,3}-\\d{3,4}-\\d{4}$", message="전화번호 형식에 맞춰 입력해주세요. <br> ex) 01x-xxx(x)-xxxx")
 	private String empPhone;
 	
 	@Positive(message="연봉을 입력해주세요.")
 	private String empSal;
 	
-	@Pattern(regexp="^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$", message="이메일 형식에 맞지 않습니다.")
+	@Pattern(regexp="^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$", message="이메일 형식에 맞춰 입력해주세요. <br> ex) xxx@xxxx.xxx")
 	private String empEmail;
 	
-	@NotBlank(message="날짜를 입력해주세요.")
+	@NotBlank(message="날짜를 선택해주세요.")
 	private String empHiredate;
 	
 	private String empRetdate;
 	
-	@Pattern(regexp="\\d{2}([0]\\d|[1][0-2])([0][1-9]|[1-2]\\d|[3][0-1])[-][1-4]\\d{6}", message="xxxxxx-x(1~4)xxxxxx 형식을 맞춰주세요.")
+	@Pattern(regexp="\\d{2}([0]\\d|[1][0-2])([0][1-9]|[1-2]\\d|[3][0-1])[-][1-4]\\d{6}", message="전화번호 형식에 맞춰 입력해주세요. <br> ex) xxxxxx-xxxxxxx")
 	private String empSsc;
 	
-	@NotBlank(message="학력을 입력해주세요.")
+	@NotBlank(message="학력을 선택해주세요.")
 	private String empDegree;
 	
 	@NotBlank(message="신입/경력을 선택해주세요.")

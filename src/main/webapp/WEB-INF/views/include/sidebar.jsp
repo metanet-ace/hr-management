@@ -25,6 +25,7 @@
                                 class="icon icon-app-store"></i><span class="nav-text">조직 관리</span></a>
                         <ul aria-expanded="false">
                             <li><a href="/admin/emp/insertEmpPage">사원 등록</a></li>
+                            <li><a href="/admin/emp/deptList">부서 관리</a></li>
                    			<li><a href="/admin/emp">인사 이동</a></li>
                             <li><a href="/admin/emp/history">인사 이동 히스토리</a></li>
                         </ul>

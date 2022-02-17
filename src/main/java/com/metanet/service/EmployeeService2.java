@@ -1,9 +1,11 @@
 package com.metanet.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.validation.Errors;
 
+import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.EmployeeVO2;
 
 public interface EmployeeService2 {
@@ -12,6 +14,12 @@ public interface EmployeeService2 {
 	public int updateEmp(EmployeeVO2 emp);	// 사원수정하기(인사팀) : 비밀번호수정x
 	public int updatePwd(EmployeeVO2 emp);	// 사원비밀번호 0000 수정(인사팀)
 	public Map<String, String> validateHandling(Errors errors);	//유효성검사
-	public String pwCheck(int empNo);
-	public void pwUpdate(int empNo, String hashedPw);
+	public String pwCheck(int empNo);	//현재비밀번호 일치확인(공통)
+	public void pwUpdate(int empNo, String hashedPw); //비밀번호 수정(공통)
+	
+	public List<DepartmentVO> deptList(); //부서리트스조회(인사팀)
+	public List<DepartmentVO> dept(); //부서이름, 번호 불러오기
+	public int insertDept(DepartmentVO dept);	//부서등록(인사팀)
+	
+	public int deptCount(int deptNo); //부서별 인원 수
 }

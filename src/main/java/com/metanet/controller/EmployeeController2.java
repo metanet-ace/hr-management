@@ -17,15 +17,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.EmployeeVO2;
 import com.metanet.domain.PasswordVO;
@@ -36,7 +35,7 @@ public class EmployeeController2 {
 
 	@Autowired
 	EmployeeService2 service;
-	
+
 	@Autowired
 	PasswordEncoder encoder;
 
@@ -44,13 +43,14 @@ public class EmployeeController2 {
 	@GetMapping("/admin/emp/insertEmpPage")
 	public String insertEmployeePage(Model model) {
 		model.addAttribute("title", "사원등록 페이지");
+		model.addAttribute("dept", service.dept());
 		return "/admin/insertEmp";
 	}
 
 	// 사원등록하기(인사팀)
 	@PostMapping("/admin/emp/insertEmp")
-	public String insertEmployee(@Valid EmployeeVO2 emp, Errors errors, HttpServletRequest request,
-			Model model, @RequestParam(name = "upfile", required = false) MultipartFile mfile) {
+	public String insertEmployee(@Valid EmployeeVO2 emp, Errors errors, HttpServletRequest request, Model model,
+			@RequestParam(name = "upfile", required = false) MultipartFile mfile) {
 		// parameter 값이 없어도 오류가 나지 않게 하기 위해서 required = false
 
 		// 파일 저장 폴더 지정
@@ -96,16 +96,17 @@ public class EmployeeController2 {
 
 			emp.setEmpPhoto(mfile.getOriginalFilename());
 		}
-		
 		// 유효성 검사
-		
-		// 유효성 통과 못한 필드와 메시지를 핸들링 
-		if(errors.hasErrors()) {
+
+		// 유효성 통과 못한 필드와 메시지를 핸들링
+		if (errors.hasErrors()) {
 			// 사원등록 실패시, 입력 데이터를 유지
 			model.addAttribute("emp", emp);
+			model.addAttribute("dept", service.dept());
+
 			// 유효성 통과 못한 필드와 메시지를 핸들링
 			Map<String, String> validatorResult = service.validateHandling(errors);
-			for(String key : validatorResult.keySet()) {
+			for (String key : validatorResult.keySet()) {
 				model.addAttribute(key, validatorResult.get(key));
 			}
 			return "/admin/insertEmp";
@@ -142,7 +143,7 @@ public class EmployeeController2 {
 
 	// 사원수정하기(인사팀) : 비밀번호변경X
 	@PostMapping("/admin/emp/updateEmp")
-	public String updateEmployee(EmployeeVO2 emp, HttpServletRequest request, Model model,
+	public String updateEmployee(@Valid EmployeeVO2 emp, Errors errors, HttpServletRequest request, Model model,
 			@RequestParam(name = "upfile", required = false) MultipartFile mfile) {
 		// 파일 저장 경로
 		String savePath = request.getSession().getServletContext().getRealPath("resources/employeeImages");
@@ -196,7 +197,21 @@ public class EmployeeController2 {
 
 			emp.setEmpPhoto(mfile.getOriginalFilename());
 		}
-		System.out.println("empNo확인" + emp.getEmpNo());
+
+		// 유효성 검사
+
+		// 유효성 통과 못한 필드와 메시지를 핸들링
+		if (errors.hasErrors()) {
+			// 사원등록 실패시, 입력 데이터를 유지
+			model.addAttribute("emp", emp);
+			// 유효성 통과 못한 필드와 메시지를 핸들링
+			Map<String, String> validatorResult = service.validateHandling(errors);
+			for (String key : validatorResult.keySet()) {
+				model.addAttribute(key, validatorResult.get(key));
+			}
+			return "/admin/updateEmp";
+		}
+
 		if (service.updateEmp(emp) > 0) {
 			return "redirect:/admin/emp/detail?empNo=" + emp.getEmpNo();
 		} else {
@@ -212,7 +227,7 @@ public class EmployeeController2 {
 		return "redirect:/admin/emp/detail?empNo=" + Integer.parseInt(request.getParameter("empNo"));
 	}
 
-	// 내 정보 보기
+	// 내 정보 보기(공통)
 	@GetMapping("/emp/detail")
 	public String empDetail(@RequestParam("empNo") int empNo, Model model) {
 		EmployeeVO2 emp = service.selectOne(empNo);
@@ -222,7 +237,7 @@ public class EmployeeController2 {
 		return "/empDetail";
 	}
 
-	// 비밀번호 변경 페이지 이동
+	// 비밀번호 변경 페이지 이동(공통)
 	@GetMapping("/emp/upPwdPage")
 	public String empUpdatePage(@RequestParam("empNo") int empNo, Model model) {
 		EmployeeVO2 emp = service.selectOne(empNo);
@@ -230,7 +245,8 @@ public class EmployeeController2 {
 
 		return "/empUpPwd";
 	}
-	
+
+	// 현재비밀번호 일치확인(공통)
 	@PostMapping("/emp/pwCheck")
 	@ResponseBody
 	public int pwCheck(HttpSession session, EmployeeVO2 emp) {
@@ -238,37 +254,81 @@ public class EmployeeController2 {
 		System.out.println(empInfo);
 		System.out.println("empNo 확인" + empInfo.getEmpNo());
 		String empPwd = service.pwCheck(empInfo.getEmpNo());
-		
+
 		System.out.println("emp.getEmpPwd() 확인" + emp.getEmpPwd());
 		System.out.println("empPwd 확인" + empPwd);
-		
-		if(!encoder.matches(emp.getEmpPwd(), empPwd)) {
+
+		if (!encoder.matches(emp.getEmpPwd(), empPwd)) {
 			return 0;
 		}
 		return 1;
 	}
-	
+
+	// 비밀번호 수정(공통)
 	@PostMapping("/emp/pwUpdate")
-	public String pwUpdate(@Valid PasswordVO pass, Errors errors, Model model, int empNo, String pw1, RedirectAttributes rttr, HttpSession session) {
+	public String pwUpdate(@Valid PasswordVO pass, Errors errors, Model model, int empNo, String pw1,
+			RedirectAttributes rttr, HttpSession session) {
 		String hashedPw = "{bcrypt}" + BCrypt.hashpw(pw1, BCrypt.gensalt());
 		// 유효성 검사
-		
-				// 유효성 통과 못한 필드와 메시지를 핸들링 
-				if(errors.hasErrors()) {
-					// 사원등록 실패시, 입력 데이터를 유지
-					model.addAttribute("pass", pass);
-					// 유효성 통과 못한 필드와 메시지를 핸들링
-					Map<String, String> validatorResult = service.validateHandling(errors);
-					for(String key : validatorResult.keySet()) {
-						model.addAttribute(key, validatorResult.get(key));
-					}
-					return "/empUpPwd";
-				}
+
+		// 유효성 통과 못한 필드와 메시지를 핸들링
+		if (errors.hasErrors()) {
+			// 사원등록 실패시, 입력 데이터를 유지
+			model.addAttribute("pass", pass);
+			// 유효성 통과 못한 필드와 메시지를 핸들링
+			Map<String, String> validatorResult = service.validateHandling(errors);
+			for (String key : validatorResult.keySet()) {
+				model.addAttribute(key, validatorResult.get(key));
+			}
+			return "/empUpPwd";
+		}
 		System.out.println("hashedPw = " + hashedPw);
 		service.pwUpdate(empNo, hashedPw);
 		session.invalidate();
 		rttr.addFlashAttribute("msg", "비밀번호 수정이 완료되었습니다. 다시 로그인해주세요.");
-		
+
 		return "redirect:/logout";
+	}
+
+	// 부서리스트조회(인사팀)
+	@GetMapping("/admin/emp/deptList")
+	public String deptList(Model model, HttpServletRequest request) {
+		model.addAttribute("deptList", service.deptList());
+		model.addAttribute("title", "부서 리스트");
+
+		return "/admin/deptList";
+	}
+
+	// 부서등록페이지이동(인사팀)
+	@GetMapping("/admin/emp/insertDeptPage")
+	public String insertDept(Model model) {
+		model.addAttribute("title", "부서 등록페이지");
+		return "/admin/insertDept";
+	}
+
+	// 부서등록(인사팀)
+	@PostMapping("/admin/emp/insertDept")
+	public String insertDept(@Valid DepartmentVO dept, Errors errors, Model model) {
+		// 유효성 검사
+
+		// 유효성 통과 못한 필드와 메시지를 핸들링
+		if (errors.hasErrors()) {
+			// 사원등록 실패시, 입력 데이터를 유지
+			model.addAttribute("dept", dept);
+
+			// 유효성 통과 못한 필드와 메시지를 핸들링
+			Map<String, String> validatorResult = service.validateHandling(errors);
+			for (String key : validatorResult.keySet()) {
+				model.addAttribute(key, validatorResult.get(key));
+			}
+			return "/admin/insertDept";
+		}
+
+		if (service.insertDept(dept) > 0) {
+			return "redirect:/admin/emp/deptList";
+		} else {
+			model.addAttribute("message", "부서 등록 실패");
+			return "/index";
+		}
 	}
 }
