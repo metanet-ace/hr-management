@@ -5,6 +5,28 @@
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
 
+<!DOCTYPE html>
+<html>
+<script type="text/javascript">
+let now = new Date();
+let year =  now.getFullYear();
+let month = now.getMonth()+1;
+let date = now.getDate();
+var today = new Date(year+'-'+ month +'-'+ date);
+
+function checkStart(){
+	start = new Date($('#eduStart').val());
+	if(start.valueOf() < today.valueOf()){
+		alert("교육 시작일은 현재 날짜 이후만 가능합니다.");
+		$("#eduStart").val('');
+	}else {
+		$("#eduEnd").attr("min",$('#eduStart').val());
+		$("#eduEnd").val('');
+		$("#eduEnd").attr("readonly",false);
+	}
+}
+</script>
+
 <body>
 	<!--**********************************
             Content body start
@@ -99,7 +121,8 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="datepicker" value="${eduVO.eduStart }" name="eduStart">
+													<input type="date" class="form-control" id="eduStart" value="${eduVO.eduStart }"
+															name="eduStart" onchange="checkStart();">
 													<span style="color: #ff0000;">${valid_eduStart}</span>												
 												</div>
 											</div>
@@ -109,7 +132,7 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="date" class="form-control" id="eduEnd" value="${eduVO.eduEnd }"
-														name="eduEnd">
+														name="eduEnd" readonly="readonly">
 													<span style="color: #ff0000;">${valid_eduEnd}</span>
 												</div>
 											</div>
