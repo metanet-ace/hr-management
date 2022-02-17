@@ -4,11 +4,77 @@
 
 	<c:import url="/WEB-INF/views/include/header.jsp" />
 	<c:import url="/WEB-INF/views/include/sidebar.jsp" />
- 
+ 	
   	<script>
   		$(document).ready(function(){
+  			// 페이지가 처음 로드될 때 캘린더 보여주기
   			calendarView();
-  		})
+			
+  			document.getElementById('prevBtn').addEventListener('click', function() {
+  				
+  				var empNo = ${sessionEmp.empNo}; 
+  				var data = {empNo: empNo};
+  				
+  				$.ajax({
+  					url: "/emp/workingTimeList",
+  					type: "POST",
+  					data: JSON.stringify(data),
+  					contentType : 'application/json',
+  					dataType: 'JSON',
+  					success: function(result){
+  						
+	  					if(month == 0){
+	  	  		  				
+	  						var newCalendar = new FullCalendar.Calendar(calendarEl, {
+	  							initialView : 'dayGridMonth',
+	  							locale : "ko",
+	  							initialDate: new Date(year-1, 11, 1),
+	  							dateClick : function(info) {
+	  								console.log(info);
+	  							},
+	  							//navLinks: true,
+	  							editable : true,
+	  						});
+	  		  				
+	  						date = newCalendar.getDate();
+	  		  				console.log(date);
+	  		  				year = date.getFullYear();
+	  		  				month = date.getMonth();
+	  		  				console.log(month);
+	  		  				console.log(year)
+		  		  				
+							newCalendar.render();
+  						
+  						} else {
+  							
+  							var newCalendar = new FullCalendar.Calendar(calendarEl, {
+  	  							initialView : 'dayGridMonth',
+  	  							locale : "ko",
+  	  							initialDate: new Date(year, month-1, 1),
+  	  							dateClick : function(info) {
+  	  								console.log(info);
+  	  							},
+  	  							//navLinks: true,
+  	  							editable : true,
+  	  						});
+  	  						
+  							date = newCalendar.getDate();
+  	  		  				console.log(date);
+  	  		  				year = date.getFullYear();
+  	  		  				month = date.getMonth();
+  	  		  				console.log(month);
+  	  		  				console.log(year)
+  	  		  			
+		  					newCalendar.render(); 
+	 					}
+  					},
+  					error: function(err){
+  						alert(err);
+  					}
+  				});
+  			});
+  			
+  		});
   	</script>
         <!--**********************************
             Content body start
@@ -18,7 +84,9 @@
             <div class="container-fluid">
                 <div class="row">
                 	<div class="col-lg-9 col-sm-10">
+                		<button type="button" id="prevBtn" class="btn btn-primary">이전</button>
 	                	<div id="calendar">
+	                		
                 		<!-- 달력 출력 -->
                 		</div>
                 	</div>
@@ -28,15 +96,15 @@
 							<div class="card-header text-center" style="display: block; font-size: 1.5em; color: black;">근태관리</div>
 							<div class="card-body">
 								<button type="button" class="btn btn-outline-danger" id="startTime" onclick='recordTime();'>출근하기</button>
-								<button type="button" class="btn btn-outline-danger" id="endTime">퇴근하기</button>
+								<button type="button" class="btn btn-outline-danger" id="endTime" onclick='recordEndTime();'>퇴근하기</button>
 								<br><br>
 								
 								<h4>금일 출근시간</h4>
-								<h5>2022-02-16 08:50:32</h5>
+								<h5 id="start">${startTime}</h5>
 								<h4>금일 퇴근시간</h4>
-								<h5></h5>
+								<h5 id="end">${endTime }</h5>
 								<h4>이번주 누적근무 시간</h4>
-								<h5>10시간</h5>
+								<h5></h5>
 							</div>
 							<div class="card-footer"></div>
 						</div>
@@ -626,22 +694,33 @@
 			contentType : 'application/json',
 			dataType: 'JSON',
 			success: function(result){
+				console.log("자바 >>>> 캘린더 뷰로 주는 결과: ");
 				console.log(result);
-			var calendarEl = document.getElementById('calendar');
-			var calendar = new FullCalendar.Calendar(calendarEl, {
-				initialView : 'dayGridMonth',
-				locale : "ko",
-				dateClick : function(info) {
-					console.log(info);
-				},
-				//navLinks: true,
-				editable : true,
-				events : [ {
-					title : '테스트',
-					start : '2022-02-16'
-				} ]
-			});
-			calendar.render();
+				// 보여줄 데이터 가공
+				const keys = Object.keys(result);
+				var list = [];
+				for(var i = 0; i < keys.length; i++){
+					if(result[i]["WORK_START"] == null) { // 퇴근 시간
+						list.push({title: result[i]["WORK_TYPE"], start: result[i]["WORK_END"] });	
+					} else{ // 출근 시간 
+						list.push({title: result[i]["WORK_TYPE"], start: result[i]["WORK_START"]});
+					}
+				}
+				
+				console.log(list);
+				
+				var calendarEl = document.getElementById('calendar');
+				var calendar = new FullCalendar.Calendar(calendarEl, {
+					initialView : 'dayGridMonth',
+					locale : "ko",
+					dateClick : function(info) {
+						console.log(info);
+					},
+					//navLinks: true,
+					editable : true,
+					events : list
+				});
+				calendar.render();
 			
 			},
 			error: function(err){
@@ -656,8 +735,6 @@
  		// 출근 시간 등록 
 		function recordTime() {
 			
-			// var startTime = $("#startTime").val();
-			// var data = {startTime: startTime};
 			var empNo = ${sessionEmp.empNo}; 
 			var data = {empNo: empNo};
 			
@@ -667,13 +744,38 @@
 				type: "POST",
 				contentType : 'application/json',
 				success: function(result){
+					// 당일 출근시간 찍힘
+					$("#start").text(result['formattedDate']);
 					calendarView();
 				},
 				error: function(err){
-					alert(err);
+					alert('이미 출근 시간을 등록하였습니다.');
 				}
 			});
 		}
+ 		
+ 		// 퇴근 시간 등록 
+ 		function recordEndTime(){
+ 			var empNo = ${sessionEmp.empNo}; 
+			var data = {empNo: empNo};
+			
+			$.ajax({
+				url: "/emp/recordEndTime",
+				data: JSON.stringify(data),
+				type: "POST",
+				contentType : 'application/json',
+				success: function(result){
+					// 당일 퇴근시간 찍힘
+					$("#end").text(result['formattedDate']);
+					calendarView();
+				},
+				error: function(err){
+					alert('이미 퇴근 시간을 등록하였습니다.');
+				}
+			});
+ 		}
+ 		
+ 		
 	</script>
 	
         <c:import url="/WEB-INF/views/include/footer.jsp" />

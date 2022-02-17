@@ -33,11 +33,26 @@
 	</select>
 	
 	<select id="findWorkingDate" resultType="map">
-		SELECT * 
-		FROM EMP_WORKINGHOUR ew, EMPLOYEE e 
-		WHERE ew.EMP_NO = e.EMP_NO
-		AND ew.EMP_NO = #{empNo}
-		AND ew.WORK_START BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD')
-		AND TO_DATE(#{enddate}, 'YYYYMMDD') 
+		SELECT ew.WORK_START, ew.WORK_END, ew.WORK_TYPE
+		FROM EMP_WORKINGHOUR ew 
+		WHERE ew.EMP_NO = #{empNo}
+		AND ew.WORK_START BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD') AND TO_DATE(#{enddate}, 'YYYYMMDD')
+		OR ew.WORK_END BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD') AND TO_DATE(#{enddate}, 'YYYYMMDD')
 	</select>	
+	
+	<select id="findStartTime" resultType="com.metanet.domain.EmpWorkingtimeVO">
+		SELECT *
+		FROM EMP_WORKINGHOUR ew 
+		WHERE ew.EMP_NO = #{empNo} 
+		AND TO_CHAR(ew.WORK_START, 'YY/MM/DD') = TO_CHAR(sysdate, 'YY/MM/DD')
+		AND WORK_TYPE = #{type}
+	</select>
+	
+	<select id="findEndTime" resultType="com.metanet.domain.EmpWorkingtimeVO">
+		SELECT *
+		FROM EMP_WORKINGHOUR ew 
+		WHERE ew.EMP_NO = #{empNo} 
+		AND TO_CHAR(ew.WORK_END, 'YY/MM/DD') = TO_CHAR(sysdate, 'YY/MM/DD')
+		AND WORK_TYPE = #{type}
+	</select>
 </mapper>

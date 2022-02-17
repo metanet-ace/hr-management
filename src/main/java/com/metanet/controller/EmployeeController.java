@@ -1,6 +1,7 @@
 package com.metanet.controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +24,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.EmpHistoryVO;
+import com.metanet.domain.EmpWorkingtimeVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.PositionVO;
 import com.metanet.service.EmployeeServiceImpl;
@@ -156,24 +159,52 @@ public class EmployeeController {
 		return new ResponseEntity<>(empHistoryPage, HttpStatus.OK);
 	}
 	
-	// 출근 시간 기록 컨트롤러 
+	// 출근 시간 등록 컨트롤러 
 	@PostMapping("/emp/recordTime")
 	@ResponseBody
-	public ResponseEntity<String> workingTimeRecoder(@RequestBody HashMap<String, String> data){
+	public ResponseEntity<EmpWorkingtimeVO> workingTimeRecoder(@RequestBody HashMap<String, String> data){
 		
 		int empNo = Integer.parseInt(data.get("empNo"));
-		empService.insertStartTime(empNo);
 		
-		return new ResponseEntity<>("success", HttpStatus.OK);
+		if(empService.findStartWorkingTime(empNo) != null) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		EmpWorkingtimeVO result = empService.insertStartTime(empNo);
+		
+		// 날짜 포맷 변경 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		result.setFormattedDate(sdf.format(result.getWorkStart()));
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	// 근무 시간 보여주기
+	// 출근 시간 리드 컨트롤러
 	@PostMapping("/emp/workingTimeList")
 	@ResponseBody
-	public ResponseEntity<List<Map<String, Object>>> workingTimeViewer(@RequestBody EmployeeVO emp){
-		int empNo = emp.getEmpNo();
+	public ResponseEntity<List<Map<String, Object>>> workingTimeViewer(@RequestBody Map<String, String> map){
+		Integer empNo = Integer.parseInt(map.get("empNo"));
 		
-		List<Map<String, Object>> result = empService.selectWorkingTime(empNo);
+		List<Map<String, Object>> result = empService.selectWorkingTime(empNo, map);
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	// 퇴근 시간 등록 컨트롤러 
+	@PostMapping("/emp/recordEndTime")
+	@ResponseBody
+	public ResponseEntity<EmpWorkingtimeVO> workingEndTimeRecoder(@RequestBody HashMap<String, String> data){
+		
+		int empNo = Integer.parseInt(data.get("empNo"));
+		
+		if(empService.findEndWorkingTime(empNo) != null) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		EmpWorkingtimeVO result = empService.insertEndTime(empNo);
+		
+		// 날짜 포맷 변경 (변경 되자마자 AJAX로 보여줄 때)
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		result.setFormattedDate(sdf.format(result.getWorkEnd()));
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
@@ -195,6 +226,40 @@ public class EmployeeController {
 			e.printStackTrace();
 		}
 		return "redirect:/main";
+	}
+	
+	// 메인 페이지 
+	@GetMapping("/main")
+	public String mainView(Model model, @SessionAttribute("sessionEmp") EmployeeVO emp ) {
+		// 출근 시간 정보 가져오기 
+		EmpWorkingtimeVO workVo = empService.findStartWorkingTime(emp.getEmpNo());
+		// 퇴근 시간 정보 가져오기
+		EmpWorkingtimeVO workVo2 = empService.findEndWorkingTime(emp.getEmpNo());
+	    
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	   
+	    String startTime = null;
+	    String endTime = null;
+	    
+	    if(workVo == null) {
+	    	// 출근을 아직 안눌렀다면 그냥 인덱스로
+	    	return "index";
+	    } 
+	    
+	    if(workVo2 == null) {
+	    	// 출근을 하고 퇴근을 아직 안했다면 
+	    	startTime = sdf.format(workVo.getWorkStart());
+	    	model.addAttribute("startTime", startTime);
+	    	return "index";
+	    }
+	    
+	    // 출근도 하고 퇴근도 찍었다면
+		startTime = sdf.format(workVo.getWorkStart());
+	    endTime = sdf.format(workVo2.getWorkEnd());
+    	model.addAttribute("startTime", startTime);
+		model.addAttribute("endTime", endTime);
+		
+		return "index";
 	}
 	
 	// 엑세스 접근 권한이 없습니다 페이지로 이동

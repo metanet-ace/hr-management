@@ -204,22 +204,59 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 출근 시간 등록 
-	public void insertStartTime(int empNo) {
+	public EmpWorkingtimeVO insertStartTime(int empNo) {
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 
 		EmpWorkingtimeVO workTimeVO = new EmpWorkingtimeVO();
 		workTimeVO.setEmp(emp);
 		workTimeVO.setWorkStart(new Date());
-		workTimeVO.setWorkType(null);
+		workTimeVO.setWorkType("출근");
 		
-		workRepo.save(workTimeVO);
+		return workRepo.save(workTimeVO);
 	}
 	
-	// 근무 시간 뷰어
-	public List<Map<String, Object>> selectWorkingTime(int empNo){
+	// 오늘 출근한 시간 보기
+	public EmpWorkingtimeVO findStartWorkingTime(int empNo) {
+		String type = "출근";
+		Map<String, Object> param = new HashMap<>();
+		param.put("empNo", empNo);
+		param.put("type", type);
+		
+		EmpWorkingtimeVO result = empMapper.findStartTime(param);
+	 
+	    return result;
+	}
+	
+	// 퇴근 시간 등록
+	public EmpWorkingtimeVO insertEndTime(int empNo) {
+		EmployeeVO emp = empRepo.findByEmpNo(empNo);
+
+		EmpWorkingtimeVO workTimeVO = new EmpWorkingtimeVO();
+		workTimeVO.setEmp(emp);
+		workTimeVO.setWorkEnd(new Date());
+		workTimeVO.setWorkType("퇴근");
+		
+		return workRepo.save(workTimeVO);
+	}
+	
+	// 오늘 퇴근한 시간 보기
+	public EmpWorkingtimeVO findEndWorkingTime(int empNo) {
+		String type = "퇴근";
+		Map<String, Object> param = new HashMap<>();
+		param.put("empNo", empNo);
+		param.put("type", type);
+		
+		EmpWorkingtimeVO result = empMapper.findEndTime(param);
+	 
+	    return result;
+	}
+	
+	// 근무 시간 기록 비즈니스 로직
+	public List<Map<String, Object>> selectWorkingTime(int empNo, Map<String, String> map){
 		
 		Map<String, String> param = new HashMap<String, String>();
 		String strEmpNo = Integer.toString(empNo);
+		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		Calendar cal = Calendar.getInstance();
@@ -227,16 +264,22 @@ public class EmployeeServiceImpl {
 		
 		System.out.println(dateFormat.format(cal.getTime()));
 		
+		int year = cal.get(Calendar.YEAR);
 		System.out.println("해당년도: " + cal.get(Calendar.YEAR));
+		int month = cal.get(Calendar.MONTH)+1;
 		System.out.println("해당월: " + cal.get(Calendar.MONTH) + 1); // MONTH는 0부터 시작
+		int startday = cal.getMinimum(Calendar.DAY_OF_MONTH);
 		System.out.println("첫번째 일: " + cal.getMinimum(Calendar.DAY_OF_MONTH));
-		
+		int endday = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		System.out.println("마지막 일(현재 날짜 기준 최대수)" + cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		System.out.println("마지막 일(Calendar이 가진 최대수)" + cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		
+		String start = Integer.toString(year) + "0" + Integer.toString(month) + Integer.toString(startday);
+		String end = Integer.toString(year) + "0" + Integer.toString(month) + Integer.toString(endday);
+		
 		param.put("empNo", strEmpNo);
-		param.put("startdate", "20220201");
-		param.put("enddate", "20220228");
+		param.put("startdate", start);
+		param.put("enddate", end);
 		
 		return empMapper.findWorkingDate(param);
 	}
