@@ -105,6 +105,47 @@
 		</choose> 
 	</select>
 	
+	<select id="getPagingNoticeList" resultType="com.metanet.domain.NoticeVO">
+	<choose>
+			<when test="keyField =='noticeTitle' and keyword != null and keyword !=''">
+			SELECT * 
+			FROM (SELECT rownum rnum, a.*
+			FROM (SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_WRITER, 
+			TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as NOTICE_DATE
+			FROM NOTICE WHERE notice_title like '%'||#{keyword}||'%' ORDER BY notice_no desc) a )
+			WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</when>
+			<when test="keyField =='noticeWriter' and keyword != null and keyword !=''">
+			SELECT * 
+			FROM (SELECT rownum rnum, a.*
+			FROM (SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_WRITER, 
+			TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as NOTICE_DATE
+			FROM NOTICE WHERE notice_writer like '%'||#{keyword}||'%' ORDER BY notice_no desc) a )
+			WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</when>
+			<otherwise>
+			SELECT * 
+			FROM (SELECT rownum rnum, a.*
+			FROM (SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_WRITER, 
+			TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as NOTICE_DATE
+			FROM NOTICE ORDER BY notice_no desc) a )
+			WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</otherwise>
+		</choose> 
+	</select>
+	
+	<select id="noticeTotalCount" parameterType="Map" resultType="Integer">
+		SELECT COUNT(*) FROM NOTICE
+		<choose>
+			<when test="keyField =='noticeTitle' and keyword != null and keyword !=''">
+				WHERE notice_title like '%'||#{keyword}||'%'
+			</when>
+			<when test="keyField =='noticeWriter' and keyword != null and keyword !=''">
+				WHERE notice_writer like '%'||#{keyword}||'%'
+			</when>
+		</choose> 
+	</select>
+	
 	
 	<select id="eduDetail" parameterType="Integer" resultType="com.metanet.domain.EduVO">
 		SELECT EDU_NO, EDU_TITLE, EDU_DESC, EDU_LOC, EDU_TIME, EDU_TEACHER, EDU_PEOPLE, EDU_TARGET,
@@ -192,27 +233,6 @@
 		</choose>
 	</select>
 	
-	<!-- <select id="getEduEmpHistroyList" resultType="com.metanet.domain.EduHistoryVO">
-		select d.edu_title, d.edu_no, e.emp_no, e.emp_name, h.attendance, h.score
-    	from employee e, edu d, edu_history h 
-    	where e.emp_no = #{empNo} 
-    	and e.emp_no = h.emp_no
-    	and d.edu_no = h.edu_no
-	</select>
-	
-	<select id="getEduEmpHistroyListByKey" parameterType="Map" resultType="com.metanet.domain.EduHistoryVO">
-    	select d.edu_title, d.edu_no, e.emp_no, e.emp_name, h.attendance, h.score
-    	from employee e, edu d, edu_history h 
-    	where e.emp_no = #{empNo} 
-    	and e.emp_no = h.emp_no
-    	and d.edu_no = h.edu_no
-    	<choose>
-    		<when test='"eduTitle".equals(keyField) '>
-    			and d.edu_title like '%' || #{keyField} || '%'
-    		</when>
-    	</choose>
-    </select> -->
-    
     <select id="getPagingEmpEduList" parameterType="map" resultType="com.metanet.domain.EduHistoryVO">
     	<choose>
 			<when test="keyField =='eduTitle' and keyword != null and keyword !=''">

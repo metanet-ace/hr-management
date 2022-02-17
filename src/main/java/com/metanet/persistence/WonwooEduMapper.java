@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
+import com.metanet.domain.NoticeVO;
 import com.metanet.domain.PageDTO;
 
 
@@ -47,4 +48,8 @@ public interface WonwooEduMapper{
 	public List<EduVO> getPagingEduList(PageDTO pdto);
 
 	public int EduTotalCount(PageDTO pdto);
+
+	public List<NoticeVO> getPagingNoticeList(PageDTO pdto);
+
+	public int noticeTotalCount(PageDTO pdto);
 }

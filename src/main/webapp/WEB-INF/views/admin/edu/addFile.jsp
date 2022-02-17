@@ -4,10 +4,7 @@
 
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
-<!DOCTYPE html>
-<html>
-<head>
-</head>
+
 <body>
 	<!--**********************************
             Content body start
@@ -102,8 +99,7 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduStart" value="${eduVO.eduStart }"
-															name="eduStart">
+													<input type="text" class="form-control" id="datepicker" value="${eduVO.eduStart }" name="eduStart">
 													<span style="color: #ff0000;">${valid_eduStart}</span>												
 												</div>
 											</div>
