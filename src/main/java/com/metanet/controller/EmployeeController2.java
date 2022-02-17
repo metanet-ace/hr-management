@@ -17,14 +17,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.metanet.domain.DepartmentVO;
+import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.EmployeeVO2;
 import com.metanet.domain.PasswordVO;
@@ -306,29 +305,32 @@ public class EmployeeController2 {
 		return "/admin/insertDept";
 	}
 
+	// 사원번호 확인
+	@PostMapping("/empNoCheck")
+	@ResponseBody
+	public int empNoCheck(int empNo) {
+		int result = service.empNoCheck(empNo);
+		return result;
+	}
+	
 	// 부서등록(인사팀)
 	@PostMapping("/admin/emp/insertDept")
-	public String insertDept(@Valid DepartmentVO dept, Errors errors, Model model) {
-		// 유효성 검사
-
-		// 유효성 통과 못한 필드와 메시지를 핸들링
-		if (errors.hasErrors()) {
-			// 사원등록 실패시, 입력 데이터를 유지
-			model.addAttribute("dept", dept);
-
-			// 유효성 통과 못한 필드와 메시지를 핸들링
-			Map<String, String> validatorResult = service.validateHandling(errors);
-			for (String key : validatorResult.keySet()) {
-				model.addAttribute(key, validatorResult.get(key));
+	public String insertDept(DeptVO dept, int empNo, Model model) {
+		int empNoResult = service.empNoCheck(empNo);
+		
+		try {
+			if(empNoResult == 0) {
+				return "/admin/insertDept";
+			}else if(empNoResult == 1) {
+				service.insertDept(dept);
+				return "redirect:/admin/emp/deptList";
 			}
-			return "/admin/insertDept";
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		if (service.insertDept(dept) > 0) {
-			return "redirect:/admin/emp/deptList";
-		} else {
-			model.addAttribute("message", "부서 등록 실패");
-			return "/index";
-		}
+		
+		return "redirect:/";
 	}
+	
+	
 }

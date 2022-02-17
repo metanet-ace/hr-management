@@ -59,13 +59,20 @@
 	</select>
 	
 	<!-- 부서 추가(인사팀) -->
-	<insert id="insertDept" parameterType="com.metanet.domain.DepartmentVO">
+	<insert id="insertDept" parameterType="com.metanet.domain.DeptVO">
 		insert into department
-		values (seq_dept_no.nextval, #{deptName}, sysdate, null, #{deptHead})
+		values (seq_dept_no.nextval, #{deptName}, sysdate, null, #{empNo})
 	</insert> 
 	
+	<!-- 부서 추가할 때 사원번호 확인하기 -->
+	<select id="empNoCheck" parameterType="com.metanet.domain.EmployeeVO2" resultType="int">
+		select count(*)
+		from employee
+		where emp_no = #{empNo}
+	</select>
+	
 	<!-- 부서이름, 번호 불러오기 -->
-	<select id="dept" resultType="com.metanet.domain.DepartmentVO">
+	<select id="dept" resultType="com.metanet.domain.DeptVO">
 		select dept_name, dept_no
 		from department
 	</select>

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.metanet.domain.DepartmentVO;
+import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO2;
 
 @Mapper
@@ -18,8 +19,9 @@ public interface EmployeeMapper2 {
 	public void pwUpdate(Map<String, Object> map);	//비밀번호 수정(공통)
 	
 	public List<DepartmentVO> deptList(); //부서리스트조회(인사팀)
-	public List<DepartmentVO> dept(); //부서이름, 번호 불러오기
-	public int insertDept(DepartmentVO dept);	//부서 등록(인사팀)
+	public List<DeptVO> dept(); //부서이름, 번호 불러오기
+	public void insertDept(DeptVO dept);	//부서 등록(인사팀)
+	public int empNoCheck(int empNo);	//사원번호 확인
 	
 	public int deptCount(int deptNo);	//부서별 인원 수
 }
