@@ -42,7 +42,7 @@
     </update>
     
     <select id="eduHistoryListSelect" resultType="com.metanet.domain.EduHistoryVO">
-    	select * from (select rownum rn, total_list.*
+    	select * from (select rownum rn, history_list.*
     	from (select h.edu_hisno, d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h
     	where e.emp_no = h.emp_no
@@ -58,14 +58,15 @@
     			and e.emp_name like '%' || #{keyword} || '%'
     		</when>
     	</choose>
-    	order by h.edu_hisno DESC) total_list) WHERE rn BETWEEN #{startNum} AND #{endNum}
+    	order by h.edu_hisno DESC) history_list) WHERE rn BETWEEN #{startNum} AND #{endNum}
     </select>
     
     <select id="eduHistorytotalCount" parameterType="Map" resultType="Integer">
     	select count(*)
-    	from employee e, edu d, edu_history h
+    	from employee e, edu d, edu_history h, department dept
     	where e.emp_no = h.emp_no
     	and d.edu_no = h.edu_no
+    	and dept.dept_no = e.dept_no
     	<choose>
     		<when test='"eduTitle".equals(keyField) '>
     			and d.edu_title like '%' || #{keyword} || '%'
@@ -77,6 +78,38 @@
     			and e.emp_name like '%' || #{keyword} || '%'
     		</when>
     	</choose>
+    </select>
+    
+    <select id="getTotalCountForAllocation" parameterType="Map" resultType="Integer">
+    	select count(*)
+    	from employee e, department dept, position pos
+    	where dept.dept_no = e.dept_no
+    	and pos.pos_no = e.pos_no
+    	<choose>
+    		<when test='"deptName".equals(keyField) '>
+    			and dept.dept_name like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"posName".equals(keyField) '>
+    			and pos.pos_name = #{keyword}
+    		</when>
+    	</choose>
+    </select>
+    
+    <select id="empListForAllocationSelect" resultType="com.metanet.domain.EmpListVO">
+    	select *
+    	from(select rownum rn, emp_list.* 
+    	from(select e.emp_no, e.emp_name, pos.pos_name, dept.dept_name
+    	from employee e, department dept, position pos
+    	where dept.dept_no = e.dept_no
+    	and pos.pos_no = e.pos_no
+    	<choose>
+    		<when test='"deptName".equals(keyField) '>
+    			and dept.dept_name like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"posName".equals(keyField) '>
+    			and pos.pos_name = #{keyword}
+    		</when>
+    	</choose>) emp_list) where rn between #{startNum} and #{endNum}
     </select>
     
     <insert id="eduHistroyInsert" parameterType="Map">
