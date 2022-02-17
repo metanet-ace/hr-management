@@ -42,7 +42,6 @@
                                             <div class="col-xl-6">
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="upfile">사원 이미지
-                                                        <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
                                                         ${emp.empPhoto } <input type="file" class="form-control" id="upfile" name="upfile"> 
@@ -54,6 +53,7 @@
                                                     </label>
                                                     <div class="col-lg-6">
                                                         <input type="text" class="form-control" id="empName" name="empName" value="${emp.empName }">
+                                                        <span style="color: #ff0000;">${valid_empName}</span>
                                                     </div>
                                                 </div>
                                                 
@@ -81,7 +81,8 @@
                                                         <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="tel" class="form-control" id="empPhone" name="empPhone" value="${emp.empPhone }" placeholder="'-' 포함 입력해주세요.">
+                                                        <input type="tel" class="form-control" id="empPhone" name="empPhone" value="${emp.empPhone }">
+                                                        <span style="color: #ff0000;">${valid_empPhone}</span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -90,6 +91,7 @@
                                                     </label>
                                                     <div class="col-lg-6">
                                                         <input type="email" class="form-control" id="empEmail" name="empEmail" value="${emp.empEmail }">
+                                                    	<span style="color: #ff0000;">${valid_empEmail}</span>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -98,18 +100,11 @@
                                                     </label>
                                                     <div class="col-lg-6">
                                                         <input type="date" class="form-control" id="empHiredate" name="empHiredate" value="${emp.empHiredate }">
+                                                        <span style="color: #ff0000;">${valid_empHiredate}</span>
                                                     </div>
                                                 </div>
                                                  </div>
                                                  <div class="col-xl-6">
-                                                <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="empRetdate">퇴사일 </label>
-                                                    <div class="col-lg-6">
-                                                        <input type="date" class="form-control" id="empRetdate" name="empRetdate" value="${emp.empRetdate }">
-                                                    </div>
-                                                </div>
-                                            
-                                           
                                             
                                            
                                             <div class="form-group row">
@@ -117,7 +112,8 @@
                                                         <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="empSsc" name="empSsc" value="${emp.empSsc }" placeholder="'-' 포함 입력해주세요.">
+                                                        <input type="text" class="form-control" id="empSsc" name="empSsc" value="${emp.empSsc }">
+                                                        <span style="color: #ff0000;">${valid_empSsc}</span>
                                                     </div>
                                             </div>
                                             
@@ -127,8 +123,10 @@
                                                     <label class="col-lg-4 col-form-label" for="empDegree">최종학력
                                                         <span class="text-danger">*</span>
                                                     </label>
-                                                    <c:if test="${ emp.empDegree eq '고졸'}">
-                                                    <div class="col-lg-6">
+                                                     <div class="col-lg-6">
+                                                    <c:choose>
+                                                    <c:when test="${ emp.empDegree eq '고졸'}">
+                                                   
                                                         <select class="form-control" id="empDegree" name="empDegree">
                                                             <option value="">최종학력을 선택해주세요</option>
                                                             <option value="고졸" selected>고졸</option>
@@ -136,10 +134,8 @@
                                                             <option value="석사">석사</option>
                                                             <option value="박사">박사</option>
                                                         </select>
-                                                    </div>
-                                                    </c:if>
-                                                    <c:if test="${ emp.empDegree eq '학사'}">
-                                                    <div class="col-lg-6">
+                                                    </c:when>
+                                                    <c:when test="${ emp.empDegree eq '학사'}">
                                                         <select class="form-control" id="empDegree" name="empDegree">
                                                             <option value="">최종학력을 선택해주세요</option>
                                                             <option value="고졸">고졸</option>
@@ -147,10 +143,8 @@
                                                             <option value="석사">석사</option>
                                                             <option value="박사">박사</option>
                                                         </select>
-                                                    </div>
-                                                    </c:if>
-                                                    <c:if test="${ emp.empDegree eq '석사'}">
-                                                    <div class="col-lg-6">
+                                                    </c:when>
+                                                    <c:when test="${ emp.empDegree eq '석사'}">
                                                         <select class="form-control" id="empDegree" name="empDegree">
                                                             <option value="">최종학력을 선택해주세요</option>
                                                             <option value="고졸">고졸</option>
@@ -158,10 +152,8 @@
                                                             <option value="석사" selected>석사</option>
                                                             <option value="박사">박사</option>
                                                         </select>
-                                                    </div>
-                                                    </c:if>
-                                                    <c:if test="${ emp.empDegree eq '박사'}">
-                                                    <div class="col-lg-6">
+                                                    </c:when>
+                                                    <c:when test="${ emp.empDegree eq '박사'}">
                                                         <select class="form-control" id="empDegree" name="empDegree">
                                                             <option value="">최종학력을 선택해주세요</option>
                                                             <option value="고졸">고졸</option>
@@ -169,13 +161,23 @@
                                                             <option value="석사">석사</option>
                                                             <option value="박사" selected>박사</option>
                                                         </select>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <select class="form-control" id="empDegree" name="empDegree">
+                                                            <option value="">최종학력을 선택해주세요</option>
+                                                            <option value="고졸">고졸</option>
+                                                            <option value="학사">학사</option>
+                                                            <option value="석사">석사</option>
+                                                            <option value="박사">박사</option>
+                                                        </select>
+                                                    </c:otherwise>
+                                                    </c:choose>
+                                                    <span style="color: #ff0000;">${valid_empDegree}</span>
                                                     </div>
-                                                    </c:if>
                                                 </div>
                                                 
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label"><a
-                                                            href="javascript:void()">신입/경력</a> <span
+                                                    <label class="col-lg-4 col-form-label"><a>신입/경력</a> <span
                                                             class="text-danger">*</span>
                                                     </label>
                                                     <c:if test="${ emp.empCareer eq '신입' }">
@@ -200,17 +202,19 @@
                                                     </label>
                                                     <div class="col-lg-4"> 
                                                         <input type="text" class="form-control" id="empSal" name="empSal" value="${emp.empSal }">
-                                                        
-                                                    </div>
-                                                    <div>만 원</div>
+                                                        <span style="color: #ff0000;">${valid_empSal}</span>
+                                                    </div>만 원
+                                                    
                                                 </div>
                                                 
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="empMil">병역
                                                         <span class="text-danger">*</span>
                                                     </label>
-                                                    <c:if test="${ emp.empMil eq '미필' }">
                                                     <div class="col-lg-6">
+                                                    <c:choose>
+                                                    <c:when test="${ emp.empMil eq '미필' }">
+                                                    
                                                         <select class="form-control" id="empMil" name="empMil">
                                                             <option value="">병역을 선택해주세요</option>
                                                             <option value="미필" selected>미필</option>
@@ -218,10 +222,8 @@
                                                             <option value="면제">면제</option>
                                                             <option value="해당없음">해당없음</option>
                                                         </select>
-                                                    </div>
-                                                    </c:if>
-                                                    <c:if test="${ emp.empMil eq '군필' }">
-                                                    <div class="col-lg-6">
+                                                    </c:when>
+                                                    <c:when test="${ emp.empMil eq '군필' }">
                                                         <select class="form-control" id="empMil" name="empMil">
                                                             <option value="">병역을 선택해주세요</option>
                                                             <option value="미필">미필</option>
@@ -229,10 +231,8 @@
                                                             <option value="면제">면제</option>
                                                             <option value="해당없음">해당없음</option>
                                                         </select>
-                                                    </div>
-                                                    </c:if>
-                                                    <c:if test="${ emp.empMil eq '면제' }">
-                                                    <div class="col-lg-6">
+                                                    </c:when>
+                                                    <c:when test="${ emp.empMil eq '면제' }">
                                                         <select class="form-control" id="empMil" name="empMil">
                                                             <option value="">병역을 선택해주세요</option>
                                                             <option value="미필">미필</option>
@@ -240,10 +240,8 @@
                                                             <option value="면제" selected>면제</option>
                                                             <option value="해당없음">해당없음</option>
                                                         </select>
-                                                    </div>
-                                                    </c:if>
-                                                    <c:if test="${ emp.empMil eq '해당없음' }">
-                                                    <div class="col-lg-6">
+                                                    </c:when>
+                                                    <c:when test="${ emp.empMil eq '해당없음' }">
                                                         <select class="form-control" id="empMil" name="empMil">
                                                             <option value="">병역을 선택해주세요</option>
                                                             <option value="미필">미필</option>
@@ -251,8 +249,19 @@
                                                             <option value="면제">면제</option>
                                                             <option value="해당없음" selected>해당없음</option>
                                                         </select>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <select class="form-control" id="empMil" name="empMil">
+                                                            <option value="">병역을 선택해주세요</option>
+                                                            <option value="미필">미필</option>
+                                                            <option value="군필">군필</option>
+                                                            <option value="면제">면제</option>
+                                                            <option value="해당없음">해당없음</option>
+                                                        </select>
+                                                    </c:otherwise>
+                                                    </c:choose>
+                                                    <span style="color: #ff0000;">${valid_empMil}</span>
                                                     </div>
-                                                    </c:if>
                                                 </div>
                                                 
                                                 

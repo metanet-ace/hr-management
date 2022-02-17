@@ -1,0 +1,124 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+	<c:import url="/WEB-INF/views/include/header.jsp" />
+	<c:import url="/WEB-INF/views/include/sidebar.jsp" />
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6 p-md-0">
+                        <div class="welcome-text">
+                            <h4>Hi, welcome back!</h4>
+                            <p class="mb-1">Validation</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Validation</a></li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- row -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Form Validation</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-validation">
+                                    <form class="form-valide" action="/admin/emp/insertDept" method="post">
+                                        <div class="row">
+                                            <div class="col-xl-6">
+                                                
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="deptName">부서명<span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="col-lg-6">
+                                                        <input type="text" class="form-control" id="deptName" name="deptName" value="${ dept.deptName }">
+                                                        <span style="color: #ff0000;">${valid_deptName}</span>
+                                                    </div>
+                                                </div>
+                                                </div>  
+                                                
+                                                
+                                            <div class="col-xl-6">
+                                                
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="deptHead">부서장<span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="col-lg-6">
+                                                        <input type="text" class="form-control" id="deptHead" name="deptHead" value="${ dept.deptHead }" placeholder="사원번호로 입력해주세요.">
+                                                         <span style="color: #ff0000;">${valid_deptHead}</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group row">
+                                                    <div class="col-lg-8 ml-auto">
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
+
+        <!-- <!--**********************************
+            Footer start
+        ***********************************
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+            </div>
+        </div>
+        **********************************
+            Footer end
+        *********************************** -->
+<c:import url="/WEB-INF/views/include/footer.jsp" />
+
+        <!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+        <!--**********************************
+           Support ticket button end
+        ***********************************-->
+
+        
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="./vendor/global/global.min.js"></script>
+    <script src="./js/quixnav-init.js"></script>
+    <script src="./js/custom.min.js"></script>
+    
+
+
+
+    <!-- Jquery Validation -->
+    <script src="./vendor/jquery-validation/jquery.validate.min.js"></script>
+    <!-- Form validate init -->
+    <script src="./js/plugins-init/jquery.validate-init.js"></script>

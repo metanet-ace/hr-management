@@ -24,7 +24,7 @@
 	<update id="updateEmp" parameterType="com.metanet.domain.EmployeeVO2">
 		update employee
 		set emp_name = #{empName}, emp_gender = #{empGender}, emp_phone = #{empPhone}, emp_sal = #{empSal}, emp_email = #{empEmail}, 
-			emp_hiredate = to_date(#{empHiredate}, 'YYYY-MM-DD'), emp_retdate = to_date(#{empRetdate}, 'YYYY-MM-DD'), emp_ssc = #{empSsc}, emp_degree = #{empDegree}, emp_career = #{empCareer}, 
+			emp_hiredate = to_date(#{empHiredate}, 'YYYY-MM-DD'), emp_ssc = #{empSsc}, emp_degree = #{empDegree}, emp_career = #{empCareer}, 
 			emp_re_photo = #{empRePhoto, jdbcType=VARCHAR}, emp_photo = #{empPhoto, jdbcType=VARCHAR}, emp_mil = #{empMil}
 		where emp_no = #{empNo}
 	</update>
@@ -36,17 +36,44 @@
 		where emp_no = #{empNo}
 	</update>
 	
-	<!-- 비밀번호 수정 중 현재비밀번호와 일치 확인 -->
+	<!-- 비밀번호 수정 중 현재비밀번호와 일치 확인(공통) -->
 	<select id="pwCheck" resultType="String">
 		select emp_pwd
 		from employee
 		where emp_no = #{empNo}
 	</select>
 	
-	<!-- 비밀번호 수정 -->
+	<!-- 비밀번호 수정(공통) -->
 	<update id="pwUpdate" parameterType="com.metanet.domain.EmployeeVO2">
 		update employee
 		set emp_pwd = #{empPwd}
 		where emp_no = #{empNo}
 	</update>
+	
+	<!-- 부서 리스트보기(인사팀) -->
+	<select id="deptList" resultType="com.metanet.domain.DepartmentVO">
+		select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name
+		from department d, employee e
+        where d.dept_head = e.emp_no
+		order by d.dept_no desc
+	</select>
+	
+	<!-- 부서 추가(인사팀) -->
+	<insert id="insertDept" parameterType="com.metanet.domain.DepartmentVO">
+		insert into department
+		values (seq_dept_no.nextval, #{deptName}, sysdate, null, #{deptHead})
+	</insert> 
+	
+	<!-- 부서이름, 번호 불러오기 -->
+	<select id="dept" resultType="com.metanet.domain.DepartmentVO">
+		select dept_name, dept_no
+		from department
+	</select>
+	
+	<!-- 부서별 인원 수 (미완성) -->
+	<select id="deptCount" resultType="int" parameterType="com.metanet.domain.EmployeeVO2">
+		select count(*)
+		from employee
+		where dept_no = #{deptNo}
+	</select>
 </mapper>

@@ -6,7 +6,7 @@
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
 
-<<script type="text/javascript">
+<script type="text/javascript">
 function upPwd(no){
 	if(confirm("해당 직원의 비밀번호를 초기화하시겠습니까?")){
 		location.href="/admin/emp/updatePwd?empNo="+no;
@@ -46,9 +46,12 @@ function upPwd(no){
 					<div class="card-body">
 						<div class="form-validation">
 							<form class="form-valide" align="center">
-							<img
-											src="${ pageContext.servletContext.contextPath }/resources/employeeImages/${ empDetail.empRePhoto }"
-											style="width: 250px; height: 300px">
+							<c:if test="${empDetail.empPhoto != null }">
+							<img src="${ pageContext.servletContext.contextPath }/resources/employeeImages/${ empDetail.empRePhoto }" style="width: 250px; height: 300px">
+							</c:if>
+							<c:if test="${empDetail.empPhoto == null }">
+							<img src="${ pageContext.servletContext.contextPath }/resources/employeeImages/basic.png" style="width: 250px; height: 300px">
+							</c:if>
 											<br><br><br><br>
 								<div class="row">
 									

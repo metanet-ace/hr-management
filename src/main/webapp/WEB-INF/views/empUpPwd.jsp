@@ -65,9 +65,10 @@ function cancle(no){
                             <div class="col-xl-12">
                             
                                 <div class="auth-form">
-                                    <h4 class="text-center mb-4">Sign in your account</h4>
+                                	
                                     <form action="/emp/pwUpdate" method="post" id="pwUpdateForm" name="pwUpdateForm">
-                                    sessuionEmp : ${sessionEmp.empNo}
+                                    <br><br><br>
+                                    <h3 align="center">비밀번호 수정</h3>
                                     <input type="hidden" id="empNo" name="empNo" value="${ sessionEmp.empNo }">
                                         <div class="form-group">
                                             <label><strong>현재 비밀번호</strong></label>
@@ -75,7 +76,7 @@ function cancle(no){
                                         </div>
                                         <div class="form-group">
                                             <label><strong>새로운 비밀번호</strong></label>
-                                            <input type="password" class="form-control" name="pw1" id="pw1" value="${ pass.pw1 }">
+                                            <input type="password" class="form-control" name="pw1" id="pw1" value="${ pass.pw1 }" placeholder="영문, 숫자, 특수문자 포함 8글자 이상 입력">
                                             <span style="color: #ff0000;">${ valid_pw1 }</span>
                                         </div>
                                         
