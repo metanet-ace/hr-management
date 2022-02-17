@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.validation.Errors;
 
 import com.metanet.domain.DepartmentVO;
+import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO2;
 
 public interface EmployeeService2 {
@@ -18,8 +19,9 @@ public interface EmployeeService2 {
 	public void pwUpdate(int empNo, String hashedPw); //비밀번호 수정(공통)
 	
 	public List<DepartmentVO> deptList(); //부서리트스조회(인사팀)
-	public List<DepartmentVO> dept(); //부서이름, 번호 불러오기
-	public int insertDept(DepartmentVO dept);	//부서등록(인사팀)
+	public List<DeptVO> dept(); //부서이름, 번호 불러오기
+	public void insertDept(DeptVO dept);	//부서등록(인사팀)
+	public int empNoCheck(int empNo);	//사원번호 확인
 	
 	public int deptCount(int deptNo); //부서별 인원 수
 }

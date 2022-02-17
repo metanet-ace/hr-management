@@ -11,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 import com.metanet.domain.DepartmentVO;
+import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO2;
 import com.metanet.persistence.EmployeeMapper2;
 
@@ -85,7 +86,7 @@ public class EmployeeServiceImpl2 implements EmployeeService2 {
 
 	// 부서이름, 번호 불러오기
 	@Override
-	public List<DepartmentVO> dept() {
+	public List<DeptVO> dept() {
 		return empMapper.dept();
 	}
 
@@ -97,7 +98,13 @@ public class EmployeeServiceImpl2 implements EmployeeService2 {
 
 	// 부서등록(인사팀)
 	@Override
-	public int insertDept(DepartmentVO dept) {
-		return empMapper.insertDept(dept);
+	public void insertDept(DeptVO dept) {
+		empMapper.insertDept(dept);
+	}
+	
+	// 사원번호 확인
+	@Override
+	public int empNoCheck(int empNo) {
+		return empMapper.empNoCheck(empNo);
 	}
 }
