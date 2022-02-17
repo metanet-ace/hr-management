@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
+import com.metanet.domain.EmpListVO;
 import com.metanet.domain.PageDTO;
 
 public interface suinEduService {
@@ -17,4 +18,7 @@ public interface suinEduService {
 	public void eduScoreUpdate(List<EduHistoryVO> list);
 	public void eduProgress() throws ParseException;
 	public int eduHistoryTotalCount(Map<String, String> map);
+	public int getTotalCountForAllocation(Map<String, String> map);
+	public List<EmpListVO> empListForAllocationSelect(PageDTO pdto);
+	
 }

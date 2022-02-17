@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.metanet.domain.AttendanceVO;
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
+import com.metanet.domain.EmpListVO;
 import com.metanet.domain.PageDTO;
 import com.metanet.persistence.suinEduMapper;
 
@@ -99,6 +100,16 @@ public class suinEduServiceImpl implements suinEduService {
 	@Override
 	public int eduHistoryTotalCount(Map<String, String> map) {
 		return mapper.eduHistorytotalCount(map);
+	}
+
+	@Override
+	public int getTotalCountForAllocation(Map<String, String> map) {
+		return mapper.getTotalCountForAllocation(map);
+	}
+
+	@Override
+	public List<EmpListVO> empListForAllocationSelect(PageDTO pdto) {
+		return mapper.empListForAllocationSelect(pdto);
 	}
 
 }
