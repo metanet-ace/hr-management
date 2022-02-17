@@ -121,7 +121,7 @@
     <update id="eduScoreUpdate" parameterType="List">
     	<foreach collection="list" item="vo" separator=";" open="DECLARE BEGIN" close="; END;">
     	update edu_history
-    	set score = #{vo.score}
+    	set score = upper(#{vo.score})
     	where edu_hisno = #{vo.eduHisno}
     	</foreach>
     </update>
