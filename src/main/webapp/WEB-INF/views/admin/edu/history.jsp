@@ -18,6 +18,7 @@
 $(document).ready(function(){
 	console.log("ready");
 });
+
 function showKeyField(){
 	console.log("123");
 	console.log(${keyField});
@@ -60,6 +61,12 @@ function modifyScore(){
 		}
 	});
 }
+
+function checkScore(){
+	$('.eduScore').keyup(function(){
+		console.log("keyup");
+	});
+}
 </script>
 
 <!--**********************************
@@ -86,7 +93,7 @@ function modifyScore(){
 					<th>사원번호</th>
 					<th>성명</th>
 					<th>출석률</th>
-					<th>점수</th>
+					<th>점수<span class="scoreMsg"></span></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -99,17 +106,19 @@ function modifyScore(){
 						<td>${list.empNo }</td>
 						<td>${list.empName }</td>
 						<td>${list.attendance }%</td>
+						<td>
 						<c:choose>
 							<c:when test="${empty list.score and list.attendance eq 0}">
-								<td><input type="text" name="score3" class="eduScore" value="-" readonly="readonly" size="1"></td>
+								<input type="text" name="score3" class="eduScore" value="-" readonly="readonly" size="1">
 							</c:when>
 							<c:when test="${empty list.score and list.attendance ne 0}">
-								<td><input type="text" name="score" class="eduScore" value="-" readonly="readonly" size="1"></td>
+								<input type="text" name="score" class="eduScore" value="-" readonly="readonly" size="1">
 							</c:when>
 							<c:otherwise>
-								<td><input type="text" name="score2" class="eduScore" value="${list.score }" readonly="readonly" size="1"></td>
+								<input type="text" name="score2" class="eduScore" value="${list.score }" readonly="readonly" size="1">
 							</c:otherwise>
 						</c:choose>
+						</td>
 						<td class="eduHisno"><input type="text" name="eduHisno" value="${list.eduHisno }"></td>
 					</tr>
 				</c:forEach>
@@ -124,7 +133,14 @@ function modifyScore(){
 			<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-center">
 				<c:if test="${paging.hasPrev }">
-					<li class="page-item"><a class="page-link" href="/edu/allocation2/${paging.startPage-1}?keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">이전</a></li>
+					<c:choose>
+						<c:when test="${empty pageInfo.keyField}">
+							<li class="page-item"><a class="page-link" href="/edu/admin/history/${paging.startPage-1}">이전</a></li>
+						</c:when>
+						<c:otherwise>
+							<li class="page-item"><a class="page-link" href="/edu/admin/history/${paging.startPage-1}/${pageInfo.keyField }/${pageInfo.keyword}">이전</a></li>
+						</c:otherwise>
+					</c:choose>
 				</c:if>
 
 				<c:forEach var="p" begin="${paging.startPage }" end="${paging.endPage }" step="1">
@@ -147,7 +163,14 @@ function modifyScore(){
 				</c:forEach>
 
 				<c:if test="${paging.hasNext }">
-					<li class="page-item"><a class="page-link" href="/edu/allocation2/${paging.endPage+1}?keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
+					<c:choose>
+						<c:when test="${empty pageInfo.keyField}">
+							<li class="page-item"><a class="page-link" href="/edu/admin/history/${paging.endPage+1}">다음</a></li>
+						</c:when>
+						<c:otherwise>
+							<li class="page-item"><a class="page-link" href="/edu/admin/history/${paging.endPage+1}/${pageInfo.keyField }/${pageInfo.keyword}">다음</a></li>
+						</c:otherwise>
+					</c:choose>
 				</c:if>
 			</ul>
 			</nav>
