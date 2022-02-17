@@ -10,6 +10,7 @@ import org.springframework.validation.Errors;
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
+import com.metanet.domain.NoticeVO;
 import com.metanet.domain.PageDTO;
 
 public interface WonwooEduService {
@@ -28,11 +29,15 @@ public interface WonwooEduService {
 	
 	public List<EduVO> getPagingEduList(PageDTO pdto);
 	
+	public List<NoticeVO> getPagingNoticeList(PageDTO pdto);
+	
 	public int totalCount(PageDTO pdto);
 	
 	public int EmpEduTotalCount(Map<String, Object> map);
 	
 	public int EduTotalCount(PageDTO pdto);
+	
+	public int noticeTotalCount(PageDTO pdto);
 
 	public List<EmpListVO> empList();
 

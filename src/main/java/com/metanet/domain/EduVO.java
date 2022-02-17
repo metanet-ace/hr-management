@@ -32,7 +32,7 @@ public class EduVO {
 	@NotBlank(message="대상을 입력해주세요.")
 	private String eduTarget;
 	
-	@NotBlank(message="시작일을 입력해주세요")
+	@NotBlank(message="시작일을 입력해주세요.")
 	private String eduStart;
 	
 	@NotBlank(message="종료일을 입력해주세요")

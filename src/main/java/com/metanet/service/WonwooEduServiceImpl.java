@@ -14,6 +14,7 @@ import org.springframework.validation.FieldError;
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
+import com.metanet.domain.NoticeVO;
 import com.metanet.domain.PageDTO;
 import com.metanet.persistence.WonwooEduMapper;
 
@@ -117,6 +118,16 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 	@Override
 	public int EduTotalCount(PageDTO pdto) {
 		return wonwooEduMapper.EduTotalCount(pdto);
+	}
+
+	@Override
+	public List<NoticeVO> getPagingNoticeList(PageDTO pdto) {
+		return wonwooEduMapper.getPagingNoticeList(pdto);
+	}
+
+	@Override
+	public int noticeTotalCount(PageDTO pdto) {
+		return wonwooEduMapper.noticeTotalCount(pdto);
 	}
 
 
