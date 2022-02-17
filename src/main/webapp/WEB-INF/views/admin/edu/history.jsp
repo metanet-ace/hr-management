@@ -15,9 +15,21 @@
 }
 </style>
 <script type="text/javascript">
+
 $(document).ready(function(){
 	console.log("ready");
+	console.log($(".eduScore"));
+	
+	$(".eduScore").keyup(function(){
+		console.log("keyup");
+		var vaildScore = /^[PNpn]$|^(100|[1-9]?\d)$/;
+		if(!vaildScore.test($(this).val())){
+			alert("잘못된 형식입니다.\n점수는 0 ~ 100 사이의 숫자 또는 P/N 만 입력 가능합니다.");
+			$(this).val("");
+		} 
+	});
 });
+
 
 function showKeyField(){
 	console.log("123");
@@ -62,11 +74,6 @@ function modifyScore(){
 	});
 }
 
-function checkScore(){
-	$('.eduScore').keyup(function(){
-		console.log("keyup");
-	});
-}
 </script>
 
 <!--**********************************
