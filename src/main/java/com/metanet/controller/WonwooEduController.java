@@ -37,6 +37,7 @@ import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.FileDTO;
+import com.metanet.domain.NoticeVO;
 import com.metanet.domain.PageDTO;
 import com.metanet.domain.PaginationDTO;
 import com.metanet.service.WonwooEduService;
@@ -50,6 +51,46 @@ public class WonwooEduController {
 
 	@Autowired
 	WonwooEduService wonwooEduService;
+	
+	@RequestMapping("/notice")
+	public String noticeList(Model model, HttpServletRequest request) {
+		int pageNum = 1;
+		String keyField = "";
+		String keyword = "";
+
+		// 현재 페이지 넘버
+		if (request.getParameter("pageNum") != null) {
+			pageNum = Integer.parseInt((request.getParameter("pageNum")).trim());
+		}
+		model.addAttribute("tempPageNum", pageNum);
+
+		// 키워드(작성자/작성내용 등)
+		if (request.getParameter("keyField") != null && request.getParameter("keyField") != "") {
+			keyField = request.getParameter("keyField");
+		}
+
+		if (request.getParameter("keyword") != null && request.getParameter("keyword") != "") {
+			keyword = request.getParameter("keyword");
+		}
+
+		// 페이지 관련 정보
+		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
+		model.addAttribute("pageInfo", pdto);
+
+		// 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
+		List<NoticeVO> list = wonwooEduService.getPagingNoticeList(pdto);
+		model.addAttribute("list", list);
+
+		// 페이징 처리된 숫자그룹(뷰에서)
+		int total = wonwooEduService.noticeTotalCount(pdto);
+		PaginationDTO pageDto = new PaginationDTO(total, pdto);
+
+		model.addAttribute("paging", pageDto);
+		model.addAttribute("title", "공지사항 리스트");
+
+		return "/notice";
+	}
+	
 
 	@RequestMapping("/list")
 	public String eduList(Model model, HttpServletRequest request) {

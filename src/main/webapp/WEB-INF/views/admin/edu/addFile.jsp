@@ -4,6 +4,7 @@
 
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
+
 <!DOCTYPE html>
 <html>
 <script type="text/javascript">
@@ -25,6 +26,7 @@ function checkStart(){
 	}
 }
 </script>
+
 <body>
 	<!--**********************************
             Content body start
