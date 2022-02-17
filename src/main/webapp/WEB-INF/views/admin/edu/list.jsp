@@ -83,7 +83,7 @@ form {
 			<ul class="pagination justify-content-center">
 				<c:if test="${paging.hasPrev }">
 					<li class="page-item"><a class="page-link"
-						href="./history?pageNum=${paging.startPage-1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">이전</a></li>
+						href="./list?pageNum=${paging.startPage-1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">이전</a></li>
 				</c:if>
 
 				<c:forEach var="p" begin="${paging.startPage }"
@@ -96,11 +96,11 @@ form {
 							<c:choose>
 								<c:when test="${empty pageInfo.keyField}">
 									<li class="page-item"><a class="page-link"
-										href="./history?pageNum=${p}">${p}</a>
+										href="./list?pageNum=${p}">${p}</a>
 								</c:when>
 								<c:otherwise>
 									<li class="page-item"><a class="page-link"
-										href="./history?pageNum=${p}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">${p}</a>
+										href="./list?pageNum=${p}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">${p}</a>
 								</c:otherwise>
 							</c:choose>
 
@@ -110,7 +110,7 @@ form {
 
 				<c:if test="${paging.hasNext }">
 					<li class="page-item"><a class="page-link"
-						href="./history?pageNum=${paging.endPage+1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
+						href="./list?pageNum=${paging.endPage+1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
 				</c:if>
 			</ul>
 		</nav>
