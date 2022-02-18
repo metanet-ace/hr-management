@@ -138,6 +138,9 @@ textarea {
 			}
 		})
 		
+		// 이전 검색키워드 받아오기
+		$("#field").val("${field}").attr("selected","selected");
+		
 	});
 </script>
 
@@ -249,12 +252,9 @@ textarea {
 						<div class="col-lg-3">
 							<select class="form-control" id="changeDept" name="changeDept">
 								<option value="">변경사항 없음</option>
-								<option value=1>인사팀</option>
-								<option value=2>마케팅팀</option>
-								<option value=3>경영팀</option>
-								<option value=4>개발팀</option>
-								<option value=5>기획팀</option>
-								<option value=6>법무팀</option>
+								<c:forEach items="${deptList }" var="list">
+									<option value="${list.deptNo }">${list.deptName }</option>
+								</c:forEach>
 							</select>
 						</div>
 						<label class="col-lg-3 col-form-label" for="changePos">직급
@@ -263,12 +263,9 @@ textarea {
 						<div class="col-lg-3">
 							<select class="form-control" id="changePos" name="changePos">
 								<option value="">변경사항 없음</option>
-								<option value=1>사원</option>
-								<option value=2>대리</option>
-								<option value=3>과장</option>
-								<option value=4>차장</option>
-								<option value=5>부장</option>
-								<option value=6>사장</option>
+								<c:forEach items="${posList }" var="list">
+									<option value="${list.posNo }">${list.posName }</option>
+								</c:forEach>
 							</select>
 						</div>
 						<label class="col-lg-3 col-form-label" for="reason">사유<span
