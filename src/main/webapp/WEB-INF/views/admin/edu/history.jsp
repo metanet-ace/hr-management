@@ -18,8 +18,11 @@
 
 $(document).ready(function(){
 	console.log("ready");
-	console.log($(".eduScore"));
+	console.log("keyField: " + '${keyField}');
 	
+	//검색 후 select-option 유지
+	$("#keyField").val("${keyField}").attr("selected","selected");
+
 	$(".eduScore").keyup(function(){
 		console.log("keyup");
 		var vaildScore = /^[PNpn]$|^(100|[1-9]?\d)$/;
@@ -29,12 +32,6 @@ $(document).ready(function(){
 		} 
 	});
 });
-
-
-function showKeyField(){
-	console.log("123");
-	console.log(${keyField});
-}
 
 function activeInput(){
 	$("input[name='score2']").attr("readonly",false);
@@ -83,7 +80,8 @@ function modifyScore(){
 	<div class="container-fluid">
 		<!-- 교육 히스토리 리스트 출력 -->
 		<form id="search_form" action="/edu/admin/history" method="post">
-			<select name="keyField" size="1">
+			<select name="keyField" id="keyField" size="1">
+				<option value="">=====</option>
 				<option value="eduTitle">교육명</option>
 				<option value="empNo">사원번호</option>
 				<option value="empName">사원이름</option>

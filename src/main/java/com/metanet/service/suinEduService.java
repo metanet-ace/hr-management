@@ -20,5 +20,7 @@ public interface suinEduService {
 	public int eduHistoryTotalCount(Map<String, String> map);
 	public int getTotalCountForAllocation(Map<String, String> map);
 	public List<EmpListVO> empListForAllocationSelect(PageDTO pdto);
+	public int getTotalCountEduList(Map<String, String> map);
+	public List<EduVO> eduListSelect(PageDTO pdto);
 	
 }

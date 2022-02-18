@@ -42,7 +42,8 @@
     </update>
     
     <select id="eduHistoryListSelect" resultType="com.metanet.domain.EduHistoryVO">
-    	select * from (select rownum rn, history_list.*
+    	select * 
+    	from (select rownum rn, history_list.*
     	from (select h.edu_hisno, d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
     	from employee e, edu d, edu_history h
     	where e.emp_no = h.emp_no
@@ -78,6 +79,69 @@
     			and e.emp_name like '%' || #{keyword} || '%'
     		</when>
     	</choose>
+    </select>
+    
+    <select id="getTotalCountEduList" parameterType="Map" resultType="Integer">
+    	select count(*)
+    	from edu
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			where edu_title like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"eduTarget".equals(keyField) '>
+    			where edu_target like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"eduProgress".equals(keyField) '>
+    			<choose>
+    				<when test='"진행중".equals(keyword) '>
+    					where edu_progress = 'ing'
+    				</when>
+    				<when test='"진행예정".equals(keyword) '>
+    					where edu_progress = 'pre'
+    				</when>
+    				<when test='"진행종료".equals(keyword) '>
+    					where edu_progress = 'post'
+    				</when>
+    				<otherwise>
+    					where edu_progress = '-'
+    				</otherwise>
+    			</choose>
+    		</when>
+    	</choose>
+    </select>
+    
+    <select id="eduListSelect" resultType="com.metanet.domain.EduVO">
+    	select *
+    	from (select rownum rn , edu_list.*
+    	from (select EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+			   TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, 
+			   TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+			   EDU_PROGRESS
+    	from edu
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			where edu_title like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"eduTarget".equals(keyField) '>
+    			where edu_target like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"eduProgress".equals(keyField) '>
+    			<choose>
+    				<when test='"진행중".equals(keyword) '>
+    					where edu_progress = 'ing'
+    				</when>
+    				<when test='"진행예정".equals(keyword) '>
+    					where edu_progress = 'pre'
+    				</when>
+    				<when test='"진행종료".equals(keyword) '>
+    					where edu_progress = 'post'
+    				</when>
+    				<otherwise>
+    					where edu_progress = '-'
+    				</otherwise>
+    			</choose>
+    		</when>
+    	</choose>) edu_list ) where rn between ${startNum} and ${endNum}
     </select>
     
     <select id="getTotalCountForAllocation" parameterType="Map" resultType="Integer">

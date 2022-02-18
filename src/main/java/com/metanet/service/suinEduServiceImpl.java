@@ -112,4 +112,14 @@ public class suinEduServiceImpl implements suinEduService {
 		return mapper.empListForAllocationSelect(pdto);
 	}
 
+	@Override
+	public int getTotalCountEduList(Map<String, String> map) {
+		return mapper.getTotalCountEduList(map);
+	}
+
+	@Override
+	public List<EduVO> eduListSelect(PageDTO pdto) {
+		return mapper.eduListSelect(pdto);
+	}
+
 }

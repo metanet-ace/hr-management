@@ -27,6 +27,14 @@ form {
 }
 </style>
 <script>
+$(document).ready(function(){
+	console.log("ready");
+	console.log("keyField: " + '${keyField}');
+	
+	//검색 후 select-option 유지
+	$("#keyField").val("${keyField}").attr("selected","selected");
+});
+
 function eduAllocation(){
 	var empNo = [];
 	$("input[name='empNo']:checked").each(function(i){
@@ -57,11 +65,12 @@ function eduAllocation(){
 <div class="content-body">
 	<div class="container-fluid">
 		<form id="search_form" action="/edu/allocation2/${eduNo}" method="post">
-			<select name="keyField" size="1">
+			<select name="keyField" id="keyField" size="1">
+				<option value="">==</option>
 				<option value="deptName">부서</option>
 				<option value="posName">직급</option>
 			</select> 
-			<input type="text" id="kwd" name="keyword" value=""> 
+			<input type="text" id="kwd" name="keyword" value="${keyword}"> 
 			<input type="submit" value="찾기">
 		</form>
 		<br>
@@ -79,6 +88,9 @@ function eduAllocation(){
 				</tr>
 			</thead>
 			<tbody>
+				<c:if test="${empty list}">
+				<tr><td colspan=5>조회된 결과가 없습니다.</td></tr>
+				</c:if>
 				<c:forEach items="${list }" var="list">
 					<tr>
 						<td><input type="checkbox" name="empNo" value="${list.empNo }"></td>

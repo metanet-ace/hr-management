@@ -39,4 +39,8 @@ public interface suinEduMapper {
 
 	public List<EmpListVO> empListForAllocationSelect(PageDTO pdto);
 
+	public int getTotalCountEduList(Map<String, String> map);
+
+	public List<EduVO> eduListSelect(PageDTO pdto);
+
 }
