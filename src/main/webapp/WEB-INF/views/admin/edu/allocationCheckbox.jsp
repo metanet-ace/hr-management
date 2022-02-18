@@ -57,11 +57,11 @@ function eduAllocation(){
 <div class="content-body">
 	<div class="container-fluid">
 		<form id="search_form" action="/edu/allocation2/${eduNo}" method="post">
-			<select name="keyword" size="1">
+			<select name="keyField" size="1">
 				<option value="deptName">부서</option>
 				<option value="posName">직급</option>
 			</select> 
-			<input type="text" id="kwd" name="searchContent" value=""> 
+			<input type="text" id="kwd" name="keyword" value=""> 
 			<input type="submit" value="찾기">
 		</form>
 		<br>
@@ -95,7 +95,7 @@ function eduAllocation(){
 			<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-center">
 				<c:if test="${paging.hasPrev }">
-					<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}?pageNum=${paging.startPage-1}&keyword=${pageInfo.keyword }&searchContent=${pageInfo.searchContent}">이전</a></li>
+					<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}/${paging.startPage-1}/${pageInfo.keyField }/${pageInfo.keyword}">이전</a></li>
 				</c:if>
 
 				<c:forEach var="p" begin="${paging.startPage }" end="${paging.endPage }" step="1">
@@ -105,11 +105,11 @@ function eduAllocation(){
 						</c:when>
 						<c:otherwise>
 							<c:choose>
-								<c:when test="${empty pageInfo.keyword}">
-									<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}?pageNum=${p}">${p}</a>
+								<c:when test="${empty pageInfo.keyField}">
+									<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}/${p}">${p}</a>
 								</c:when>
 								<c:otherwise>
-									<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}?pageNum=${p}&keyword=${pageInfo.keyword }&searchContent=${pageInfo.searchContent}">${p}</a>
+									<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}/${p}/${pageInfo.keyField }/${pageInfo.keyword}">${p}</a>
 								</c:otherwise>
 							</c:choose>
 							
@@ -118,7 +118,7 @@ function eduAllocation(){
 				</c:forEach>
 
 				<c:if test="${paging.hasNext }">
-					<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}?pageNum=${paging.endPage+1}&keyword=${pageInfo.keyword }&searchContent=${pageInfo.searchContent}">다음</a></li>
+					<li class="page-item"><a class="page-link" href="/edu/allocation2/${eduNo}/${paging.endPage+1}/${pageInfo.keyField }/${pageInfo.keyword}">다음</a></li>
 				</c:if>
 			</ul>
 			</nav>
