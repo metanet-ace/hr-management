@@ -30,12 +30,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
-import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.FileDTO;
 import com.metanet.domain.NoticeVO;
 import com.metanet.domain.PageDTO;
@@ -51,7 +50,7 @@ public class WonwooEduController {
 
 	@Autowired
 	WonwooEduService wonwooEduService;
-	
+
 	@RequestMapping("/notice")
 	public String noticeList(Model model, HttpServletRequest request) {
 		int pageNum = 1;
@@ -90,7 +89,6 @@ public class WonwooEduController {
 
 		return "/notice";
 	}
-	
 
 	@RequestMapping("/list")
 	public String eduList(Model model, HttpServletRequest request) {
@@ -128,10 +126,6 @@ public class WonwooEduController {
 		model.addAttribute("paging", pageDto);
 		model.addAttribute("title", "교육 전체리스트");
 
-		/*
-		 * model.addAttribute("eduList", wonwooEduService.eduList());
-		 * model.addAttribute("title", "교육과정 전체 리스트");
-		 */
 		return "admin/edu/list";
 	}
 
@@ -173,6 +167,26 @@ public class WonwooEduController {
 		model.addAttribute("title", "교육 상세조회");
 
 		return "/admin/empEduDetail";
+	}
+
+	// 공지사항 상세페이지
+	@GetMapping("/noticeDetail")
+	public String noticeDetail(Model model, HttpServletRequest request) {
+		int noticeNo = Integer.parseInt(request.getParameter("notice_no"));
+		NoticeVO noticeVO = wonwooEduService.noticeDetail(noticeNo);
+
+		if (noticeVO.getNoticeRefile() != null) {
+			String noticeRefile = noticeVO.getNoticeRefile();
+			System.out.println(noticeRefile);
+			String[] noticeRefileSplitUuid = noticeRefile.split("_");
+			System.out.println(noticeRefileSplitUuid[0]);
+			model.addAttribute("uuid", noticeRefileSplitUuid[0]);
+		}
+
+		model.addAttribute("detail", noticeVO);
+		model.addAttribute("title", "공지사항 상세조회");
+
+		return "/noticeDetail";
 	}
 
 	@GetMapping("/update")
@@ -252,6 +266,79 @@ public class WonwooEduController {
 		}
 	}
 
+	@GetMapping("/updateNotice")
+	public String updateNotice(Model model, HttpServletRequest request) {
+		int notice_no = Integer.parseInt(request.getParameter("notice_no"));
+		model.addAttribute("noticeVO", wonwooEduService.noticeDetail(notice_no));
+		System.out.println("getRefile : " + wonwooEduService.noticeDetail(notice_no).getNoticeRefile());
+		model.addAttribute("title", "공지사항 정보수정");
+		return "/noticeUpdate";
+	}
+
+	@PostMapping("/updateNotice")
+	public String updateNoticeAction(@ModelAttribute("noticeVO") NoticeVO noticeVO, @Valid NoticeVO noticeVO2,
+			Errors errors, @RequestParam MultipartFile uploadfile, FileDTO fileDTO, HttpServletRequest request,
+			Model model) throws IllegalStateException, IOException {
+
+		if (!uploadfile.isEmpty()) {
+			if (noticeVO.getNoticeFile() != null) {
+				String path = request.getSession().getServletContext().getRealPath("resources") + "\\noticeFiles";
+				System.out.println("Path : " + path);
+
+				File file = new File(path + noticeVO.getNoticeRefile());
+
+				if (file.exists()) {
+					file.delete(); // 파일 삭제
+				}
+				noticeVO.setNoticeFile(null);
+				noticeVO.setNoticeRefile(null);
+			}
+
+			String noticeFile = uploadfile.getOriginalFilename();
+			noticeVO.setNoticeFile(noticeFile);
+
+			FileDTO dto = new FileDTO(UUID.randomUUID().toString(), uploadfile.getOriginalFilename(),
+					uploadfile.getContentType());
+			File newFileName = new File(dto.getUuid() + "_" + dto.getFileName());
+
+			uploadfile.transferTo(newFileName);
+
+			String noticeRefile = newFileName.getName();
+			noticeVO.setNoticeRefile(noticeRefile);
+
+			if (errors.hasErrors()) {
+				// 교육수정 실패시, 입력 데이터를 유지
+				model.addAttribute("noticeVO", noticeVO2);
+				// 유효성 통과 못한 필드와 메시지를 핸들링
+				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);
+				for (String key : validatorResult.keySet()) {
+					model.addAttribute(key, validatorResult.get(key));
+				}
+				model.addAttribute("title", "교육 정보수정");
+				return "/noticeUpdate";
+			}
+			model.addAttribute("title", "공지사항 정보수정");
+			wonwooEduService.noticeUpdate(noticeVO);
+			return "redirect:./noticeDetail?notice_no=" + Integer.parseInt(request.getParameter("noticeNo"));
+
+		} else {
+			if (errors.hasErrors()) {
+				// 교육수정 실패시, 입력 데이터를 유지
+				model.addAttribute("noticeVO", noticeVO2);
+				// 유효성 통과 못한 필드와 메시지를 핸들링
+				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);
+				for (String key : validatorResult.keySet()) {
+					model.addAttribute(key, validatorResult.get(key));
+				}
+				model.addAttribute("title", "교육 정보수정");
+				return "/noticeUpdate";
+			}
+			model.addAttribute("title", "공지사항 정보수정");
+			wonwooEduService.noticeUpdateNoModifyFile(noticeVO);
+			return "redirect:./noticeDetail?notice_no=" + Integer.parseInt(request.getParameter("noticeNo"));
+		}
+	}
+
 	@GetMapping("/delete")
 	public String eduDelete(HttpServletRequest request) {
 		// 해당경로 이전 파일 삭제
@@ -269,6 +356,27 @@ public class WonwooEduController {
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
 		wonwooEduService.eduDelete(edu_no);
 		return "redirect:/edu/list";
+	}
+
+	@GetMapping("/deleteNotice")
+	public String deleteNotice(HttpServletRequest request) {
+		// 해당경로 이전 파일 삭제
+		String noticeRefile = request.getParameter("notice_refile");
+		System.out.println(noticeRefile);
+		if (noticeRefile != null) {
+			String path = request.getSession().getServletContext().getRealPath("resources");
+			System.out.println("Path : " + path);
+			String root = path + "\\noticeFiles";
+
+			File file = new File(root + "\\" + noticeRefile);
+
+			if (file.exists()) {
+				file.delete(); // 파일 삭제
+			}
+		}
+		int notice_no = Integer.parseInt(request.getParameter("notice_no"));
+		wonwooEduService.noticeDelete(notice_no);
+		return "redirect:/edu/notice";
 	}
 
 	@RequestMapping("/allocation")
@@ -363,23 +471,9 @@ public class WonwooEduController {
 			model.addAttribute("paging", pageDto);
 			model.addAttribute("title", "사원 교육 히스토리");
 
-//			System.out.println(Integer.parseInt(empNo));
-//			model.addAttribute("eduEmpHistoyList", wonwooEduService.getEduEmpHistroyList(Integer.parseInt(empNo)));
 			return "/history";
 		}
 	}
-
-	/*
-	 * @PostMapping("/history") public String eduEmpHistoyListBykeyField(Model model,
-	 * HttpServletRequest request,
-	 * 
-	 * @SessionAttribute("sessionEmp") EmployeeVO empVO) { int empNo =
-	 * empVO.getEmpNo(); Map<String, Object> map = new HashMap<String, Object>();
-	 * map.put("empNo", empNo); map.put("keyField",
-	 * request.getParameter("keyField")); map.put("keyField",
-	 * request.getParameter("keyField")); model.addAttribute("eduEmpHistoyList",
-	 * wonwooEduService.getEduEmpHistroyListByKey(map)); return "/history"; }
-	 */
 
 	@GetMapping("/download")
 	public ResponseEntity<Resource> download(@ModelAttribute FileDTO dto) throws IOException {
@@ -394,6 +488,27 @@ public class WonwooEduController {
 		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
 
 		Resource resource = new InputStreamResource(Files.newInputStream(path));
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/downloadNoticeFile")
+	public ResponseEntity<Resource> downloadNoticeFile(@ModelAttribute FileDTO dto, HttpServletRequest request)
+			throws IOException {
+		String path = request.getSession().getServletContext().getRealPath("resources");
+		System.out.println("Path : " + path);
+		String root = path + "\\noticeFiles";
+
+		Path Realpath = Paths.get(root + "/" + dto.getUuid() + "_" + dto.getFileName());
+		String contentType = Files.probeContentType(Realpath);
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setContentDisposition(
+				ContentDisposition.builder("attachment").filename(dto.getFileName(), StandardCharsets.UTF_8).build());
+		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+
+		Resource resource = new InputStreamResource(Files.newInputStream(Realpath));
 		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 
 	}
@@ -451,6 +566,78 @@ public class WonwooEduController {
 			wonwooEduService.eduAddNoFile(eduVO);
 			System.out.println("교육 과정 추가");
 			return "redirect:/edu/list";
+		}
+	}
+
+	@GetMapping("/noticeAdd")
+	public String noticeAdd(Model model) {
+		model.addAttribute("title", "공지사항 등록");
+		return "/noticeAdd";
+	}
+
+	@PostMapping("/noticeAdd")
+	public String noticeAdd(@Valid NoticeVO noticeVO, Errors errors, Model model,
+			@RequestParam MultipartFile uploadfile, HttpServletRequest request, @RequestParam("empNo") String empNo,
+			@RequestParam("empName") String empName, FileDTO fileDTO) {
+		noticeVO.setEmpNo(Integer.parseInt(empNo));
+		noticeVO.setNoticeWriter(empName);
+
+		if (!uploadfile.isEmpty()) {
+			// 저장할 경로 가져오기
+			String path = request.getSession().getServletContext().getRealPath("resources");
+			System.out.println("Path : " + path);
+			String root = path + "\\noticeFiles";
+
+			File file = new File(root);
+
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+
+			String noticeFile = uploadfile.getOriginalFilename();
+			noticeVO.setNoticeFile(noticeFile);
+
+			FileDTO dto = new FileDTO(UUID.randomUUID().toString(), noticeFile, uploadfile.getContentType());
+			File newFileName = new File(dto.getUuid() + "_" + dto.getFileName());
+			File changeFile = new File(root + "\\" + newFileName.getName());
+
+			try {
+				uploadfile.transferTo(changeFile);
+				String noticeRefile = newFileName.getName();
+				noticeVO.setNoticeRefile(noticeRefile);
+
+				System.out.println("파일 업로드 성공");
+			} catch (IllegalStateException | IOException e) {
+				System.out.println("파일 업로드 실패");
+				e.printStackTrace();
+			}
+
+			if (errors.hasErrors()) {
+				// 공지사항 등록 실패시, 입력 데이터를 유지
+				model.addAttribute("noticeVO", noticeVO);
+				// 유효성 통과 못한 필드와 메시지를 핸들링
+				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);
+				for (String key : validatorResult.keySet()) {
+					model.addAttribute(key, validatorResult.get(key));
+				}
+				return "/noticeAdd";
+			}
+			wonwooEduService.noticeAdd(noticeVO);
+			return "redirect:/edu/notice";
+
+		} else {
+			if (errors.hasErrors()) {
+				// 사원등록 실패시, 입력 데이터를 유지
+				model.addAttribute("noticeVO", noticeVO);
+				// 유효성 통과 못한 필드와 메시지를 핸들링
+				Map<String, String> validatorResult = wonwooEduService.validateHandling(errors);
+				for (String key : validatorResult.keySet()) {
+					model.addAttribute(key, validatorResult.get(key));
+				}
+				return "/noticeAdd";
+			}
+			wonwooEduService.noticeAddNoFile(noticeVO);
+			return "redirect:/edu/notice";
 		}
 	}
 }

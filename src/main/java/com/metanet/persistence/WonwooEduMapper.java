@@ -52,4 +52,16 @@ public interface WonwooEduMapper{
 	public List<NoticeVO> getPagingNoticeList(PageDTO pdto);
 
 	public int noticeTotalCount(PageDTO pdto);
+
+	public void noticeAdd(@Valid NoticeVO noticeVO);
+
+	public void noticeAddNoFile(@Valid NoticeVO noticeVO);
+
+	public NoticeVO noticeDetail(int noticeNo);
+
+	public void noticeDelete(int notice_no);
+
+	public void noticeUpdate(NoticeVO noticeVO);
+
+	public void noticeUpdateNoModifyFile(NoticeVO noticeVO);
 }

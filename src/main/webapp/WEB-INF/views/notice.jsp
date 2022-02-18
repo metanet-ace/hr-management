@@ -41,8 +41,11 @@ form {
 			</select> <input type="text" id="kwd" name="keyword" class="form-control form-cotrol-sm" style="margin: 10px"> 
 			<input type="submit" class="btn btn-outline-info btn-sm" value="찾기">
 		</form>
-		<br>
 		
+		<div style="float:right; margin:10px;">
+		<button class="btn btn-primary" onclick="location.href='./noticeAdd';">공지사항 등록</button>
+		</div>
+		<br>
 		<table class="table table-striped" border=1>
 			<thead>
 				<tr>
@@ -60,7 +63,7 @@ form {
 					<tr>
 					<%-- <a href="./eduEmpDetail?edu_no=${list.eduNo }">${list.eduTitle }</a> --%>
 						<td>${list.noticeNo }</td>
-						<td>${list.noticeTitle }</td>
+						<td onClick="location.href='./noticeDetail?notice_no=${list.noticeNo }'">${list.noticeTitle }</td>
 						<td>${list.noticeWriter}</td>
 						<td>${list.noticeDate }</td>
 					</tr>
