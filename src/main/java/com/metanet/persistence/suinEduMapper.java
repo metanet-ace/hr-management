@@ -15,15 +15,11 @@ import com.metanet.domain.PageDTO;
 @Mapper
 public interface suinEduMapper {
 
-	public void eduInsert(EduVO vo);
-
 	public void eduAttendanceUpdate(List<AttendanceVO> list);
 
 	public ArrayList<AttendanceVO> eduHistorySelect();
 
 	public List<EduHistoryVO> eduHistoryListSelect(PageDTO dto);
-
-	public List<EduHistoryVO> eduHistoryListSelectByKey(Map<String, String> map);
 
 	public void eduHistroyInsert(Map<String, Object> param);
 

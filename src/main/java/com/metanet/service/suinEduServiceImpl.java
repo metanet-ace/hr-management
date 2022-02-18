@@ -25,12 +25,7 @@ public class suinEduServiceImpl implements suinEduService {
 	
 	@Autowired
 	suinEduMapper mapper;
-
-	@Override
-	public void eduAdd(EduVO vo) {
-		mapper.eduInsert(vo);
-	}
-
+	
 	@Override
 	public void eduAttendance() throws ParseException {
 		List<AttendanceVO> list = mapper.eduHistorySelect();
@@ -59,11 +54,6 @@ public class suinEduServiceImpl implements suinEduService {
 	public List<EduHistoryVO> getEduHistoryList(PageDTO dto) {
 		return mapper.eduHistoryListSelect(dto);
 		 
-	}
-
-	@Override
-	public List<EduHistoryVO> getEduHistoryListByKey(Map<String, String> map) {
-		return mapper.eduHistoryListSelectByKey(map);
 	}
 
 	@Override

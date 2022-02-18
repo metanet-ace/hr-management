@@ -4,21 +4,6 @@
 
 <!-- namespace는 @mapper로 설정된 경로 입력  -->        
 <mapper namespace="com.metanet.persistence.suinEduMapper">
-    <insert id="eduInsert" parameterType="com.metanet.domain.EduVO">
-        INSERT INTO edu
-        VALUES (seq_edu_no.nextval, 
-        		#{eduTitle}, 
-        		#{eduDesc}, 
-        		#{eduLoc}, 
-        		#{eduTime}, 
-        		#{eduTeacher}, 
-        		#{eduPeople}, 
-        		#{eduTarget}, 
-        		#{eduStart}, 
-        		#{eduEnd}, 
-        		#{eduCost},
-        		0)
-    </insert>
     
     <select id="eduHistorySelect" resultType="com.metanet.domain.AttendanceVO">
 	     <![CDATA[
@@ -59,7 +44,7 @@
     			and e.emp_name like '%' || #{keyword} || '%'
     		</when>
     	</choose>
-    	order by h.edu_hisno DESC) history_list) WHERE rn BETWEEN #{startNum} AND #{endNum}
+    	order by decode(edu_progress,'pre', 2, 'ing', 1, 'post', 3), h.edu_hisno) history_list) WHERE rn BETWEEN #{startNum} AND #{endNum}
     </select>
     
     <select id="eduHistorytotalCount" parameterType="Map" resultType="Integer">

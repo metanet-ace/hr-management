@@ -10,10 +10,8 @@ import com.metanet.domain.EmpListVO;
 import com.metanet.domain.PageDTO;
 
 public interface suinEduService {
-	public void eduAdd(EduVO vo);
 	public void eduAttendance() throws ParseException;
 	public List<EduHistoryVO> getEduHistoryList(PageDTO dto);
-	public List<EduHistoryVO> getEduHistoryListByKey(Map<String, String> map);
 	public void eduHistoryAdd(Map<String, Object> param);
 	public void eduScoreUpdate(List<EduHistoryVO> list);
 	public void eduProgress() throws ParseException;
