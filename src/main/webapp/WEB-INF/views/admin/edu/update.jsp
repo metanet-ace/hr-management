@@ -4,41 +4,10 @@
 
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- Favicon icon -->
-<link rel="icon" type="image/png" sizes="16x16"
-	href="/assets/images/favicon.png">
-<!-- Daterange picker -->
-<link
-	href="/assets/vendor/bootstrap-daterangepicker/daterangepicker.css"
-	rel="stylesheet">
-<!-- Clockpicker -->
-<link
-	href="/assets/vendor/clockpicker/css/bootstrap-clockpicker.min.css"
-	rel="stylesheet">
-<!-- asColorpicker -->
-<link
-	href="/assets/vendor/jquery-asColorPicker/css/asColorPicker.min.css"
-	rel="stylesheet">
-<!-- Material color picker -->
-<link
-	href="/assets/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css"
-	rel="stylesheet">
-<!-- Pick date -->
-<link rel="stylesheet"
-	href="/assets/vendor/pickadate/themes/default.css">
-<link rel="stylesheet"
-	href="/assets/vendor/pickadate/themes/default.date.css">
-<!-- Custom Stylesheet -->
-<link href="/assets/css/style.css" rel="stylesheet">
+
 <script type="text/javascript">
 	function previous(no){
-			location.href="./detail?edu_no="+no;
+			location.href="/edu/detail?edu_no="+no;
 	}
 	
 	function updateCheck(){
@@ -49,8 +18,6 @@
 		}
 	}
 </script>
-</head>
-<body>
 	<!--**********************************
             Content body start
         ***********************************-->
@@ -65,7 +32,7 @@
 						</div>
 <div class="card-body">
 							<div class="form-validation">
-								<form class="form-valide" action="./update" method="post" onsubmit="return updateCheck()" enctype="multipart/form-data">
+								<form class="form-valide" action="/edu/update" method="post" onsubmit="return updateCheck()" enctype="multipart/form-data">
 									<input type="hidden" name="eduNo" value="${eduVO.eduNo}">
 									<div class="row">
 										<div class="col-xl-6">
@@ -213,7 +180,4 @@
 	<!--**********************************
             Content body end
         ***********************************-->
-
 	<c:import url="/WEB-INF/views/include/footer.jsp" />
-</body>
-</html>

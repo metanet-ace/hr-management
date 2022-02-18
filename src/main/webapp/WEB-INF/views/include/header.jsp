@@ -69,8 +69,10 @@
             <div class="header-content">
                 <nav class="navbar navbar-expand">
                     <div class="collapse navbar-collapse justify-content-between">
+						
 						<div class="header-left">
 							<div class="search_bar dropdown">
+							<!-- 
 								<a style="font-size: 30px; color: black;" href="./">
 									정보 조회
 								</a>
@@ -80,8 +82,10 @@
 								<a style="font-size: 30px; color: black;" href="./">
 									<div style="font-size: 30px; color: black; padding-left: 30px">교육 관리</div>
 								</a>
+								-->
 							</div>
-						</div>
+						</div> 
+						
 
 						<ul class="navbar-nav header-right">
                             <li class="nav-item dropdown notification_dropdown">

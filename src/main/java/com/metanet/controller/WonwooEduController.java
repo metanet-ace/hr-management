@@ -90,45 +90,6 @@ public class WonwooEduController {
 		return "/notice";
 	}
 
-	@RequestMapping("/list")
-	public String eduList(Model model, HttpServletRequest request) {
-		int pageNum = 1;
-		String keyField = "";
-		String keyword = "";
-
-		// 현재 페이지 넘버
-		if (request.getParameter("pageNum") != null) {
-			pageNum = Integer.parseInt((request.getParameter("pageNum")).trim());
-		}
-		model.addAttribute("tempPageNum", pageNum);
-
-		// 키워드(작성자/작성내용 등)
-		if (request.getParameter("keyField") != null && request.getParameter("keyField") != "") {
-			keyField = request.getParameter("keyField");
-		}
-
-		if (request.getParameter("keyword") != null && request.getParameter("keyword") != "") {
-			keyword = request.getParameter("keyword");
-		}
-
-		// 페이지 관련 정보
-		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
-		model.addAttribute("pageInfo", pdto);
-
-		// 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
-		List<EduVO> list = wonwooEduService.getPagingEduList(pdto);
-		model.addAttribute("list", list);
-
-		// 페이징 처리된 숫자그룹(뷰에서)
-		int total = wonwooEduService.EduTotalCount(pdto);
-		PaginationDTO pageDto = new PaginationDTO(total, pdto);
-
-		model.addAttribute("paging", pageDto);
-		model.addAttribute("title", "교육 전체리스트");
-
-		return "admin/edu/list";
-	}
-
 	// 인사팀용 교육과정 상세페이지
 	@GetMapping("/detail")
 	public String eduDetail(Model model, HttpServletRequest request) {
@@ -379,49 +340,6 @@ public class WonwooEduController {
 		return "redirect:/edu/notice";
 	}
 
-	@RequestMapping("/allocation")
-	public String eduAllocation(Model model, HttpServletRequest request) {
-		int pageNum = 1;
-		String keyField = "";
-		String keyword = "";
-		/* int edu_no = Integer.parseInt(request.getParameter("edu_no")); */
-
-		System.out.println(request.getParameter("pageNum"));
-
-		// 현재 페이지 넘버
-		if (request.getParameter("pageNum") != null) {
-			pageNum = Integer.parseInt((request.getParameter("pageNum")).trim());
-		}
-		model.addAttribute("tempPageNum", pageNum);
-
-		// 키워드(작성자/작성내용 등)
-		if (request.getParameter("keyField") != null && request.getParameter("keyField") != "") {
-			keyField = request.getParameter("keyField");
-		}
-
-		if (request.getParameter("keyword") != null && request.getParameter("keyword") != "") {
-			keyword = request.getParameter("keyword");
-		}
-
-		System.out.println(keyField);
-		System.out.println(keyword);
-		// 페이지 관련 정보
-		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
-		model.addAttribute("pageInfo", pdto);
-
-		// 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
-		List<EmpListVO> list = wonwooEduService.getPagingList(pdto);
-		model.addAttribute("list", list);
-
-		// 페이징 처리된 숫자그룹(뷰에서)
-		int total = wonwooEduService.totalCount(pdto);
-		PaginationDTO pageDto = new PaginationDTO(total, pdto);
-
-		model.addAttribute("paging", pageDto);
-		model.addAttribute("title", "교육배정");
-		return "/admin/edu/allocation";
-	}
-
 	@RequestMapping("/history")
 	public String eduEmpHistoyList(Model model, @RequestParam("empNo") String empNo, HttpServletRequest request) {
 		if (empNo == null || empNo == "") {
@@ -513,14 +431,14 @@ public class WonwooEduController {
 
 	}
 
-	@GetMapping("/addFile")
+	@GetMapping("/add")
 	public String eduAdd(Model model) {
 		model.addAttribute("title", "교육 등록");
 		System.out.println("교육 추가 페이지 출력");
-		return "/admin/edu/addFile";
+		return "/admin/edu/add";
 	}
 
-	@PostMapping("/addFile")
+	@PostMapping("/add")
 	public String eduAdd(@Valid EduVO eduVO, Errors errors, Model model, @RequestParam MultipartFile uploadfile,
 			FileDTO fileDTO) throws IllegalStateException, IOException {
 		if (!uploadfile.isEmpty()) {
@@ -546,7 +464,7 @@ public class WonwooEduController {
 				for (String key : validatorResult.keySet()) {
 					model.addAttribute(key, validatorResult.get(key));
 				}
-				return "/admin/edu/addFile";
+				return "/admin/edu/add";
 			}
 			wonwooEduService.eduAdd(eduVO);
 			System.out.println("교육 과정 추가");
@@ -561,7 +479,7 @@ public class WonwooEduController {
 				for (String key : validatorResult.keySet()) {
 					model.addAttribute(key, validatorResult.get(key));
 				}
-				return "/admin/edu/addFile";
+				return "/admin/edu/add";
 			}
 			wonwooEduService.eduAddNoFile(eduVO);
 			System.out.println("교육 과정 추가");

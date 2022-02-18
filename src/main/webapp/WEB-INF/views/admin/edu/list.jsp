@@ -39,7 +39,7 @@ $(document).ready(function(){
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 교육 히스토리 리스트 출력 -->
-		<form id="search_form" action="/edu/list2" method="post">
+		<form id="search_form" action="/edu/list" method="post">
 			<select name="keyField" id="keyField" size="1">
 				<option value="">====</option>
 				<option value="eduTitle">교육명</option>
@@ -49,13 +49,6 @@ $(document).ready(function(){
 				type="submit" value="찾기">
 		</form>
 		<br>
-		<!-- row -->
-		<!-- <div class="row">
-                    <div class="col-12">
-                        <div class="card1">
-                            <div class="card-body1">
-                                <div class="table-responsive1"> -->
-
 		<table class="table table-striped" border=1>
 			<thead>
 				<tr>
@@ -86,7 +79,7 @@ $(document).ready(function(){
 							</c:choose></td>
 						<td>
 							<c:if test="${list.eduProgress eq 'pre'}">
-								<button type="button" class="btn-primary" onclick="location.href='./allocation2/${list.eduNo }'">교육배정</button>
+								<button type="button" class="btn-primary" onclick="location.href='/edu/allocation/${list.eduNo }'">교육배정</button>
 							</c:if>
 						</td>
 					</tr>

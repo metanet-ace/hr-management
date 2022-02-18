@@ -10,14 +10,8 @@
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                                 class="icon icon-single-04"></i><span class="nav-text">정보 조회</span></a>
                         <ul aria-expanded="false">
-                            <li><a href="/emp/detail?empNo=${sessionEmp.empNo }">내 정보 조회</a></li>
-                            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">교육 과정</a>
-                                <ul aria-expanded="false">
-                                    <li><a href="/edu/history?empNo=${sessionEmp.empNo}">진행 예정</a></li>
-                                    <li><a href="/edu/history?empNo=${sessionEmp.empNo}">진행중</a></li>
-                                </ul>
-                            </li>  
-                            <li><a href="/edu/history?empNo=${sessionEmp.empNo}">교육 이수 내역</a></li>
+                            <li><a href="/emp/detail?empNo=${sessionEmp.empNo }">내 정보 조회</a></li> 
+                            <li><a href="/edu/history?empNo=${sessionEmp.empNo}">내 교육 정보</a></li>
                         </ul>
                     </li>
                     
@@ -33,9 +27,9 @@
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                                 class="icon icon-chart-bar-33"></i><span class="nav-text">교육 관리</span></a>
                         <ul aria-expanded="false">
-                            <li><a href="/edu/addFile">교육 추가</a></li>
-                            <li><a href="/edu/list">교육 일정 조회</a></li>
-                            <li><a href="/edu/admin/history">교육 결과</a></li>
+                            <li><a href="/edu/add">교육 과정 등록</a></li>
+                            <li><a href="/edu/list">교육 과정 조회</a></li>
+                            <li><a href="/edu/admin/history">교육 진행 관리</a></li>
                         </ul>
                     </li>
                     

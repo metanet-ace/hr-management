@@ -37,25 +37,6 @@ public class suinEduController {
 	@Autowired
 	private suinEduService service;
 	
-	@Autowired
-	WonwooEduService wonwooEduService;
-	
-	@GetMapping("/add")
-	public String eduAdd(Model model) throws ParseException {
-		model.addAttribute("title", "교육 과정 추가");
-		System.out.println("교육 추가 페이지 출력");
-		schedulerTest();
-		return "/admin/edu/add";
-	}
-	
-	@PostMapping("/add")
-	public String eduAdd(@ModelAttribute("params") EduVO params) {
-		service.eduAdd(params);
-		System.out.println("교육 과정 추가");
-		return "redirect:/edu/list";
-	}
-	
-	
 	@Scheduled(cron="0 0 0 * * ?", zone="Asia/Seoul")
 	public void schedulerTest() throws ParseException {
 		System.out.println("Scheduler Test..." + new Date());
@@ -63,7 +44,7 @@ public class suinEduController {
 		service.eduProgress();
 	}
 	
-	@RequestMapping(value={"/list2", "/list/{pageNum}", "/list/{pageNum}/{keyField}/{keyword}"})
+	@RequestMapping(value={"/list", "/list/{pageNum}", "/list/{pageNum}/{keyField}/{keyword}"})
 	public String eduList(@PathVariable(value = "pageNum", required = false) Integer p,
 						  @PathVariable(value = "keyField", required = false) String keyField,
 						  @PathVariable(value = "keyword", required = false) String keyword,
@@ -103,7 +84,7 @@ public class suinEduController {
 		return "admin/edu/list";
 	}
 	
-	@RequestMapping(value={"/allocation2/{eduNo}", "/allocation2/{eduNo}/{pageNum}", "/allocation2/{eduNo}/{pageNum}/{keyField}/{keyword}"})
+	@RequestMapping(value={"/allocation/{eduNo}", "/allocation/{eduNo}/{pageNum}", "/allocation/{eduNo}/{pageNum}/{keyField}/{keyword}"})
 	public String eduAllocation(@PathVariable("eduNo") int eduNo,
 								@PathVariable(value = "pageNum", required = false) Integer p,
 								@PathVariable(value = "keyField", required = false) String keyField,
@@ -139,14 +120,14 @@ public class suinEduController {
         PaginationDTO pageDto = new PaginationDTO(total, pdto);
      
         model.addAttribute("paging", pageDto);
-        model.addAttribute("title", "교육 인원할당");
+        model.addAttribute("title", "교육 배정");
         model.addAttribute("keyField", keyField);
 		model.addAttribute("keyword", keyword);
-        return "/admin/edu/allocationCheckbox";
+        return "/admin/edu/allocation";
 	}
 	
 	@ResponseBody
-	@PostMapping("/allocation2")
+	@PostMapping("/allocation")
 	public void eduAllocCheck(@RequestBody Map<String, Object> param) {
 		System.out.println("empNo"+param.get("empNo"));
 		System.out.println("eduNo"+param.get("eduNo"));
@@ -194,6 +175,7 @@ public class suinEduController {
 		model.addAttribute("eduHistoryList", service.getEduHistoryList(pdto));
 		model.addAttribute("keyField", keyField);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("title","교육 이수사항 조회");
 		return "/admin/edu/history";
 	}
 	
