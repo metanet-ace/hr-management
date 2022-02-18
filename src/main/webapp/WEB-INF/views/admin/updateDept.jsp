@@ -49,8 +49,8 @@ function fnSubmit(){
 		return false;
 	}
 	
-	if(confirm("부서를 등록하시겠습니까?")){
-		$("#insert").submit();
+	if(confirm("부서를 수정하시겠습니까?")){
+		$("#update").submit();
 		return false;
 	}
 }
@@ -86,8 +86,9 @@ function fnSubmit(){
 					</div>
 					<div class="card-body">
 						<div class="form-validation">
-							<form id="insert" class="form-valide" action="/admin/emp/insertDept"
+							<form id="update" class="form-valide" action="/admin/emp/updateDept"
 								method="post">
+								<input type="hidden" name="deptNo" value="${dept.deptNo }">
 								<div class="row">
 									<div class="col-xl-6">
 
@@ -96,7 +97,7 @@ function fnSubmit(){
 												class="text-danger">*</span></label>
 											<div class="col-lg-6">
 												<input type="text" class="form-control" id="deptName"
-													name="deptName">
+													name="deptName" value="${dept.deptName }">
 											</div>
 										</div>
 									</div>
@@ -109,7 +110,7 @@ function fnSubmit(){
 												class="text-danger">*</span></label>
 											<div class="col-lg-6">
 												<input type="text" class="form-control" id="empNo"
-													name="empNo" placeholder="사원번호로 입력해주세요.">
+													name="empNo" placeholder="사원번호로 입력해주세요." value="${dept.deptHead }">
 												<div class="col-lg-8 ml-auto">
 												<button type="button" class="btn btn-primary" id="empNoCheck"
 													name="empNoCheck" onclick="fn_empNoCheck(); return false;"

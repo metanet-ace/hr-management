@@ -64,7 +64,7 @@
 		values (seq_dept_no.nextval, #{deptName}, sysdate, null, #{empNo})
 	</insert> 
 	
-	<!-- 부서 추가할 때 사원번호 확인하기 -->
+	<!-- 부서 추가, 수정할 때 사원번호 확인하기 -->
 	<select id="empNoCheck" parameterType="com.metanet.domain.EmployeeVO2" resultType="int">
 		select count(*)
 		from employee
@@ -77,10 +77,38 @@
 		from department
 	</select>
 	
-	<!-- 부서별 인원 수 (미완성) -->
-	<select id="deptCount" resultType="int" parameterType="com.metanet.domain.EmployeeVO2">
-		select count(*)
-		from employee
-		where dept_no = #{deptNo}
+	<!-- 부서원 상세보기 -->
+	<select id="selectDept" resultType="com.metanet.domain.DepartmentVO">
+		select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name, e.emp_no
+		from department d, employee e
+		where d.dept_no = #{deptNo} and e.dept_no = #{deptNo}
 	</select>
+	
+	<!-- 부서장 상세보기 -->
+	<select id="selectD" resultType="com.metanet.domain.DepartmentVO">
+		select d.dept_name, e.emp_name, d.dept_no, d.dept_head
+        from department d, employee e
+        where d.dept_head = e.emp_no and d.dept_no = #{deptNo}
+	</select>
+	
+	<!-- 부서 수정하기 -->
+	<update id="updateDept" parameterType="com.metanet.domain.DeptVO">
+		update department
+		set dept_name = #{deptName}, dept_modify = sysdate, dept_head = #{empNo}
+		where dept_no = #{deptNo}
+	</update>
+	
+	<!-- 부서 삭제 전 사원들의 부서이동 -->
+	<update id="empDept" parameterType="com.metanet.domain.EmployeeVO2">
+		update employee
+		set dept_no = 0
+		where dept_no = #{deptNo}
+	</update>
+	
+	<!-- 부서 삭제 -->
+	<delete id="deleteDept" parameterType="int">
+		delete 
+		from department
+		where dept_no = #{deptNo}
+	</delete>
 </mapper>

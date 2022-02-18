@@ -90,12 +90,6 @@ public class EmployeeServiceImpl2 implements EmployeeService2 {
 		return empMapper.dept();
 	}
 
-	// 부서별 인원수
-	@Override
-	public int deptCount(int deptNo) {
-		return empMapper.deptCount(deptNo);
-	}
-
 	// 부서등록(인사팀)
 	@Override
 	public void insertDept(DeptVO dept) {
@@ -106,5 +100,35 @@ public class EmployeeServiceImpl2 implements EmployeeService2 {
 	@Override
 	public int empNoCheck(int empNo) {
 		return empMapper.empNoCheck(empNo);
+	}
+	
+	// 부서원 상세정보(인사팀)
+	@Override
+	public List<DepartmentVO> selectDept(int deptNo) {
+		return empMapper.selectDept(deptNo);
+	}
+	
+	// 부서장 상세보기
+	@Override
+	public DepartmentVO selectD(int deptNo) {
+		return empMapper.selectD(deptNo);
+	}
+	
+	// 부서수정(인사팀)
+	@Override
+	public void updateDept(DeptVO dept) {
+		empMapper.updateDept(dept);
+	}
+	
+	//부서 삭제 전 사원들의 부서이동
+	@Override
+	public int empDept(EmployeeVO2 emp) {
+		return empMapper.empDept(emp);
+	}
+	
+	// 부서 삭제
+	@Override
+	public int deleteDept(int deptNo) {
+		return empMapper.deleteDept(deptNo);
 	}
 }

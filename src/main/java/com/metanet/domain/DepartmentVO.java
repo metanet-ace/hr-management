@@ -34,4 +34,7 @@ public class DepartmentVO {
 	
 	@Transient
 	private String empName;
+	
+	@Transient
+	private int empNo;
 }

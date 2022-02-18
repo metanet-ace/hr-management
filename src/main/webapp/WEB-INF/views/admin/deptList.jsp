@@ -35,7 +35,10 @@ function deptWriteForm(){
                                         <tbody>
                                              <c:forEach items="${deptList }" var="list">
                                               <tr align="center">
-                                                <td>${list.deptName }</td>
+                                              <c:url value="/admin/emp/deptDetail" var="detail">
+                                              	<c:param name="deptNo" value="${list.deptNo }" />
+                                              </c:url>
+                                                <td><a href="${detail}">${list.deptName }</a></td>
                                                 <td>${list.empName }</td>
                                                 <td>${list.deptHead }</td>
                                                 <td>${list.deptDate }</td>
