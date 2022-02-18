@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.EmployeeVO2;
@@ -312,17 +315,59 @@ public class EmployeeController2 {
 		int result = service.empNoCheck(empNo);
 		return result;
 	}
-	
+
 	// 부서등록(인사팀)
 	@PostMapping("/admin/emp/insertDept")
 	public String insertDept(DeptVO dept, int empNo, Model model) {
 		int empNoResult = service.empNoCheck(empNo);
+
+		try {
+			if (empNoResult == 0) {
+				return "/admin/insertDept";
+			} else if (empNoResult == 1) {
+				service.insertDept(dept);
+				return "redirect:/admin/emp/deptList";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:/";
+	}
+
+	// 부서 상세정보(인사팀)
+	@GetMapping("/admin/emp/deptDetail")
+	public String selectDept(@RequestParam("deptNo") int deptNo, Model model) {
+		List<DepartmentVO> listDept = new ArrayList<DepartmentVO>();
+		listDept = service.selectDept(deptNo);
+		DepartmentVO dept = service.selectD(deptNo);
+		model.addAttribute("dept", dept);
+		model.addAttribute("deptDetail", listDept);
+		model.addAttribute("title", dept.getDeptName() + " 상세보기");
+
+		return "/admin/deptDetail";
+	}
+
+	// 부서 수정페이지이동(인사팀)
+	@GetMapping("/admin/emp/updateDeptPage")
+	public String updateDeptPage(@RequestParam("deptNo") int deptNo, Model model) {
+		DepartmentVO dept = service.selectD(deptNo);
+		model.addAttribute("dept", dept);
+		model.addAttribute("title", dept.getDeptName() + " 수정페이지");
+
+		return "/admin/updateDept";
+	}
+
+	// 부서수정(인사팀)
+	@PostMapping("/admin/emp/updateDept")
+	public String updateDept(DeptVO dept, int empNo, Model model) {
+		int empNoResult = service.empNoCheck(empNo);
 		
 		try {
 			if(empNoResult == 0) {
-				return "/admin/insertDept";
+				return "/admin/updateDept";
 			}else if(empNoResult == 1) {
-				service.insertDept(dept);
+				service.updateDept(dept);
 				return "redirect:/admin/emp/deptList";
 			}
 		} catch (Exception e) {
@@ -332,5 +377,13 @@ public class EmployeeController2 {
 		return "redirect:/";
 	}
 	
-	
+	// 부서삭제(삭제 전 부서0번이동)
+	@GetMapping("/admin/emp/deleteDept")
+	public String deptDelete(@RequestParam("deptNo") int deptNo, EmployeeVO2 emp, HttpServletRequest request) {
+		service.empDept(emp);
+		service.deleteDept(deptNo);
+
+		return "redirect:/admin/emp/deptList";
+			
+	}
 }

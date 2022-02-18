@@ -11,7 +11,7 @@ import com.metanet.domain.EmployeeVO2;
 
 public interface EmployeeService2 {
 	public int insertEmp(EmployeeVO2 emp); // 사원등록(인사팀)
-	public EmployeeVO2 selectOne(int empNo);	//사원상세정보
+	public EmployeeVO2 selectOne(int empNo);	//사원상세정보(공통)
 	public int updateEmp(EmployeeVO2 emp);	// 사원수정하기(인사팀) : 비밀번호수정x
 	public int updatePwd(EmployeeVO2 emp);	// 사원비밀번호 0000 수정(인사팀)
 	public Map<String, String> validateHandling(Errors errors);	//유효성검사
@@ -22,6 +22,10 @@ public interface EmployeeService2 {
 	public List<DeptVO> dept(); //부서이름, 번호 불러오기
 	public void insertDept(DeptVO dept);	//부서등록(인사팀)
 	public int empNoCheck(int empNo);	//사원번호 확인
+	public List<DepartmentVO> selectDept(int deptNo); //부서원 상세보기(인사팀)
+	public DepartmentVO selectD(int deptNo);	//부서장 상세보기
+	public void updateDept(DeptVO dept);	//부서수정(인사팀)
 	
-	public int deptCount(int deptNo); //부서별 인원 수
+	public int empDept(EmployeeVO2 emp);	//부서 삭제 전 사원들의 부서이동
+	public int deleteDept(int deptNo);	//부서삭제
 }
