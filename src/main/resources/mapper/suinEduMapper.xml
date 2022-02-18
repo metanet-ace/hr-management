@@ -141,7 +141,7 @@
     				</otherwise>
     			</choose>
     		</when>
-    	</choose>) edu_list ) where rn between ${startNum} and ${endNum}
+    	</choose> order by decode(edu_progress,'pre', 1, 'ing', 2, 'post', 3) , edu_no desc) edu_list ) where rn between ${startNum} and ${endNum}
     </select>
     
     <select id="getTotalCountForAllocation" parameterType="Map" resultType="Integer">
