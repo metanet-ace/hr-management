@@ -24,19 +24,28 @@ form {
 	text-align: center;
 }
 </style>
-
+<script type="text/javascript">
+$(document).ready(function(){
+	console.log("ready");
+	console.log("keyField: " + '${keyField}');
+	
+	//검색 후 select-option 유지
+	$("#keyField").val("${keyField}").attr("selected","selected");
+});
+</script>
 <!--**********************************
             Content body start
         ***********************************-->
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 교육 히스토리 리스트 출력 -->
-		<form id="search_form" action="./list" method="post">
-			<select name="keyField" size="1">
+		<form id="search_form" action="/edu/list2" method="post">
+			<select name="keyField" id="keyField" size="1">
+				<option value="">====</option>
 				<option value="eduTitle">교육명</option>
 				<option value="eduTarget">교육대상</option>
 				<option value="eduProgress">진행상태</option>
-			</select> <input type="text" id="kwd" name="keyword" value=""> <input
+			</select> <input type="text" id="kwd" name="keyword" value="${keyword}"> <input
 				type="submit" value="찾기">
 		</form>
 		<br>
@@ -60,6 +69,9 @@ form {
 				</tr>
 			</thead>
 			<tbody>
+				<c:if test="${empty list}">
+				<tr><td colspan=7>조회된 결과가 없습니다.</td></tr>
+				</c:if>
 				<c:forEach items="${list }" var="list">
 					<tr>
 						<td onClick="location.href='./detail?edu_no=${list.eduNo }'">${list.eduTitle }</td>
@@ -78,16 +90,16 @@ form {
 				</c:forEach>
 			</tbody>
 		</table>
+
 		<!-- 페이지네이션  -->
 		<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-center">
 				<c:if test="${paging.hasPrev }">
 					<li class="page-item"><a class="page-link"
-						href="./list?pageNum=${paging.startPage-1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">이전</a></li>
+						href="/edu/list/${paging.startPage-1}/${pageInfo.keyField }/${pageInfo.keyword}">이전</a></li>
 				</c:if>
 
-				<c:forEach var="p" begin="${paging.startPage }"
-					end="${paging.endPage }" step="1">
+				<c:forEach var="p" begin="${paging.startPage }" end="${paging.endPage }" step="1">
 					<c:choose>
 						<c:when test="${p == tempPageNum }">
 							<li class="page-item active"><a class="page-link" href="#">${p}</a>
@@ -96,11 +108,11 @@ form {
 							<c:choose>
 								<c:when test="${empty pageInfo.keyField}">
 									<li class="page-item"><a class="page-link"
-										href="./list?pageNum=${p}">${p}</a>
+										href="/edu/list/${p}">${p}</a>
 								</c:when>
 								<c:otherwise>
 									<li class="page-item"><a class="page-link"
-										href="./list?pageNum=${p}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">${p}</a>
+										href="/edu/list/${p}/${pageInfo.keyField }/${pageInfo.keyword}">${p}</a>
 								</c:otherwise>
 							</c:choose>
 
@@ -110,7 +122,8 @@ form {
 
 				<c:if test="${paging.hasNext }">
 					<li class="page-item"><a class="page-link"
-						href="./list?pageNum=${paging.endPage+1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
+						href="/edu/list/${paging.endPage+1}/${pageInfo.keyField }/${pageInfo.keyword}">다음</a>
+					</li>
 				</c:if>
 			</ul>
 		</nav>

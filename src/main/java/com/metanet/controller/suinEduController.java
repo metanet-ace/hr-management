@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
-import com.metanet.domain.EmpListVO;
 import com.metanet.domain.PageDTO;
 import com.metanet.domain.PaginationDTO;
 import com.metanet.service.WonwooEduService;
@@ -64,6 +63,46 @@ public class suinEduController {
 		service.eduProgress();
 	}
 	
+	@RequestMapping(value={"/list2", "/list/{pageNum}", "/list/{pageNum}/{keyField}/{keyword}"})
+	public String eduList(@PathVariable(value = "pageNum", required = false) Integer p,
+						  @PathVariable(value = "keyField", required = false) String keyField,
+						  @PathVariable(value = "keyword", required = false) String keyword,
+						  Model model, HttpServletRequest request) {
+		int pageNum = 1;
+
+		// 현재 페이지 넘버
+		if (p != null) {
+			pageNum = p;
+		}
+		
+		if(request.getParameter("keyField") != null) {
+			keyField = request.getParameter("keyField");
+			keyword = request.getParameter("keyword");
+		}
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("keyField", keyField);
+		map.put("keyword", keyword);
+
+		model.addAttribute("tempPageNum", pageNum);
+
+        // 페이지 관련 정보
+        PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
+        model.addAttribute("pageInfo", pdto);
+        
+		model.addAttribute("list", service.eduListSelect(pdto));
+
+		// 페이징 처리된 숫자그룹(뷰에서)
+		int total = service.getTotalCountEduList(map);
+		PaginationDTO pageDto = new PaginationDTO(total, pdto);
+
+		model.addAttribute("paging", pageDto);
+		model.addAttribute("title", "교육 전체리스트");
+		model.addAttribute("keyField", keyField);
+		model.addAttribute("keyword", keyword);
+		return "admin/edu/list";
+	}
+	
 	@RequestMapping(value={"/allocation2/{eduNo}", "/allocation2/{eduNo}/{pageNum}", "/allocation2/{eduNo}/{pageNum}/{keyField}/{keyword}"})
 	public String eduAllocation(@PathVariable("eduNo") int eduNo,
 								@PathVariable(value = "pageNum", required = false) Integer p,
@@ -88,8 +127,6 @@ public class suinEduController {
 
 		model.addAttribute("tempPageNum", pageNum);
 
-        System.out.println(keyField);
-        System.out.println(keyword);
         // 페이지 관련 정보
         PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
         model.addAttribute("pageInfo", pdto);
@@ -103,7 +140,8 @@ public class suinEduController {
      
         model.addAttribute("paging", pageDto);
         model.addAttribute("title", "교육 인원할당");
-
+        model.addAttribute("keyField", keyField);
+		model.addAttribute("keyword", keyword);
         return "/admin/edu/allocationCheckbox";
 	}
 	
@@ -114,12 +152,6 @@ public class suinEduController {
 		System.out.println("eduNo"+param.get("eduNo"));
 		service.eduHistoryAdd(param);
 	}
-	
-//	@GetMapping("/admin/history")
-//	public String eduHistoryList(Model model) {
-//		model.addAttribute("eduHistoryList", service.getEduHistoryList());
-//		return "/admin/edu/history";
-//	}
 	
 	@RequestMapping(value={"/admin/history", "/admin/history/{pageNum}", "/admin/history/{pageNum}/{keyField}/{keyword}"})
 	public String eduHistoryListByKeyword(@PathVariable(value="pageNum", required=false) Integer p, 
