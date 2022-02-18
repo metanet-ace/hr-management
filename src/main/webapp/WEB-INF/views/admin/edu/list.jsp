@@ -74,7 +74,7 @@ $(document).ready(function(){
 				</c:if>
 				<c:forEach items="${list }" var="list">
 					<tr>
-						<td onClick="location.href='./detail?edu_no=${list.eduNo }'">${list.eduTitle }</td>
+						<td onClick="location.href='/edu/detail?edu_no=${list.eduNo }'">${list.eduTitle }</td>
 						<td>${list.eduPeople }</td>
 						<td>${list.eduTarget }</td>
 						<td>${list.eduStart }</td>
@@ -84,8 +84,11 @@ $(document).ready(function(){
 								<c:when test="${list.eduProgress eq 'ing'}">진행중</c:when>
 								<c:otherwise>진행종료</c:otherwise>
 							</c:choose></td>
-						<td><button type="button" class="btn btn-primary"
-								onclick="location.href='./allocation2/${list.eduNo }'">교육배정</button></td>
+						<td>
+							<c:if test="${list.eduProgress eq 'pre'}">
+								<button type="button" class="btn-primary" onclick="location.href='./allocation2/${list.eduNo }'">교육배정</button>
+							</c:if>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -129,13 +132,7 @@ $(document).ready(function(){
 		</nav>
 	</div>
 </div>
-<!-- 
-</div>
-</div>
-</div>
-</div>
-</div> 
--->
+
 <!--**********************************
             Content body end
         ***********************************-->
