@@ -64,32 +64,30 @@ public class suinEduController {
 		service.eduProgress();
 	}
 	
-	@RequestMapping("/allocation2/{eduNo}")
-	public String eduAllocation(@PathVariable("eduNo") int eduNo, 
+	@RequestMapping(value={"/allocation2/{eduNo}", "/allocation2/{eduNo}/{pageNum}", "/allocation2/{eduNo}/{pageNum}/{keyField}/{keyword}"})
+	public String eduAllocation(@PathVariable("eduNo") int eduNo,
+								@PathVariable(value = "pageNum", required = false) Integer p,
+								@PathVariable(value = "keyField", required = false) String keyField,
+								@PathVariable(value = "keyword", required = false) String keyword,
 								Model model, HttpServletRequest request) {	
 		int pageNum=1;
-		String keyField = "";
-		String keyword = "";
-		/* int edu_no = Integer.parseInt(request.getParameter("edu_no")); */
-		
-		
-		System.out.println(request.getParameter("pageNum"));
-		
-		 // 현재 페이지 넘버 
-		if(request.getParameter("pageNum") != null) {
-			pageNum = Integer.parseInt((request.getParameter("pageNum")).trim());
+
+		// 현재 페이지 넘버
+		if (p != null) {
+			pageNum = p;
 		}
+		
+		if(request.getParameter("keyField") != null) {
+			keyField = request.getParameter("keyField");
+			keyword = request.getParameter("keyword");
+		}
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("keyField", keyField);
+		map.put("keyword", keyword);
+
 		model.addAttribute("tempPageNum", pageNum);
-        
-        // 키워드(작성자/작성내용 등)
-        if(request.getParameter("keyField") != null && request.getParameter("keyField") != ""){
-        	keyField = request.getParameter("keyField");	
-		}
-        
-        if(request.getParameter("keyword") != null && request.getParameter("keyword") != ""){
-        	keyword = request.getParameter("keyword");
-		}
-        
+
         System.out.println(keyField);
         System.out.println(keyword);
         // 페이지 관련 정보
@@ -97,11 +95,10 @@ public class suinEduController {
         model.addAttribute("pageInfo", pdto);
         
         // 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
-        List<EmpListVO> list = wonwooEduService.getPagingList(pdto);
-        model.addAttribute("list", list);
+        model.addAttribute("list", service.empListForAllocationSelect(pdto));
         
         // 페이징 처리된 숫자그룹(뷰에서)
-        int total = wonwooEduService.totalCount(pdto);
+        int total = service.getTotalCountForAllocation(map);
         PaginationDTO pageDto = new PaginationDTO(total, pdto);
      
         model.addAttribute("paging", pageDto);
@@ -162,9 +159,6 @@ public class suinEduController {
 		PaginationDTO pageDto = new PaginationDTO(total, pdto);
 
 		model.addAttribute("paging", pageDto);
-		
-		map.put("keyField", keyField);
-		map.put("keyword", keyword);
 		model.addAttribute("eduHistoryList", service.getEduHistoryList(pdto));
 		model.addAttribute("keyField", keyField);
 		model.addAttribute("keyword", keyword);
