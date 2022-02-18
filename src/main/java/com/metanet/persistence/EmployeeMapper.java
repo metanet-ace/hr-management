@@ -28,4 +28,7 @@ public interface EmployeeMapper {
 	
 	// 사원의 오늘 퇴근한 시간 출력하기 
 	public EmpWorkingtimeVO findEndTime(Map<String, Object> map);
+	
+	// 사원의 이번주 근무한 총 시간 출력하기
+	public int findTotalTime(int empNo);
 }

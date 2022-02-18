@@ -283,4 +283,10 @@ public class EmployeeServiceImpl {
 		
 		return empMapper.findWorkingDate(param);
 	}
+	
+	// 일주일 동안 근무한 총 시간 출력
+	public int findTotalTime(int empNo) {
+		
+		return empMapper.findTotalTime(empNo);
+	}
 }

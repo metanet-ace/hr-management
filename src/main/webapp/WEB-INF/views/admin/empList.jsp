@@ -138,6 +138,9 @@ textarea {
 			}
 		})
 		
+		// 이전 검색키워드 받아오기
+		$("#field").val("${field}").attr("selected","selected");
+		
 	});
 </script>
 

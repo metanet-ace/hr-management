@@ -40,4 +40,8 @@ public class EmpWorkingtimeVO {
 	
 	@Transient
 	private String formattedDate;
+	
+	@Transient
+	private String totalTime;
+	
 }

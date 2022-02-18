@@ -55,4 +55,32 @@
 		AND TO_CHAR(ew.WORK_END, 'YY/MM/DD') = TO_CHAR(sysdate, 'YY/MM/DD')
 		AND WORK_TYPE = #{type}
 	</select>
+	
+	<select id="findTotalTime" resultType="int">
+	SELECT
+		SUM((e.WORK_END - s.WORK_START) *24 * 60 * 60)
+	FROM
+		(
+		SELECT *
+		FROM EMP_WORKINGHOUR ew
+		WHERE WORK_START BETWEEN 
+			(SELECT trunc(sysdate, 'iw')
+			   FROM dual)
+		AND (SELECT trunc(sysdate, 'iw')+ 7
+			   FROM dual)
+		AND WORK_TYPE = '출근'
+		) s,
+		(
+		SELECT *
+		   FROM EMP_WORKINGHOUR ew
+		  WHERE WORK_END BETWEEN 
+			(SELECT trunc(sysdate, 'iw')
+			   FROM dual)
+		AND (SELECT trunc(sysdate, 'iw')+ 7
+			FROM dual)
+		AND WORK_TYPE = '퇴근'
+		) e
+	WHERE TO_CHAR(e.WORK_END, 'YY/MM/DD') = TO_CHAR(s.WORK_START, 'YY/MM/DD')
+	AND s.EMP_NO = #{empNo}
+	</select>
 </mapper>

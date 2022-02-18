@@ -1,5 +1,6 @@
 package com.metanet.controller;
 
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -12,12 +13,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +48,7 @@ public class EmployeeController {
 	@Autowired
 	suinEduController batchCtrl;
 	
-	// 인사이동 페이징 컨트롤러
+	// 인사이동 페이징(VIEW) 컨트롤러
 	@GetMapping("/admin/emp")
 	public String userList(Model model, @PageableDefault(size = 3, sort = "empNo",
 				direction = Sort.Direction.DESC ) Pageable pageable,
@@ -56,10 +60,13 @@ public class EmployeeController {
 		// 필드명에 따른 로직 처리	
 		if(field.equals("deptName")) {
 			emp = empService.getEmpListWithDept(word, pageable);
+			model.addAttribute("field", "deptName");
 		} else if (field.equals("posName")){
 			emp = empService.getEmpListWithPos(word, pageable);
+			model.addAttribute("field", "posName");
 		} else if (field.equals("empName")) {
 			emp = empService.getEmpListWithName(word, pageable);
+			model.addAttribute("field", "empName");
 		}
 		int totalPages = emp.getTotalPages(); // 총 페이지 개수 
 		int pageNumber = emp.getPageable().getPageNumber(); // 현재 페이지
@@ -84,7 +91,7 @@ public class EmployeeController {
 		return "/admin/empList";
 	}
 	
-	// 인사 이동 컨트롤러	
+	// 인사 이동 (부서변경, 직급변경) 컨트롤러	
 	@PostMapping("/admin/hr")
 	@ResponseBody
 	public ResponseEntity<String> updateHumanResource(@RequestBody HashMap<String, Object> map) {
@@ -193,8 +200,27 @@ public class EmployeeController {
 	@PostMapping("/emp/recordEndTime")
 	@ResponseBody
 	public ResponseEntity<EmpWorkingtimeVO> workingEndTimeRecoder(@RequestBody HashMap<String, String> data){
-		
 		int empNo = Integer.parseInt(data.get("empNo"));
+	
+		// 출근 버튼을 안눌렀으면
+		if(empService.findStartWorkingTime(empNo) == null) {
+			return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		int totalTime = empService.findTotalTime(empNo);
+		System.out.println(totalTime);
+		int hour, min, sec;
+		
+		hour = totalTime / 3600;
+		min = totalTime % 3600 / 60;
+		sec = totalTime % 3600 % 60;
+		
+		String totalTimeStr = hour + "시간 " + min + "분 " + sec + "초 "; 
+		
+		// 총 근무시간 체킹
+		if(totalTime > 52 * 24 * 60 * 60) { // 주 52시간 초과했는지
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		
 		if(empService.findEndWorkingTime(empNo) != null) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -205,6 +231,8 @@ public class EmployeeController {
 		// 날짜 포맷 변경 (변경 되자마자 AJAX로 보여줄 때)
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		result.setFormattedDate(sdf.format(result.getWorkEnd()));
+		result.setTotalTime(totalTimeStr);
+		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
@@ -235,14 +263,22 @@ public class EmployeeController {
 		EmpWorkingtimeVO workVo = empService.findStartWorkingTime(emp.getEmpNo());
 		// 퇴근 시간 정보 가져오기
 		EmpWorkingtimeVO workVo2 = empService.findEndWorkingTime(emp.getEmpNo());
-	    
+		// 누적 근무 시간 출력
+		int totalTime = empService.findTotalTime(emp.getEmpNo());
+		int hour, min, sec;
+		hour = totalTime / 3600;
+		min = totalTime % 3600 / 60;
+		sec = totalTime % 3600 % 60;
+		String totalTimeStr = hour + "시간 " + min + "분 " + sec + "초 "; 
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	   
 	    String startTime = null;
 	    String endTime = null;
 	    
 	    if(workVo == null) {
-	    	// 출근을 아직 안눌렀다면 그냥 인덱스로
+	    	// 출근을 아직 안눌렀다면 
+	    	model.addAttribute("totalTime", totalTimeStr);
 	    	return "index";
 	    } 
 	    
@@ -250,6 +286,7 @@ public class EmployeeController {
 	    	// 출근을 하고 퇴근을 아직 안했다면 
 	    	startTime = sdf.format(workVo.getWorkStart());
 	    	model.addAttribute("startTime", startTime);
+	    	model.addAttribute("totalTime", totalTimeStr);
 	    	return "index";
 	    }
 	    
@@ -258,6 +295,7 @@ public class EmployeeController {
 	    endTime = sdf.format(workVo2.getWorkEnd());
     	model.addAttribute("startTime", startTime);
 		model.addAttribute("endTime", endTime);
+		model.addAttribute("totalTime", totalTimeStr);
 		
 		return "index";
 	}

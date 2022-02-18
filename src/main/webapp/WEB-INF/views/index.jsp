@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
 	<c:import url="/WEB-INF/views/include/header.jsp" />
 	<c:import url="/WEB-INF/views/include/sidebar.jsp" />
  	
@@ -9,71 +8,6 @@
   		$(document).ready(function(){
   			// 페이지가 처음 로드될 때 캘린더 보여주기
   			calendarView();
-			
-  			document.getElementById('prevBtn').addEventListener('click', function() {
-  				
-  				var empNo = ${sessionEmp.empNo}; 
-  				var data = {empNo: empNo};
-  				
-  				$.ajax({
-  					url: "/emp/workingTimeList",
-  					type: "POST",
-  					data: JSON.stringify(data),
-  					contentType : 'application/json',
-  					dataType: 'JSON',
-  					success: function(result){
-  						
-	  					if(month == 0){
-	  	  		  				
-	  						var newCalendar = new FullCalendar.Calendar(calendarEl, {
-	  							initialView : 'dayGridMonth',
-	  							locale : "ko",
-	  							initialDate: new Date(year-1, 11, 1),
-	  							dateClick : function(info) {
-	  								console.log(info);
-	  							},
-	  							//navLinks: true,
-	  							editable : true,
-	  						});
-	  		  				
-	  						date = newCalendar.getDate();
-	  		  				console.log(date);
-	  		  				year = date.getFullYear();
-	  		  				month = date.getMonth();
-	  		  				console.log(month);
-	  		  				console.log(year)
-		  		  				
-							newCalendar.render();
-  						
-  						} else {
-  							
-  							var newCalendar = new FullCalendar.Calendar(calendarEl, {
-  	  							initialView : 'dayGridMonth',
-  	  							locale : "ko",
-  	  							initialDate: new Date(year, month-1, 1),
-  	  							dateClick : function(info) {
-  	  								console.log(info);
-  	  							},
-  	  							//navLinks: true,
-  	  							editable : true,
-  	  						});
-  	  						
-  							date = newCalendar.getDate();
-  	  		  				console.log(date);
-  	  		  				year = date.getFullYear();
-  	  		  				month = date.getMonth();
-  	  		  				console.log(month);
-  	  		  				console.log(year)
-  	  		  			
-		  					newCalendar.render(); 
-	 					}
-  					},
-  					error: function(err){
-  						alert(err);
-  					}
-  				});
-  			});
-  			
   		});
   	</script>
         <!--**********************************
@@ -84,15 +18,14 @@
             <div class="container-fluid">
                 <div class="row">
                 	<div class="col-lg-9 col-sm-10">
-                		<button type="button" id="prevBtn" class="btn btn-primary">이전</button>
 	                	<div id="calendar">
 	                		
                 		<!-- 달력 출력 -->
                 		</div>
                 	</div>
                 	
-					<div class="col-lg-3 col-sm-2 text-center">
-						<div class="card text-center border-dark mb-3" style="height: 50%;">
+					<div class="col-lg-3  text-center">
+						<div class="card text-center border-dark mb-3" style="height: 100%;">
 							<div class="card-header text-center" style="display: block; font-size: 1.5em; color: black;">근태관리</div>
 							<div class="card-body">
 								<button type="button" class="btn btn-outline-danger" id="startTime" onclick='recordTime();'>출근하기</button>
@@ -102,8 +35,9 @@
 								<h4>금일 출근시간</h4>
 								<h5 id="start">${startTime}</h5>
 								<h4>금일 퇴근시간</h4>
-								<h5 id="end">${endTime }</h5>
+								<h5 id="end">${endTime}</h5>
 								<h4>이번주 누적근무 시간</h4>
+								<h5>${totalTime }</h5>
 								<h5></h5>
 							</div>
 							<div class="card-footer"></div>
@@ -696,6 +630,7 @@
 			success: function(result){
 				console.log("자바 >>>> 캘린더 뷰로 주는 결과: ");
 				console.log(result);
+				
 				// 보여줄 데이터 가공
 				const keys = Object.keys(result);
 				var list = [];
@@ -711,7 +646,11 @@
 				
 				var calendarEl = document.getElementById('calendar');
 				var calendar = new FullCalendar.Calendar(calendarEl, {
-					initialView : 'dayGridMonth',
+					headerToolbar: {
+						left: '',
+						center: 'title',
+						right: ''
+					},
 					locale : "ko",
 					dateClick : function(info) {
 						console.log(info);
@@ -758,7 +697,7 @@
  		function recordEndTime(){
  			var empNo = ${sessionEmp.empNo}; 
 			var data = {empNo: empNo};
-			
+			console.log($("#start").text())
 			$.ajax({
 				url: "/emp/recordEndTime",
 				data: JSON.stringify(data),
@@ -770,7 +709,14 @@
 					calendarView();
 				},
 				error: function(err){
-					alert('이미 퇴근 시간을 등록하였습니다.');
+					
+					console.log(err);
+					if($("#start").text() == '') {
+						alert('출근 시간을 등록하지 않았습니다.');
+					} else if($("#end").text() != '') {
+						alert('이미 퇴근 시간을 등록하였습니다.');
+					} 
+					
 				}
 			});
  		}
