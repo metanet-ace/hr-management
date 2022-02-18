@@ -107,7 +107,14 @@ function eduAllocation(){
 			<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-center">
 				<c:if test="${paging.hasPrev }">
-					<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.startPage-1}/${pageInfo.keyField }/${pageInfo.keyword}">이전</a></li>
+					<c:choose>
+						<c:when test="${empty pageInfo.keyField}">
+							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.startPage-1}">이전</a></li>
+						</c:when>
+						<c:otherwise>
+							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.startPage-1}/${pageInfo.keyField }/${pageInfo.keyword}">이전</a></li>
+						</c:otherwise>
+					</c:choose>
 				</c:if>
 
 				<c:forEach var="p" begin="${paging.startPage }" end="${paging.endPage }" step="1">
@@ -129,7 +136,15 @@ function eduAllocation(){
 					</c:choose>
 				</c:forEach>		
 				<c:if test="${paging.hasNext }">
-					<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.endPage+1}/${pageInfo.keyField }/${pageInfo.keyword}">다음</a></li>
+					<c:choose>
+						<c:when test="${empty pageInfo.keyField}">
+							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.endPage+1}">다음</a></li>
+						</c:when>
+						<c:otherwise>
+							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.endPage+1}/${pageInfo.keyField }/${pageInfo.keyword}">다음</a></li>
+						</c:otherwise>
+					</c:choose>
+					
 				</c:if>
 			</ul>
 			</nav>
