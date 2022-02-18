@@ -51,5 +51,17 @@ public interface WonwooEduService {
 
 	public Map<String, String> validateHandling(Errors errors); //유효성검사
 
-	public void eduAddNoFile(@Valid EduVO eduVO);
+	public void eduAddNoFile(EduVO eduVO);
+
+	public void noticeAdd(NoticeVO noticeVO);
+
+	public void noticeAddNoFile(NoticeVO noticeVO);
+
+	public NoticeVO noticeDetail(int noticeNo);
+
+	public void noticeDelete(int notice_no);
+
+	public void noticeUpdate(NoticeVO noticeVO);
+
+	public void noticeUpdateNoModifyFile(NoticeVO noticeVO);
 }

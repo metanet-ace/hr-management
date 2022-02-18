@@ -130,5 +130,36 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 		return wonwooEduMapper.noticeTotalCount(pdto);
 	}
 
+	@Override
+	public void noticeAdd(NoticeVO noticeVO) {
+		wonwooEduMapper.noticeAdd(noticeVO);
+		
+	}
+
+	@Override
+	public void noticeAddNoFile(NoticeVO noticeVO) {
+		wonwooEduMapper.noticeAddNoFile(noticeVO);
+	}
+
+	@Override
+	public NoticeVO noticeDetail(int noticeNo) {
+		return wonwooEduMapper.noticeDetail(noticeNo);
+	}
+
+	@Override
+	public void noticeDelete(int notice_no) {
+		wonwooEduMapper.noticeDelete(notice_no);
+	}
+
+	@Override
+	public void noticeUpdate(NoticeVO noticeVO) {
+		wonwooEduMapper.noticeUpdate(noticeVO);
+		
+	}
+
+	@Override
+	public void noticeUpdateNoModifyFile(NoticeVO noticeVO) {
+		wonwooEduMapper.noticeUpdateNoModifyFile(noticeVO);
+	}
 
 }
