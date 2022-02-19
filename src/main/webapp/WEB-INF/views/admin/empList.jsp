@@ -138,8 +138,15 @@ textarea {
 			}
 		})
 		
+		var field = '${field}';
+		
 		// 이전 검색키워드 받아오기
-		$("#field").val("${field}").attr("selected","selected");
+		if(field != ''){
+			console.log(111);
+			$("#field").val("${field}").attr("selected","selected");
+		} else {
+			$("#field").val(deptName).attr("selected","selected");
+		}
 		
 	});
 </script>

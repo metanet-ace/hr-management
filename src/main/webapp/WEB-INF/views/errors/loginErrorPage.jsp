@@ -23,10 +23,10 @@
                 <div class="col-md-5">
                     <div class="form-input-content text-center">
                         <div class="mb-5">
-                            <a class="btn btn-primary" href="/main">Back to Home</a>
+                            <a class="btn btn-primary" href="/signin">Back to Home</a>
                         </div>
                         <h1 class="error-text font-weight-bold">403</h1>
-                            <h4 class="mt-4"><i class="fa fa-times-circle text-danger"></i>접근 권한이 없습니다. (인사팀에게 문의하세요)</h4>
+                            <h4 class="mt-4"><i class="fa fa-times-circle text-danger"></i>세션이 종료되었습니다!</h4>
                     </div>
                 </div>
             </div>

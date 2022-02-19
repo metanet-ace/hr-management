@@ -37,7 +37,7 @@
 								<h4>금일 퇴근시간</h4>
 								<h5 id="end">${endTime}</h5>
 								<h4>이번주 누적근무 시간</h4>
-								<h5>${totalTime }</h5>
+								<h5 id="total">${totalTime }</h5>
 								<h5></h5>
 							</div>
 							<div class="card-footer"></div>
@@ -696,7 +696,10 @@
  		// 퇴근 시간 등록 
  		function recordEndTime(){
  			var empNo = ${sessionEmp.empNo}; 
-			var data = {empNo: empNo};
+ 			var startTime = $("#start").text();
+			var data = {empNo: empNo,
+						startTime: startTime};
+			
 			console.log($("#start").text())
 			$.ajax({
 				url: "/emp/recordEndTime",
@@ -706,6 +709,7 @@
 				success: function(result){
 					// 당일 퇴근시간 찍힘
 					$("#end").text(result['formattedDate']);
+					$("#total").text(result['totalTime']);
 					calendarView();
 				},
 				error: function(err){
@@ -717,6 +721,9 @@
 						alert('이미 퇴근 시간을 등록하였습니다.');
 					} 
 					
+					if(err.status == 423){
+						alert("주 52시간을 초과하였습니다.")
+					}
 				}
 			});
  		}

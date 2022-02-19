@@ -15,18 +15,17 @@ public interface EmployeeRepository extends JpaRepository<EmployeeVO, Integer>, 
 			+ "ON e.dept.deptNo = d.deptNo WHERE e.empNo = :username")
 	EmployeeVO findByEmpNoWithDeptNo(int username);
 	
-	// 부서별 사원 목록 출력 with paging
-	@Query("SELECT e FROM EmployeeVO e INNER JOIN e.dept d "
-			+ "ON e.dept.deptNo = d.deptNo WHERE e.dept.deptName LIKE %:deptName%")
-	Page<EmployeeVO> findByEmpWithDeptName(String deptName, Pageable pageable);
+	// 사원 목록 출력 
+	Page<EmployeeVO> findAllByEmpRetdateIsNull(Pageable pageable);
 	
+	// 부서별 사원 목록 출력 with paging
+	Page<EmployeeVO> findByDeptDeptNameContainingAndEmpRetdateIsNull(String deptName, Pageable pageable);
+
 	// 직급별 사원 목록 출력 with paging
-	@Query("SELECT e FROM EmployeeVO e INNER JOIN e.pos p "
-			+ "ON e.pos.posNo = p.posNo WHERE e.pos.posName LIKE %:posName%")
-	Page<EmployeeVO> findByEmpWithPosName(String posName, Pageable pageable);
+	Page<EmployeeVO> findByPosPosNameContainingAndEmpRetdateIsNull(String posName, Pageable pageable);
 	
 	// 이름별 사원 목록 출력 with paging
-	Page<EmployeeVO> findByEmpNameContaining(String empName, Pageable pageable);
+	Page<EmployeeVO> findByEmpNameContainingAndEmpRetdateIsNull(String empName, Pageable pageable);
 	
 	// empNo로 사원 찾기
 	EmployeeVO findByEmpNo(int empNo);

@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity security) throws Exception{
 		security.authorizeRequests()
-				.antMatchers("/main2").permitAll()
+				.antMatchers("/main").permitAll()
 				.antMatchers("/emp/**").authenticated();
 				// hasRole은 접두어 "ROLE_"이 디폴트로 붙어 있다.DB에 ROLE_ADMIN, ROLE_USER 등으로 저장했다면 사용가능
 				// 현재는 부서번호로 권한을 주기 때문에 ROLE_이 붙으면 안되므로 hasAuthority 사용 
