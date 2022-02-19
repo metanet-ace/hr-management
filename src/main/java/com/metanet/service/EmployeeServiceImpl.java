@@ -57,22 +57,22 @@ public class EmployeeServiceImpl {
 	
 	// 페이징 처리된 사원 전체 리스트 
 	public Page<EmployeeVO> getEmpList(Pageable pageable){
-		return empRepo.findAll(pageable);
+		return empRepo.findAllByEmpRetdateIsNull(pageable);
 	}
 	
 	// 페이징 처리되고 부서 검색으로 출력된 전체 리스트
 	public Page<EmployeeVO> getEmpListWithDept(String deptName, Pageable pageable){
-		return empRepo.findByEmpWithDeptName(deptName, pageable);
+		return empRepo.findByDeptDeptNameContainingAndEmpRetdateIsNull(deptName, pageable);
 	}
 	
 	// 페이징 처리되고 직급 검색으로 출력된 전체 리스트
 	public Page<EmployeeVO> getEmpListWithPos(String posName, Pageable pageable){
-		return empRepo.findByEmpWithPosName(posName, pageable);
+		return empRepo.findByPosPosNameContainingAndEmpRetdateIsNull(posName, pageable);
 	}
 	
 	// 페이징 처리되고 이름 검색으로 출력된 사원 리스트
 	public Page<EmployeeVO> getEmpListWithName(String empName, Pageable pageable){
-		return empRepo.findByEmpNameContaining(empName, pageable);
+		return empRepo.findByEmpNameContainingAndEmpRetdateIsNull(empName, pageable);
 	}
 
 	// 부서 전체 출력 
@@ -111,7 +111,7 @@ public class EmployeeServiceImpl {
 	// 사원의 부서이동(UPDATE)
 	public int updateEmpDept(int empNo, int deptNo, String reason)	{
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
-		System.out.println("+++++++++++++++++++++++++++" + emp);
+
 		// 사원의 기존 부서, 직급 정보 저장 
 		EmpHistoryVO empHis = new EmpHistoryVO();
 		empHis.setBeforeDept(emp.getDept().getDeptName());
@@ -234,6 +234,18 @@ public class EmployeeServiceImpl {
 		EmpWorkingtimeVO workTimeVO = new EmpWorkingtimeVO();
 		workTimeVO.setEmp(emp);
 		workTimeVO.setWorkEnd(new Date());
+		workTimeVO.setWorkType("퇴근");
+		
+		return workRepo.save(workTimeVO);
+	}
+	
+	// 퇴근 시간 등록 + 52시간 초과 시에
+	public EmpWorkingtimeVO insertEndTime(int empNo, Date time) {
+		EmployeeVO emp = empRepo.findByEmpNo(empNo);
+		
+		EmpWorkingtimeVO workTimeVO = new EmpWorkingtimeVO();
+		workTimeVO.setEmp(emp);
+		workTimeVO.setWorkEnd(time);
 		workTimeVO.setWorkType("퇴근");
 		
 		return workRepo.save(workTimeVO);
