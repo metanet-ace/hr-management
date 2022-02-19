@@ -43,40 +43,44 @@ $(document).ready(function(){
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 공지사항 전체 리스트 출력 -->
-		<form id="search_form" action="/edu/notice" method="post" class="form-inline d-flex justify-content-end">
+		<form id="search_form" action="/edu/log" method="post" class="form-inline d-flex justify-content-end">
 			<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
-			<input type="hidden" name="a" value="list"> 
 			<select name="keyField" size="1" id="keyField" class="form-control form-control-sm">
 				<option value="">====</option>
-				<option value="noticeTitle">제목</option>
-				<option value="noticeWriter">작성자</option>
+				<option value="logIp">아이피</option>
+				<option value="empNo">사원번호</option>
+				<option value="logWriter">기록자</option>
+				<option value="logDate">기록일</option>
+				<option value="logTarget">로그장소</option>
 			</select> <input type="text" id="kwd" name="keyword" value="${pageInfo.keyword}" class="form-control form-cotrol-sm" style="margin: 10px"> 
 			<input type="submit" class="btn btn-outline-info btn-sm" value="찾기">
 		</form>
-		
-		<div style="float:right; margin:10px;">
-		<button class="btn btn-primary" onclick="location.href='./noticeAdd';">공지사항 등록</button>
-		</div>
 		<br>
 		<table class="table table-striped" border=1>
 			<thead>
 				<tr>
-					<th>순번</th>
-					<th>제목</th>
-					<th>작성자</th>
-					<th>작성일</th>
+					<th>로그번호</th>
+					<th>아이피</th>
+					<th>사원번호</th>
+					<th>기록자</th>
+					<th>기록일</th>
+					<th>로그장소</th>
+					<th>로그내용</th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:if test="${empty list }">
-				<tr><td colspan=5>조회된 결과가 없습니다.</td></tr>
+				<tr><td colspan=7>조회된 결과가 없습니다.</td></tr>
 				</c:if>
 				<c:forEach items="${list }" var="list">
 					<tr>
-						<td>${list.noticeNo }</td>
-						<td onClick="location.href='./noticeDetail?notice_no=${list.noticeNo }'">${list.noticeTitle }</td>
-						<td>${list.noticeWriter}</td>
-						<td>${list.noticeDate }</td>
+						<td>${list.logNo }</td>
+						<td>${list.logIp }</td>
+						<td>${list.empNo }</td>
+						<td>${list.logWriter}</td>
+						<td>${list.logDate}</td>
+						<td>${list.logTarget}</td>
+						<td>${list.logDesc }</td>
 					</tr>
 				</c:forEach>
 			<tbody>
@@ -85,7 +89,7 @@ $(document).ready(function(){
 			<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-center">
 				<c:if test="${paging.hasPrev }">
-					<li class="page-item"><a class="page-link" href="/edu/notice?pageNum=${paging.startPage-1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">이전</a></li>
+					<li class="page-item"><a class="page-link" href="/edu/log?pageNum=${paging.startPage-1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">이전</a></li>
 				</c:if>
 				
 				<c:forEach var="p" begin="${paging.startPage }" end="${paging.endPage }" step="1">
@@ -96,10 +100,10 @@ $(document).ready(function(){
 						<c:otherwise>
 							<c:choose>
 								<c:when test="${empty pageInfo.keyField}">
-									<li class="page-item"><a class="page-link" href="/edu/notice?pageNum=${p}">${p}</a>
+									<li class="page-item"><a class="page-link" href="/edu/log?pageNum=${p}">${p}</a>
 								</c:when>
 								<c:otherwise>
-									<li class="page-item"><a class="page-link" href="/edu/notice?pageNum=${p}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">${p}</a>
+									<li class="page-item"><a class="page-link" href="/edu/log?pageNum=${p}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">${p}</a>
 								</c:otherwise>
 							</c:choose>
 							
@@ -108,7 +112,7 @@ $(document).ready(function(){
 				</c:forEach>
 
 				<c:if test="${paging.hasNext }">
-					<li class="page-item"><a class="page-link" href="/edu/notice?pageNum=${paging.endPage+1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
+					<li class="page-item"><a class="page-link" href="/edu/log?pageNum=${paging.endPage+1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
 				</c:if>
 			</ul>
 			</nav>
