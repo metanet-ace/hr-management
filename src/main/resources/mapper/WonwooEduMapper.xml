@@ -1,254 +1,224 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.metanet.persistence.WonwooEduMapper">
+	<select id="getPagingNoticeList"
+		resultType="com.metanet.domain.NoticeVO">
+		<choose>
+			<when
+				test="keyField =='noticeTitle' and keyword != null and keyword !=''">
+				SELECT *
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_WRITER,
+				TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as NOTICE_DATE
+				FROM NOTICE WHERE notice_title like '%'||#{keyword}||'%' ORDER BY
+				notice_no desc) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</when>
+			<when
+				test="keyField =='noticeWriter' and keyword != null and keyword !=''">
+				SELECT *
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_WRITER,
+				TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as NOTICE_DATE
+				FROM NOTICE WHERE notice_writer like '%'||#{keyword}||'%' ORDER BY
+				notice_no desc) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</when>
+			<otherwise>
+				SELECT *
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_WRITER,
+				TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as NOTICE_DATE
+				FROM NOTICE ORDER BY notice_no desc) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getPagingLogList" resultType="com.metanet.domain.LogVO">
+		<choose>
+			<when test="keyField =='logIp' and keyword != null and keyword !=''">
+				SELECT *
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
+				LOG_TARGET, LOG_DESC
+				FROM LOG WHERE LOG_IP like '%'||#{keyword}||'%'
+				ORDER BY LOG_NO DESC) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</when>
+			<when test="keyField =='empNo' and keyword != null and keyword !=''">
+				SELECT *
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
+				LOG_TARGET, LOG_DESC
+				FROM LOG WHERE EMP_NO like '%'||#{keyword}||'%'
+				ORDER BY LOG_NO DESC) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</when>
+			
+			<when test="keyField =='logWriter' and keyword != null and keyword !=''">
+				SELECT *
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
+				LOG_TARGET, LOG_DESC
+				FROM LOG WHERE LOG_WRITER like '%'||#{keyword}||'%'
+				ORDER BY LOG_NO DESC) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</when>
+			
+			<when test="keyField =='logDate' and keyword != null and keyword !=''">
+				SELECT *
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
+				LOG_TARGET, LOG_DESC
+				FROM LOG WHERE LOG_DATE like '%'||#{keyword}||'%'
+				ORDER BY LOG_NO DESC) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</when>
+			<when test="keyField =='logTarget' and keyword != null and keyword !=''">
+				SELECT *
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
+				LOG_TARGET, LOG_DESC
+				FROM LOG WHERE LOG_TARGET like '%'||#{keyword}||'%'
+				ORDER BY LOG_NO DESC) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</when>
+			<otherwise>
+				SELECT *
+				FROM (SELECT rownum rnum, a.*
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
+				LOG_TARGET, LOG_DESC
+				FROM LOG ORDER BY LOG_NO DESC) a )
+				WHERE rnum BETWEEN #{startNum} AND #{endNum}
+			</otherwise>
+		</choose>
+	</select>
 
-	<select id="eduList" resultType="com.metanet.domain.EduVO">
-		SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
-		TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
-		EDU_PROGRESS
-		FROM EDU
-	</select>
-	
-	<select id ="getPagingEduList" resultType="com.metanet.domain.EduVO">
-		<choose>
-			<when test="keyField =='eduTitle' and keyword != null and keyword !=''">
-				<![CDATA[
-				SELECT * 
-				FROM (SELECT rownum rnum, a.*
-				FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
-				TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
-				EDU_PROGRESS FROM EDU
-				WHERE edu_title like '%'||#{keyword}||'%' ORDER BY edu_no desc) a )
-				WHERE rnum BETWEEN #{startNum} AND #{endNum}
-				]]>
-			</when>
-			<when test="keyField =='eduTarget' and keyword != null and keyword !=''">
-				<![CDATA[
-			SELECT * 
-			FROM (SELECT rownum rnum, a.*
-			FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
-			TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
-			EDU_PROGRESS FROM EDU 
-			WHERE edu_target like '%'||#{keyword}||'%' ORDER BY edu_no desc) a )
-			WHERE rnum BETWEEN #{startNum} AND #{endNum}
-			]]>
-			</when>
-			<when test="keyField =='eduProgress' and keyword != null and keyword !=''">
-				<choose>
-					<when test="keyword == '진행상태'">
-					<![CDATA[
-					SELECT * 
-					FROM (SELECT rownum rnum, a.*
-					FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
-					TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
-					EDU_PROGRESS FROM EDU
-					WHERE edu_progress like '%'||'pre'||'%' ORDER BY edu_no desc) a )
-					WHERE rnum BETWEEN #{startNum} AND #{endNum}
-					]]>
-					</when>
-					<when test="keyword == '진행중'">
-					<![CDATA[
-					SELECT * 
-					FROM (SELECT rownum rnum, a.*
-					FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
-					TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
-					EDU_PROGRESS FROM EDU
-					WHERE edu_progress like '%'||'ing'||'%' ORDER BY edu_no desc) a )
-					WHERE rnum BETWEEN #{startNum} AND #{endNum}
-					]]>
-					</when>
-					<when test="keyword == '진행종료'">
-					<![CDATA[
-					SELECT * 
-					FROM (SELECT rownum rnum, a.*
-					FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
-					TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
-					EDU_PROGRESS FROM EDU
-					WHERE edu_progress like '%'||'post'||'%' ORDER BY edu_no desc) a )
-					WHERE rnum BETWEEN #{startNum} AND #{endNum}
-					]]>
-				</when>
-				<otherwise>
-				<![CDATA[
-				SELECT * 
-				FROM (SELECT rownum rnum, a.*
-				FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
-				TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
-				EDU_PROGRESS FROM EDU ORDER BY edu_no desc) a )
-				WHERE rnum BETWEEN #{startNum} AND #{endNum}
-			]]>
-				</otherwise>
-				</choose>
-			</when>
-			<otherwise>
-			<![CDATA[
-			SELECT * 
-			FROM (SELECT rownum rnum, a.*
-			FROM (SELECT EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
-			TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
-			EDU_PROGRESS FROM EDU ORDER BY edu_no desc) a )
-			WHERE rnum BETWEEN #{startNum} AND #{endNum}
-			]]>
-			</otherwise>
-			</choose>
-	</select>
-	
-	<select id="EduTotalCount" parameterType="Map" resultType="Integer">
-		SELECT COUNT(*) FROM EDU
-		<choose>
-			<when test="keyField =='eduTitle' and keyword != null and keyword !=''">
-				WHERE edu_title like '%'||#{keyword}||'%'
-			</when>
-			<when test="keyField =='eduTarget' and keyword != null and keyword !=''">
-				WHERE edu_target like '%'||#{keyword}||'%'
-			</when>
-		</choose> 
-	</select>
-	
-	<select id="getPagingNoticeList" resultType="com.metanet.domain.NoticeVO">
-	<choose>
-			<when test="keyField =='noticeTitle' and keyword != null and keyword !=''">
-			SELECT * 
-			FROM (SELECT rownum rnum, a.*
-			FROM (SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_WRITER, 
-			TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as NOTICE_DATE
-			FROM NOTICE WHERE notice_title like '%'||#{keyword}||'%' ORDER BY notice_no desc) a )
-			WHERE rnum BETWEEN #{startNum} AND #{endNum}
-			</when>
-			<when test="keyField =='noticeWriter' and keyword != null and keyword !=''">
-			SELECT * 
-			FROM (SELECT rownum rnum, a.*
-			FROM (SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_WRITER, 
-			TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as NOTICE_DATE
-			FROM NOTICE WHERE notice_writer like '%'||#{keyword}||'%' ORDER BY notice_no desc) a )
-			WHERE rnum BETWEEN #{startNum} AND #{endNum}
-			</when>
-			<otherwise>
-			SELECT * 
-			FROM (SELECT rownum rnum, a.*
-			FROM (SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_WRITER, 
-			TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as NOTICE_DATE
-			FROM NOTICE ORDER BY notice_no desc) a )
-			WHERE rnum BETWEEN #{startNum} AND #{endNum}
-			</otherwise>
-		</choose> 
-	</select>
-	
-	<select id="noticeTotalCount" parameterType="Map" resultType="Integer">
+	<select id="noticeTotalCount" parameterType="Map"
+		resultType="Integer">
 		SELECT COUNT(*) FROM NOTICE
 		<choose>
-			<when test="keyField =='noticeTitle' and keyword != null and keyword !=''">
+			<when
+				test="keyField =='noticeTitle' and keyword != null and keyword !=''">
 				WHERE notice_title like '%'||#{keyword}||'%'
 			</when>
-			<when test="keyField =='noticeWriter' and keyword != null and keyword !=''">
+			<when
+				test="keyField =='noticeWriter' and keyword != null and keyword !=''">
 				WHERE notice_writer like '%'||#{keyword}||'%'
 			</when>
-		</choose> 
+		</choose>
 	</select>
 	
+	<select id="logTotalCount" parameterType="Map"
+		resultType="Integer">
+		SELECT COUNT(*) FROM LOG
+		<choose>
+			<when
+				test="keyField =='logIp' and keyword != null and keyword !=''">
+				WHERE log_ip like '%'||#{keyword}||'%'
+			</when>
+			<when
+				test="keyField =='empNo' and keyword != null and keyword !=''">
+				WHERE emp_no like '%'||#{keyword}||'%'
+			</when>
+			<when
+				test="keyField =='logWriter' and keyword != null and keyword !=''">
+				WHERE log_writer like '%'||#{keyword}||'%'
+			</when>
+			
+			<when
+				test="keyField =='logDate' and keyword != null and keyword !=''">
+				WHERE log_date like '%'||#{keyword}||'%'
+			</when>
+			<when
+				test="keyField =='logTarget' and keyword != null and keyword !=''">
+				WHERE log_target like '%'||#{keyword}||'%'
+			</when>
+		</choose>
+	</select>
 	
-	<select id="eduDetail" parameterType="Integer" resultType="com.metanet.domain.EduVO">
-		SELECT EDU_NO, EDU_TITLE, EDU_DESC, EDU_LOC, EDU_TIME, EDU_TEACHER, EDU_PEOPLE, EDU_TARGET,
-		TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END, EDU_COST, EDU_FILE, EDU_REFILE
+	<insert id="writeLog"
+		parameterType="com.metanet.domain.LogVO">
+		INSERT INTO LOG
+		VALUES (seq_log_no.nextval,
+		#{logIp},
+		#{logWriter},
+		sysdate,
+		#{logTarget},
+		#{logDesc},
+		#{empNo}
+		)
+	</insert>
+	
+	<select id="eduDetail" parameterType="Integer"
+		resultType="com.metanet.domain.EduVO">
+		SELECT EDU_NO, EDU_TITLE, EDU_DESC, EDU_LOC, EDU_TIME,
+		EDU_TEACHER, EDU_PEOPLE, EDU_TARGET,
+		TO_CHAR(EDU_START, 'YYYY-MM-DD')
+		as EDU_START, TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END, EDU_COST,
+		EDU_FILE, EDU_REFILE
 		FROM EDU
 		WHERE EDU_NO = #{EDU_NO}
 	</select>
 
-	
+
 	<delete id="eduDelete" parameterType="Integer">
 		DELETE
 		FROM EDU
-		WHERE EDU_NO = #{EDU_NO}
+		WHERE EDU_NO
+		= #{EDU_NO}
 	</delete>
-	
+
 	<delete id="noticeDelete" parameterType="Integer">
 		DELETE
 		FROM NOTICE
-		WHERE NOTICE_NO = #{NOTICE_NO}
+		WHERE
+		NOTICE_NO = #{NOTICE_NO}
 	</delete>
-	
+
 	<update id="eduUpdate" parameterType="com.metanet.domain.EduVO">
-		UPDATE EDU SET EDU_TITLE=#{eduTitle}, EDU_DESC=#{eduDesc}, EDU_LOC=#{eduLoc}, EDU_TIME=#{eduTime},
-		EDU_TEACHER=#{eduTeacher}, EDU_PEOPLE=#{eduPeople}, EDU_TARGET=#{eduTarget}, 
-		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD'), EDU_COST=#{eduCost},
-		EDU_FILE=#{eduFile}, EDU_REFILE=#{eduRefile} 
+		UPDATE EDU SET
+		EDU_TITLE=#{eduTitle}, EDU_DESC=#{eduDesc}, EDU_LOC=#{eduLoc},
+		EDU_TIME=#{eduTime},
+		EDU_TEACHER=#{eduTeacher},
+		EDU_PEOPLE=#{eduPeople}, EDU_TARGET=#{eduTarget},
+		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD'),
+		EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD'), EDU_COST=#{eduCost},
+		EDU_FILE=#{eduFile}, EDU_REFILE=#{eduRefile}
 		WHERE EDU_NO=#{eduNo}
 	</update>
-	
-	<update id="eduUpdateNoModifyFile" parameterType="com.metanet.domain.EduVO">
-		UPDATE EDU SET EDU_TITLE=#{eduTitle}, EDU_DESC=#{eduDesc}, EDU_LOC=#{eduLoc}, EDU_TIME=#{eduTime},
-		EDU_TEACHER=#{eduTeacher}, EDU_PEOPLE=#{eduPeople}, EDU_TARGET=#{eduTarget}, 
-		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD'), EDU_COST=#{eduCost}
+
+	<update id="eduUpdateNoModifyFile"
+		parameterType="com.metanet.domain.EduVO">
+		UPDATE EDU SET EDU_TITLE=#{eduTitle},
+		EDU_DESC=#{eduDesc}, EDU_LOC=#{eduLoc}, EDU_TIME=#{eduTime},
+		EDU_TEACHER=#{eduTeacher}, EDU_PEOPLE=#{eduPeople},
+		EDU_TARGET=#{eduTarget},
+		EDU_START=TO_DATE(#{eduStart}, 'YYYY-MM-DD'), EDU_END=TO_DATE(#{eduEnd}, 'YYYY-MM-DD'),
+		EDU_COST=#{eduCost}
 		WHERE EDU_NO=#{eduNo}
 	</update>
-	
-	<select id="noticeDetail" parameterType="Integer" resultType="com.metanet.domain.NoticeVO">
-		SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_CONTENT, NOTICE_WRITER, NOTICE_DATE, NOTICE_FILE, NOTICE_REFILE, EMP_NO FROM NOTICE
+
+	<select id="noticeDetail" parameterType="Integer"
+		resultType="com.metanet.domain.NoticeVO">
+		SELECT NOTICE_NO, NOTICE_TITLE, NOTICE_CONTENT,
+		NOTICE_WRITER, NOTICE_DATE, NOTICE_FILE, NOTICE_REFILE, EMP_NO FROM
+		NOTICE
 		WHERE NOTICE_NO = #{NOTICE_NO}
 	</select>
-	
-	
-	<select id="empList" resultType="com.metanet.domain.EmpListVO">
-      SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
-      WHERE e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
-   </select>
-		
-	<select id="getPagingList" resultType="com.metanet.domain.EmpListVO">
+
+	<select id="getPagingEmpEduList" parameterType="map"
+		resultType="com.metanet.domain.EduHistoryVO">
 		<choose>
-			<when test="keyField =='deptName' and keyword != null and keyword !=''">
-			<![CDATA[
-				SELECT * 
-		FROM (SELECT rownum rnum, a.*
-	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
-				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
-				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
-				and dept_name like '%'||#{keyword}||'%'
-				ORDER BY e.emp_no desc) a )
-		WHERE rnum BETWEEN #{startNum} AND #{endNum} 
-			]]>
-			</when>
-			<when test="keyField =='posName' and keyword != null and keyword !=''">
-			<![CDATA[
-				SELECT * 
-		FROM (SELECT rownum rnum, a.*
-	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
-				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
-				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
-				and pos_name like '%'||#{keyword}||'%'
-				ORDER BY e.emp_no desc) a )
-		WHERE rnum BETWEEN #{startNum} AND #{endNum} 
-			]]>
-			</when>
-			<otherwise>
-			<![CDATA[
-			SELECT * 
-		FROM (SELECT rownum rnum, a.*
-	    FROM (SELECT e.emp_no, e.emp_name, p.pos_name, d.dept_name 
-				FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p 
-				where e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
-				ORDER BY e.emp_no desc) a )
-		WHERE rnum BETWEEN #{startNum} AND #{endNum}
-			]]>
-			</otherwise>
-		</choose>
-	</select>
-	
-	<select id="totalCount" resultType="Integer">
-	SELECT COUNT(*) FROM EMPLOYEE e, DEPARTMENT d, "POSITION" p
-		WHERE e.dept_no=d.DEPT_NO AND e.POS_NO = p.POS_NO
-		<choose>
-			<when test="keyField =='deptName' and keyword != null and keyword !=''">
-					and d.dept_name like '%'||#{keyword}||'%'
-				</when>
-			<when test="keyField =='posName' and keyword != null and keyword !=''">
-					and p.pos_name like '%'||#{keyword}||'%'
-			</when>
-		</choose>
-	</select>
-	
-    <select id="getPagingEmpEduList" parameterType="map" resultType="com.metanet.domain.EduHistoryVO">
-    	<choose>
-			<when test="keyField =='eduTitle' and keyword != null and keyword !=''">
+			<when
+				test="keyField =='eduTitle' and keyword != null and keyword !=''">
 			<![CDATA[
 			SELECT * 
 		FROM (SELECT rownum rnum, a.*
@@ -275,93 +245,102 @@
 		WHERE rnum BETWEEN #{startNum} AND #{endNum}
 			]]>
 			</otherwise>
-			</choose>
-    
-    </select>
-    
-    <select id="EmpEduTotalCount" parameterType="Map" resultType="Integer">
-    	select count(*)
-    	from employee e, edu d, edu_history h 
-    	where e.emp_no = #{empNo} 
-    	and e.emp_no = h.emp_no
-    	and d.edu_no = h.edu_no
-    	<choose>
-    		<when test="keyField =='eduTitle' and keyword != null and keyword !=''">
-    			and d.edu_title like '%' || #{keyword} || '%'
-    		</when>
-    	</choose>
-    </select>
-    
-    <insert id ="eduAdd" parameterType="com.metanet.domain.EduVO">
-    	INSERT INTO edu
-        VALUES (seq_edu_no.nextval, 
-        		#{eduTitle}, 
-        		#{eduDesc}, 
-        		#{eduLoc}, 
-        		#{eduTime}, 
-        		#{eduTeacher}, 
-        		#{eduPeople}, 
-        		#{eduTarget}, 
-        		#{eduStart}, 
-        		#{eduEnd},
-        		#{eduCost},
-        		'pre',
-        		#{eduFile},
-        		#{eduRefile})
-        		
-    </insert>
-    
-    <insert id ="eduAddNoFile" parameterType="com.metanet.domain.EduVO">
-    	INSERT INTO edu
-        VALUES (seq_edu_no.nextval, 
-        		#{eduTitle}, 
-        		#{eduDesc}, 
-        		#{eduLoc}, 
-        		#{eduTime}, 
-        		#{eduTeacher}, 
-        		#{eduPeople}, 
-        		#{eduTarget}, 
-        		#{eduStart}, 
-        		#{eduEnd},
-        		#{eduCost},
-        		'pre',
-        		NULL,
-        		NULL)
-        		
-    </insert>
-    
-    <insert id="noticeAdd" parameterType="com.metanet.domain.NoticeVO">
-    	INSERT INTO NOTICE
-    	VALUES (seq_notice_no.nextval,
-    			#{noticeTitle},
-    			#{noticeContent},
-    			#{noticeWriter},
-    			sysdate,
-    			#{empNo},
-    			#{noticeFile},
-    			#{noticeRefile}
-    			)
-    </insert>
-    
-    <insert id="noticeAddNoFile" parameterType="com.metanet.domain.NoticeVO">
-    	INSERT INTO NOTICE
-    	VALUES (seq_notice_no.nextval,
-    			#{noticeTitle},
-    			#{noticeContent},
-    			#{noticeWriter},
-    			sysdate,
-    			#{empNo},
-    			NULL,
-    			NULL
-    			)
-    </insert>
-    
-    <update id="noticeUpdate" parameterType="com.metanet.domain.NoticeVO">
-    	UPDATE NOTICE SET NOTICE_TITLE=#{noticeTitle}, NOTICE_CONTENT=#{noticeContent}, 
-    	NOTICE_FILE=#{noticeFile}, NOTICE_REFILE=#{noticeRefile} WHERE NOTICE_NO=#{noticeNo}
-    </update>
-    
-    <update id="noticeUpdateNoModifyFile" parameterType="com.metanet.domain.NoticeVO">
-    	UPDATE NOTICE SET NOTICE_TITLE=#{noticeTitle}, NOTICE_CONTENT=#{noticeContent} WHERE NOTICE_NO=#{noticeNo}
-    </update>
+		</choose>
+
+	</select>
+
+	<select id="EmpEduTotalCount" parameterType="Map"
+		resultType="Integer">
+		select count(*)
+		from employee e, edu d, edu_history h
+		where e.emp_no = #{empNo}
+		and e.emp_no = h.emp_no
+		and d.edu_no = h.edu_no
+		<choose>
+			<when
+				test="keyField =='eduTitle' and keyword != null and keyword !=''">
+				and d.edu_title like '%' || #{keyword} || '%'
+			</when>
+		</choose>
+	</select>
+
+	<insert id="eduAdd" parameterType="com.metanet.domain.EduVO">
+		INSERT INTO edu
+		VALUES (seq_edu_no.nextval,
+		#{eduTitle},
+		#{eduDesc},
+		#{eduLoc},
+		#{eduTime},
+		#{eduTeacher},
+		#{eduPeople},
+		#{eduTarget},
+		#{eduStart},
+		#{eduEnd},
+		#{eduCost},
+		'pre',
+		#{eduFile},
+		#{eduRefile})
+
+	</insert>
+
+	<insert id="eduAddNoFile"
+		parameterType="com.metanet.domain.EduVO">
+		INSERT INTO edu
+		VALUES (seq_edu_no.nextval,
+		#{eduTitle},
+		#{eduDesc},
+		#{eduLoc},
+		#{eduTime},
+		#{eduTeacher},
+		#{eduPeople},
+		#{eduTarget},
+		#{eduStart},
+		#{eduEnd},
+		#{eduCost},
+		'pre',
+		NULL,
+		NULL)
+
+	</insert>
+
+	<insert id="noticeAdd"
+		parameterType="com.metanet.domain.NoticeVO">
+		INSERT INTO NOTICE
+		VALUES (seq_notice_no.nextval,
+		#{noticeTitle},
+		#{noticeContent},
+		#{noticeWriter},
+		sysdate,
+		#{empNo},
+		#{noticeFile},
+		#{noticeRefile}
+		)
+	</insert>
+
+	<insert id="noticeAddNoFile"
+		parameterType="com.metanet.domain.NoticeVO">
+		INSERT INTO NOTICE
+		VALUES (seq_notice_no.nextval,
+		#{noticeTitle},
+		#{noticeContent},
+		#{noticeWriter},
+		sysdate,
+		#{empNo},
+		NULL,
+		NULL
+		)
+	</insert>
+
+	<update id="noticeUpdate"
+		parameterType="com.metanet.domain.NoticeVO">
+		UPDATE NOTICE SET NOTICE_TITLE=#{noticeTitle},
+		NOTICE_CONTENT=#{noticeContent},
+		NOTICE_FILE=#{noticeFile}, NOTICE_REFILE=#{noticeRefile} WHERE NOTICE_NO=#{noticeNo}
+	</update>
+
+	<update id="noticeUpdateNoModifyFile"
+		parameterType="com.metanet.domain.NoticeVO">
+		UPDATE NOTICE SET NOTICE_TITLE=#{noticeTitle},
+		NOTICE_CONTENT=#{noticeContent} WHERE NOTICE_NO=#{noticeNo}
+	</update>
 </mapper>

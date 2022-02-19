@@ -14,6 +14,7 @@ import org.springframework.validation.FieldError;
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
 import com.metanet.domain.EmpListVO;
+import com.metanet.domain.LogVO;
 import com.metanet.domain.NoticeVO;
 import com.metanet.domain.PageDTO;
 import com.metanet.persistence.WonwooEduMapper;
@@ -23,11 +24,6 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 
 	@Autowired
 	WonwooEduMapper wonwooEduMapper;
-	
-	@Override
-	public List<EduVO> eduList() {
-		return wonwooEduMapper.eduList();
-	}
 
 	@Override
 	public EduVO eduDetail(int edu_no) {
@@ -37,7 +33,7 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 	@Override
 	public void eduDelete(int edu_no) {
 		wonwooEduMapper.eduDelete(edu_no);
-		
+
 	}
 
 	@Override
@@ -46,58 +42,32 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 	}
 
 	@Override
-	public List<EmpListVO> getPagingList(PageDTO pdto) {
-		return wonwooEduMapper.getPagingList(pdto);
-	}
-
-	@Override
-	public int totalCount(PageDTO pdto) {
-		return wonwooEduMapper.totalCount(pdto);
-	}
-
-	@Override
-	public List<EmpListVO> empList() {
-		return wonwooEduMapper.empList();
-	}
-
-	@Override
-	public List<EduHistoryVO> getEduEmpHistroyList(int empNo) {
-		return wonwooEduMapper.getEduEmpHistroyList(empNo);
-	}
-
-	@Override
-	public List<EduHistoryVO> getEduEmpHistroyListByKey(Map<String, Object> map) {
-		return wonwooEduMapper.getEduEmpHistroyListByKey(map);
-		 
-	}
-
-	@Override
 	public void eduAdd(EduVO eduVO) {
 		wonwooEduMapper.eduAdd(eduVO);
-		
+
 	}
 
 	@Override
 	public void eduUpdateNoModifyFile(EduVO eduVO) {
-		wonwooEduMapper.eduUpdateNoModifyFile(eduVO);		
+		wonwooEduMapper.eduUpdateNoModifyFile(eduVO);
 	}
-	
+
 	// 유효성 검사에 실패한 필드가 있다면, Service 게층으로 Errors 객체를 전달하여 비즈니스 로직을 구현
 	@Override
 	public Map<String, String> validateHandling(Errors errors) {
 		Map<String, String> validatorResult = new HashMap<>();
 
-        for (FieldError error : errors.getFieldErrors()) {
-            String validKeyName = String.format("valid_%s", error.getField());
-            validatorResult.put(validKeyName, error.getDefaultMessage());
-        }
+		for (FieldError error : errors.getFieldErrors()) {
+			String validKeyName = String.format("valid_%s", error.getField());
+			validatorResult.put(validKeyName, error.getDefaultMessage());
+		}
 
-        return validatorResult;
+		return validatorResult;
 	}
 
 	@Override
 	public void eduAddNoFile(@Valid EduVO eduVO) {
-		wonwooEduMapper.eduAddNoFile(eduVO);	
+		wonwooEduMapper.eduAddNoFile(eduVO);
 	}
 
 	@Override
@@ -108,16 +78,6 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 	@Override
 	public int EmpEduTotalCount(Map<String, Object> map) {
 		return wonwooEduMapper.EmpEduTotalCount(map);
-	}
-
-	@Override
-	public List<EduVO> getPagingEduList(PageDTO pdto) {
-		return wonwooEduMapper.getPagingEduList(pdto);
-	}
-
-	@Override
-	public int EduTotalCount(PageDTO pdto) {
-		return wonwooEduMapper.EduTotalCount(pdto);
 	}
 
 	@Override
@@ -133,7 +93,7 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 	@Override
 	public void noticeAdd(NoticeVO noticeVO) {
 		wonwooEduMapper.noticeAdd(noticeVO);
-		
+
 	}
 
 	@Override
@@ -154,12 +114,27 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 	@Override
 	public void noticeUpdate(NoticeVO noticeVO) {
 		wonwooEduMapper.noticeUpdate(noticeVO);
-		
+
 	}
 
 	@Override
 	public void noticeUpdateNoModifyFile(NoticeVO noticeVO) {
 		wonwooEduMapper.noticeUpdateNoModifyFile(noticeVO);
+	}
+
+	@Override
+	public List<LogVO> getPagingLogList(PageDTO pdto) {
+		return wonwooEduMapper.getPagingLogList(pdto);
+	}
+
+	@Override
+	public int logTotalCount(PageDTO pdto) {
+		return wonwooEduMapper.logTotalCount(pdto);
+	}
+
+	@Override
+	public void writeLog(LogVO logVO) {
+		wonwooEduMapper.writeLog(logVO);
 	}
 
 }

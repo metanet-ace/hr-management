@@ -30,15 +30,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.metanet.domain.EduVO;
-import com.metanet.domain.EmpListVO;
 import com.metanet.domain.FileDTO;
+import com.metanet.domain.LogVO;
 import com.metanet.domain.NoticeVO;
 import com.metanet.domain.PageDTO;
 import com.metanet.domain.PaginationDTO;
+import com.metanet.persistence.Util;
 import com.metanet.service.WonwooEduService;
 
 @Controller
@@ -88,6 +88,45 @@ public class WonwooEduController {
 		model.addAttribute("title", "공지사항 리스트");
 
 		return "/notice";
+	}
+	
+	@RequestMapping("/log")
+	public String logList(Model model, HttpServletRequest request) {
+		int pageNum = 1;
+		String keyField = "";
+		String keyword = "";
+
+		// 현재 페이지 넘버
+		if (request.getParameter("pageNum") != null) {
+			pageNum = Integer.parseInt((request.getParameter("pageNum")).trim());
+		}
+		model.addAttribute("tempPageNum", pageNum);
+
+		// 키워드(작성자/작성내용 등)
+		if (request.getParameter("keyField") != null && request.getParameter("keyField") != "") {
+			keyField = request.getParameter("keyField");
+		}
+
+		if (request.getParameter("keyword") != null && request.getParameter("keyword") != "") {
+			keyword = request.getParameter("keyword");
+		}
+
+		// 페이지 관련 정보
+		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
+		model.addAttribute("pageInfo", pdto);
+
+		// 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
+		List<LogVO> list = wonwooEduService.getPagingLogList(pdto);
+		model.addAttribute("list", list);
+
+		// 페이징 처리된 숫자그룹(뷰에서)
+		int total = wonwooEduService.logTotalCount(pdto);
+		PaginationDTO pageDto = new PaginationDTO(total, pdto);
+
+		model.addAttribute("paging", pageDto);
+		model.addAttribute("title", "로그 리스트");
+
+		return "/admin/log";
 	}
 
 	// 인사팀용 교육과정 상세페이지
@@ -496,9 +535,14 @@ public class WonwooEduController {
 	@PostMapping("/noticeAdd")
 	public String noticeAdd(@Valid NoticeVO noticeVO, Errors errors, Model model,
 			@RequestParam MultipartFile uploadfile, HttpServletRequest request, @RequestParam("empNo") String empNo,
-			@RequestParam("empName") String empName, FileDTO fileDTO) {
+			@RequestParam("empName") String empName, FileDTO fileDTO, LogVO logVO) {
 		noticeVO.setEmpNo(Integer.parseInt(empNo));
 		noticeVO.setNoticeWriter(empName);
+		
+		logVO.setLogIp(Util.getUserIp(request));
+		logVO.setEmpNo(Integer.parseInt(empNo));
+		logVO.setLogWriter(empName);
+		logVO.setLogTarget("공지사항 등록");
 
 		if (!uploadfile.isEmpty()) {
 			// 저장할 경로 가져오기
@@ -541,6 +585,9 @@ public class WonwooEduController {
 				return "/noticeAdd";
 			}
 			wonwooEduService.noticeAdd(noticeVO);
+			logVO.setLogDesc("공지사항 등록 성공(파일O)");
+			wonwooEduService.writeLog(logVO);
+			
 			return "redirect:/edu/notice";
 
 		} else {
@@ -555,6 +602,8 @@ public class WonwooEduController {
 				return "/noticeAdd";
 			}
 			wonwooEduService.noticeAddNoFile(noticeVO);
+			logVO.setLogDesc("공지사항 등록 성공(파일X)");
+			wonwooEduService.writeLog(logVO);
 			return "redirect:/edu/notice";
 		}
 	}
