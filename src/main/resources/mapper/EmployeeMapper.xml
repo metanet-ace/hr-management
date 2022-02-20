@@ -32,6 +32,17 @@
 		WHERE EMP_NO = #{value}
 	</select>
 	
+	<select id="findByEmpNoJoinHistory" resultType="map">
+		SELECT e.*, eh.ISSUED_CONTENT, d.DEPT_NAME, p.POS_NAME
+		FROM EMPLOYEE e, EMP_HISTORY eh, DEPARTMENT d, POSITION p
+		WHERE e.EMP_NO = eh.EMP_NO
+		AND e.DEPT_NO = d.DEPT_NO
+		AND e.POS_NO = p.POS_NO
+		AND e.EMP_RETDATE IS NOT NULL 
+		AND eh.ISSUED_ORDER = '퇴사' 
+		AND e.EMP_NO = #{empNo}
+	</select>
+	
 	<select id="findWorkingDate" resultType="map">
 		SELECT ew.WORK_START, ew.WORK_END, ew.WORK_TYPE
 		FROM EMP_WORKINGHOUR ew 
@@ -83,4 +94,5 @@
 	WHERE TO_CHAR(e.WORK_END, 'YY/MM/DD') = TO_CHAR(s.WORK_START, 'YY/MM/DD')
 	AND s.EMP_NO = #{empNo}
 	</select>
+	
 </mapper>

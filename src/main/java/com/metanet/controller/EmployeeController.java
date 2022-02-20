@@ -1,6 +1,10 @@
 package com.metanet.controller;
 
-import java.sql.SQLException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,12 +13,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -29,13 +39,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.IBlockElement;
+import com.itextpdf.layout.element.IElement;
+import com.itextpdf.layout.font.FontProvider;
 import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.EmpHistoryVO;
 import com.metanet.domain.EmpWorkingtimeVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.PositionVO;
-import com.metanet.exception.LoginException;
 import com.metanet.service.EmployeeServiceImpl;
 
 @SessionAttributes("sessionEmp")
@@ -145,7 +166,7 @@ public class EmployeeController {
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
-	
+	// 히스토리 페이지
 	@GetMapping("/admin/emp/history")
 	public String empHistoryListView() {
 		return "/admin/empHistory";
@@ -161,11 +182,36 @@ public class EmployeeController {
 		} else {
 			pageSize = 5; // 기본값
 		}
-		Pageable pageable = PageRequest.of(pageNum-1, pageSize, Sort.Direction.DESC, "empHisno");
+		
+		Pageable pageable = PageRequest.of(pageNum-1, pageSize, Sort.Direction.DESC, "issuedDate");
 		
 		Page<EmpHistoryVO> empHistoryPage = empService.getEmpHistoryList(data, pageable);
-		
+
 		return new ResponseEntity<>(empHistoryPage, HttpStatus.OK);
+	}
+	
+	//퇴사자 페이지
+	@GetMapping("/admin/emp/retire")
+	public String empRetireListView() {
+		return "/admin/empRetire";
+	}
+	
+	// 퇴사자 페이징 컨트롤러
+	@PostMapping(value = "/admin/emp/retire/{page}", produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<Page<EmployeeVO>> empRetireList(@PathVariable("page") int pageNum, @RequestBody HashMap<String, String> data){
+		int pageSize = 0;
+		if(data.get("pageSize") != null) {
+			pageSize = Integer.parseInt(data.get("pageSize"));
+		} else {
+			pageSize = 5; // 기본값
+		}
+		
+		Pageable pageable = PageRequest.of(pageNum-1, pageSize, Sort.Direction.DESC, "empRetdate");
+		
+		Page<EmployeeVO> empRetirePage = empService.getEmpRetireList(data, pageable);
+		
+		return new ResponseEntity<>(empRetirePage, HttpStatus.OK);
 	}
 	
 	// 출근 시간 등록 컨트롤러 
@@ -356,4 +402,116 @@ public class EmployeeController {
 		return "accessDenied";
 	}
 	
+	// pdf 다운로드 처리 컨트롤러
+	@GetMapping("/admin/pdf")
+	public ResponseEntity<Resource> pdfView(Model model, HttpServletRequest request, @RequestParam("empNo") int empNo) throws IOException {
+		
+		Map<String, Object> empInfo = empService.getEmpRetireInfo(empNo);
+	
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+		String hireDate = sdf.format(empInfo.get("EMP_HIREDATE"));
+		String retDate = sdf.format(empInfo.get("EMP_RETDATE"));
+		String now = sdf.format(new Date());
+		
+		StringBuilder body = new StringBuilder();
+		 
+		String header = "<!DOCTYPE html>" + "<html lang='ko-KR'>" + "<head>" + "<title>pdf</title>"
+		                + "	<meta charset='UTF-8'/>" + "	<meta name='description' content='Free Web tutorials'/>"
+		                + "	<meta name='keywords' content='HTML,CSS,XML,JavaScript'/>"
+		                + "	<meta name='viewport' content='width=device-width, initial-scale=1.0'/>"
+		                + "	<meta http-equiv='X-UA-Compatible' content='IE=Edge'/>"
+		                + "<script src='https://use.fontawesome.com/releases/v5.2.0/js/all.js'></script>" + "</head>";
+		                
+		String middle = "<body>\r\n"
+				+ "   <h1 style='text-align: center;'> 경 력 증 명 서 </h1>"
+				+ "<br /> \r\n"
+				+ "    <table border=\"1\" width=\"650\" height= \"200\">\r\n"
+				+ "    <tr>\r\n"
+				+ "        <th width = \"185\" height = \"60\" bgcolor=\"D5D5D5\">이름</th>\r\n"
+				+ "        <td colspan =\"3\" height = \"60\" style='text-align: center;'>" + empInfo.get("EMP_NAME") + "</th>\r\n"
+				+ "    </tr>\r\n"
+				+ "    <tr>\r\n"
+				+ "    	  <th width = \"185\" height = \"60\" bgcolor=\"D5D5D5\"> 부서 </th>\r\n"
+				+ "	      <td height = \"60\" style='text-align: center;'>"+ empInfo.get("DEPT_NAME") + "</th>\r\n"
+				+ "       <th width = \"185\" height = \"60\" bgcolor=\"D5D5D5\"> 직위 </th>\r\n"
+				+ "	      <td height = \"60\" style='text-align: center;'>" +empInfo.get("POS_NAME")+ "</th>\r\n"
+				+ "    </tr>\r\n"
+				+ "    <tr>\r\n"
+				+ "        <th width = \"185\" height = \"60\" bgcolor=\"D5D5D5\"> 재직기간</th>\r\n"
+				+ "        <td colspan =\"3\" height = \"60\" style='text-align: center;'>" + hireDate +  " ~ " + retDate + "</th>\r\n"
+				+ "    </tr>\r\n"
+				+ "    <tr>\r\n"
+				+ "        <th width = \"185\" height = \"60\" bgcolor=\"D5D5D5\"> 퇴사사유 </th>\r\n"
+				+ "        <td colspan =\"3\" height = \"60\" style='text-align: center;'>" + empInfo.get("ISSUED_CONTENT") +"</th>\r\n"
+				+ "    </tr>\r\n"
+				+ "<td colspan=\"4\">\r\n"
+				+ "<br/>\r\n"
+				+ "<br/>\r\n"
+				+ "<br/>\r\n"
+				+ "<br/>\r\n"
+				+ "<br/>\r\n"
+				+ "<br/>\r\n"
+				+ "    <p style = \"text-align:center\"> 위 기재 사항은 사실과 틀림이 없습니다.</p>\r\n"
+				+ "<br/>\r\n"
+				+ "<br/>\r\n"
+				+ "<p style = \"text-align:center\" >" + now + "</p>\r\n"
+				+ "<br/>\r\n"
+				+ "<br/>\r\n"
+				+ "<div style='text-align: center'>\r\n"
+				+ "<img src='" + request.getSession().getServletContext().getRealPath("assets/icons/metanet-logo.png") + "'>\r\n"
+				+ "</div>\r\n"
+				+ "<p style = \"text-align:right\">메타넷&nbsp;&nbsp;(인)&nbsp;&nbsp;&nbsp;</p>\r\n"
+				+ "</td>\r\n"
+				+ "</tr>\r\n"
+				+ "    </table>\r\n";
+
+		String footer = "	<div class='footer' style='width: 620px;height: 60px;padding: 20px;text-align: center;font-size: 0.75em; margin: auto;'>"
+		                + "	본 문서는 읽기전용 입니다. 자세한 사항은 인사팀(대표전화 : 02-1234-5678)에게 문의해 주시기 바랍니다.	" + "	</div>" + "</body>" + "</html>";
+		                
+		body.append(header);
+		body.append(middle);
+		body.append(footer);
+
+		String BODY = body.toString();
+	    String FONT = request.getSession().getServletContext().getRealPath("assets/font/NanumGothic.ttf");
+	    String FILEPATH = request.getSession().getServletContext().getRealPath("resources/sample.pdf");
+		
+	    makepdf(BODY, FILEPATH , FONT);
+		
+		// 다운로드 
+		Path path = Paths.get(FILEPATH);
+		String contentType = Files.probeContentType(path);
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setContentDisposition(
+				ContentDisposition.builder("attachment").filename("sample.pdf", StandardCharsets.UTF_8).build());
+		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+
+		Resource resource = new InputStreamResource(Files.newInputStream(path));
+		
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	}
+	
+	// pdf를 생성하는 로직 
+	public void makepdf(String BODY, String dest, String fontDir) throws IOException {
+		//한국어를 표시하기 위해 폰트 적용 
+	    //ConverterProperties : htmlconverter의 property를 지정하는 메소드인듯
+	    ConverterProperties properties = new ConverterProperties();
+	    FontProvider fontProvider = new DefaultFontProvider(false, false, false);
+	    FontProgram fontProgram = FontProgramFactory.createFont(fontDir);
+	    fontProvider.addFont(fontProgram);
+	    properties.setFontProvider(fontProvider);
+
+		//pdf 페이지 크기를 조정
+		List<IElement> elements = HtmlConverter.convertToElements(BODY, properties);
+	    PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
+	    Document document = new Document(pdf);
+	    	//setMargins 매개변수순서 : 상, 우, 하, 좌
+	        document.setMargins(50, 50, 50, 50);
+	        for (IElement element : elements) {
+	            document.add((IBlockElement) element);
+	        }
+	        document.close();
+	}
 }

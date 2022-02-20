@@ -187,26 +187,25 @@ textarea {
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${emplist.content }" var="list">
-					<tr id="emplist">
-					<c:url value="/admin/emp/detail" var="detail" >
-						<c:param name="empNo" value="${list.empNo }" />
-					</c:url>
-						<td id="empNo"><input type="checkbox" name="checkbox" value="${list.empNo }"></td>
-						<td><a href="${detail}">${list.empNo }</a></td>
-						
-						<c:choose>
-							<c:when test="${empty list.empRetdate }">
-								<td><a href="${detail}">${list.empName }</a></td>
-							</c:when>
-							<c:otherwise>
-								<td><a href="${detail}">${list.empName } (퇴사)</a></td>
-							</c:otherwise>
-						</c:choose>
-						<td><a href="${detail}">${list.pos.posName }</a></td>
-						<td><a href="${detail}">${list.dept.deptName }</a></td>
-					</tr>
-				</c:forEach>
+			<c:choose>
+				<c:when test="${empty emplist.content}" >
+					<td colspan='5' align='center'>검색 결과가 없습니다.</td>
+				</c:when>	
+				<c:otherwise>
+					<c:forEach items="${emplist.content }" var="list">
+						<tr id="emplist">
+						<c:url value="/admin/emp/detail" var="detail" >
+							<c:param name="empNo" value="${list.empNo }" />
+						</c:url>
+							<td id="empNo"><input type="checkbox" name="checkbox" value="${list.empNo }"></td>
+							<td><a href="${detail}">${list.empNo }</a></td>
+							<td><a href="${detail}">${list.empName }</a></td>
+							<td><a href="${detail}">${list.pos.posName }</a></td>
+							<td><a href="${detail}">${list.dept.deptName }</a></td>
+						</tr>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>	
 			<tbody>
 		</table>
 

@@ -17,6 +17,10 @@
 	<description>metanet hr project </description>
 	<properties>
 		<java.version>11</java.version>
+		<!-- 로컬 jar 경로 설정 -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	 	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	    <project.lib.path>${project.basedir}/src/main/webapp/WEB-INF/lib</project.lib.path>
 	</properties>
 	
 	<dependencies>
@@ -103,7 +107,115 @@
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
-		</dependency>		
+		</dependency>
+	
+		<!-- itext -->
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>barcodes</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/barcodes-7.1.14.jar</systemPath>
+		</dependency>	
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>font-asian</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/font-asian-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>forms</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/forms-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>hyph</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/hyph-7.1.14.jar</systemPath>
+		</dependency>
+				
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>io</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/io-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>kernel</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/kernel-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>layout</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/layout-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>pdfa</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/pdfa-7.1.14.jar</systemPath>
+		</dependency>
+		
+			
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>pdftest</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/pdftest-7.1.14.jar</systemPath>
+		</dependency>
+		
+			
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>sign</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/sign-7.1.14.jar</systemPath>
+		</dependency>
+		
+			
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>styled-xml-parser</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/styled-xml-parser-7.1.14.jar</systemPath>
+		</dependency>
+		
+			
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>svg</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/svg-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.itextpdf/html2pdf -->
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>html2pdf</artifactId>
+		    <version>3.0.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -135,6 +247,35 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<!-- war plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+		
+				<configuration>
+					<webResources>
+						<resource>
+							<!-- 로컬 lib파일 경로 -->
+							<directory>${project.basedir}/local-repo</directory>
+							<includes>
+								<include>barcodes-7.1.14.jar</include>
+								<include>font-asian-7.1.14.jar</include>
+								<include>forms-7.1.14.jar</include>
+								<include>hyph-7.1.14.jar</include>
+								<include>io-7.1.14.jar</include>
+								<include>kernel-7.1.14.jar</include>
+								<include>layout-7.1.14.jar</include>
+								<include>pdfa-7.1.14.jar</include>
+								<include>pdftest-7.1.14.jar</include>
+								<include>sign-7.1.14.jar</include>
+								<include>styled-xml-parser-7.1.14.jar</include>
+								<include>svg-7.1.14.jar</include>
+							</includes>
+							<targetPath>WEB-INF/lib</targetPath>
+						</resource>
+					</webResources>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -20,6 +20,9 @@ public interface EmployeeMapper {
 	// 사원 부서, 직급 업데이트 히스토리 저장
 	public int saveHistory(EmpHistoryVO empHis);
 	
+	// 퇴사자 정보보기
+	public Map<String, Object> findByEmpNoJoinHistory(int empNo);
+	
 	// 사원의 한 달동안의 출결상황 보기
 	public List<Map<String, Object>> findWorkingDate(Map<String, String> map);
 	
@@ -31,4 +34,5 @@ public interface EmployeeMapper {
 	
 	// 사원의 이번주 근무한 총 시간 출력하기
 	public int findTotalTime(int empNo);
+	
 }
