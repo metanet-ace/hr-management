@@ -6,9 +6,9 @@
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
 
 <script type="text/javascript">
-	function del(no, fileName){
+	function del(no, fileName, empNo){
 		if(confirm("해당 공지사항을 삭제하시겠습니까?")){
-			location.href="./deleteNotice?notice_no="+no+"&notice_refile="+fileName;
+			location.href="./deleteNotice?notice_no="+no+"&notice_refile="+fileName+"&empNo="+empNo;
 		}
 	}
 	
@@ -30,7 +30,7 @@
 				<div class="col-lg-12">
 					<div class="card">
 						<div class="card-header">
-							<h4 class="card-title">공지사항 등록</h4>
+							<h4 class="card-title">공지사항 상세</h4>
 						</div>
 						<div class="card-body">
 							<div class="form-validation">
@@ -98,7 +98,7 @@
 													<div class="form-group row">
 													<div class="col-lg-8 ml-auto">
 													<button type="button" onclick="update(${detail.noticeNo})" class="btn btn-primary">수정</button>
-													<button type="button" onclick="del('${detail.noticeNo}', '${detail.noticeRefile}')" class="btn btn-primary">삭제</button>
+													<button type="button" onclick="del('${detail.noticeNo}', '${detail.noticeRefile}', '${sessionEmp.empNo }')" class="btn btn-primary">삭제</button>
 													<button type="button" onclick="location.href='./notice';" class="btn btn-primary">리스트로</button>
 												</div>
 											</div>
