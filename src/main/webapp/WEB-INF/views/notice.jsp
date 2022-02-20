@@ -26,6 +26,17 @@ form {
 }
 </style>
 
+<script type="text/javascript">
+$(document).ready(function(){
+	console.log("ready");
+	console.log("keyField: " + '${pageInfo.keyField}');
+	
+	//검색 후 select-option 유지
+	$("#keyField").val("${pageInfo.keyField}").attr("selected","selected");
+});
+</script>
+
+
 <!--**********************************
             Content body start
         ***********************************-->
@@ -35,10 +46,11 @@ form {
 		<form id="search_form" action="/edu/notice" method="post" class="form-inline d-flex justify-content-end">
 			<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
 			<input type="hidden" name="a" value="list"> 
-			<select name="keyField" size="1" class="form-control form-control-sm">
+			<select name="keyField" size="1" id="keyField" class="form-control form-control-sm">
+				<option value="">====</option>
 				<option value="noticeTitle">제목</option>
 				<option value="noticeWriter">작성자</option>
-			</select> <input type="text" id="kwd" name="keyword" class="form-control form-cotrol-sm" style="margin: 10px"> 
+			</select> <input type="text" id="kwd" name="keyword" value="${pageInfo.keyword}" class="form-control form-cotrol-sm" style="margin: 10px"> 
 			<input type="submit" class="btn btn-outline-info btn-sm" value="찾기">
 		</form>
 		
@@ -61,7 +73,6 @@ form {
 				</c:if>
 				<c:forEach items="${list }" var="list">
 					<tr>
-					<%-- <a href="./eduEmpDetail?edu_no=${list.eduNo }">${list.eduTitle }</a> --%>
 						<td>${list.noticeNo }</td>
 						<td onClick="location.href='./noticeDetail?notice_no=${list.noticeNo }'">${list.noticeTitle }</td>
 						<td>${list.noticeWriter}</td>

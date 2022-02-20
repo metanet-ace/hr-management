@@ -76,15 +76,15 @@ $(document).ready(function() {
 		<br>
 		<table class="table table-striped" border=1>
 			<thead>
-				<tr>
-					<th>사원이름</th>
-					<th>사원번호</th>
+				<tr align='center'>
+					<th >사원이름</th>
 					<th>변경전직급</th>
 					<th>변경후직급</th>
 					<th>변경전부서</th>
 					<th>변경후부서</th>
 					<th>비고</th>
 					<th>변경일</th>
+					<th>상세내용</th>
 				</tr>
 			</thead>
 			<tbody id="dataSection">
@@ -163,15 +163,14 @@ function getPage(pageNum, keyword){
 			for(var i = 0; i < list.length; i++) {
 				var reason = list[i]['issuedContent'];
 				data += "<tr id='empHistoryList'>";
-				data += "<td><a href='#' onclick=reasonModal('" + reason + "');>" + list[i]['emp'].empName + "</td>";
-				data += "<td>" + list[i]['emp'].empNo + "</td>";
+				data += "<td align='center'>" + list[i]['emp'].empName + "</td>";
 				if(list[i]['emp'].pos.posName === list[i]['beforePos']) {
 					data += "<td colspan='2' align='center'>" + list[i]['beforePos'] + "</td>";
 				} else if (list[i]['beforePos'] === "-"){
 					data += "<td colspan='2' align='center'>" + "-" + "</td>";
 				} else {
-					data += "<td>" + list[i]['emp'].pos.posName + "</td>"
-					data += "<td>" + list[i]['beforePos'] + "</td>";
+					data += "<td align='center'>" + list[i]['beforePos'] + "</td>";
+					data += "<td align='center'>" + list[i]['emp'].pos.posName + "</td>"
 				}
 				
 				if(list[i]['beforeDept'] === list[i]['emp'].dept.deptName ){
@@ -179,12 +178,13 @@ function getPage(pageNum, keyword){
 				} else if(list[i]['beforeDept'] === "-") {
 					data += "<td colspan='2' align='center'>" + "-" + "</td>";
 				} else {
-					data += "<td>" + list[i]['beforeDept'] + "</td>";
-					data += "<td>" + list[i]['emp'].dept.deptName + "</td>"
+					data += "<td align='center'>" + list[i]['beforeDept'] + "</td>";
+					data += "<td align='center'>" + list[i]['emp'].dept.deptName + "</td>"
 				}
 				
-				data += "<td>" + list[i]['issuedOrder'] + "</td>";
-				data += "<td>" + list[i]['issuedDate'] + "</td>";
+				data += "<td align='center'>" + list[i]['issuedOrder'] + "</td>";
+				data += "<td align='center'>" + list[i]['issuedDate'] + "</td>";
+				data += "<td width='10%'  align='center'><button class='btn btn-primary' href='#' onclick=reasonModal('" + reason + "');>상세내용</td>";
 			}
 			
 			// 이전 버튼 활성화

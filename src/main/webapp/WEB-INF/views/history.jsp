@@ -34,9 +34,9 @@ form {
 		<!-- 교육 히스토리 리스트 출력 -->
 		<form id="search_form" action="/edu/history" method="post" class="form-inline d-flex justify-content-end">
 			<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
-			<select name="keyField" size="1" class="form-control form-control-sm">
+			<select name="keyField" id="keyField" size="1" class="form-control form-control-sm">
 				<option value="eduTitle">교육명</option>
-			</select> <input type="text" id="kwd" name="keyword" class="form-control form-cotrol-sm" style="margin: 10px"> 
+			</select> <input type="text" id="kwd" name="keyword" value="${pageInfo.keyword}" class="form-control form-cotrol-sm" style="margin: 10px"> 
 			<input type="submit" class="btn btn-outline-info btn-sm" value="찾기">
 		</form>
 		<br>
