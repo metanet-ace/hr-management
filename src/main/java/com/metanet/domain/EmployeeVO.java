@@ -1,6 +1,7 @@
 package com.metanet.domain;
 
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

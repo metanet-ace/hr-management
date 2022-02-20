@@ -10,19 +10,22 @@ $(document).ready(function() {
 	
 	$("#searchBtn1").on("click", function(e){
 		e.preventDefault();
-	
-		var empName = $("#empName").val();
-		getPage(1, empName);
+		
+		const keyword = $("#empName").val();
+		$("#searchEmp").val(keyword);
+		
+		getPage(1);
 	})
 	
 	$("#searchBtn2").on("click", function(e){
 		e.preventDefault();
 	
-		var begin = $("input[name=begin]").val();
-		var end = $("input[name=end]").val();
-		console.log(end);
-		const date = new Map([['시작일', begin], ['종료일', end]]);
-		getPage(1, date);
+		const begin = $("input[name=begin]").val();
+		const end = $("input[name=end]").val();
+		
+		$("#searchStart").val(begin);
+		$("#searchEnd").val(end);
+		getPage(1);
 	})
 	
 });
@@ -42,7 +45,7 @@ $(document).ready(function() {
 						<select id="listSize" class="form-control form-control-sm"
 							onchange="getPage(1)">
 							<option value="5">5 개</option>
-							<option value="15">10 개</option>
+							<option value="10">10 개</option>
 							<option value="20">20 개</option>
 						</select>
 					</div>
@@ -70,6 +73,11 @@ $(document).ready(function() {
 					</div>	
 								
 				</form>
+				
+				<!-- 검색어를 저장하기 위한 input -->
+				<input type="hidden" id="searchEmp" value="" />
+				<input type="hidden" id="searchStart" value="" />
+				<input type="hidden" id="searchEnd" value="" />
 			</div>
 		</div>
 		
@@ -123,7 +131,8 @@ $(document).ready(function() {
             Content body end
         ***********************************-->
 <script>
-function reasonModal(reason){
+function reasonModal(){
+	var reason = $("#why").val()
 	$(".modal-body").html(reason);
 	$("#reasonModal").modal("show");
 }
@@ -132,22 +141,32 @@ function closeBtn(){
 	$("#reasonModal").modal("hide");
 }
 
-function getPage(pageNum, keyword){
+function getPage(pageNum){
 	// 페이지 사이즈 정보 
 	var pageSize = $("#listSize option:selected").val();
-
-	if(keyword instanceof Map){
-		if(keyword.get('시작일') === '' || keyword.get('종료일') === ''){
-			alert("시작일과 종료일을 설정해주세요");
+	
+	// 검색 필드
+	var field = $("#field").val();
+	
+	// 검색타입
+	var empName = $("#searchEmp").val();
+	var start = $("#searchStart").val();
+	var end = $("#searchEnd").val();
+	
+	// 날짜 검색
+	if ( field == 'issuedDate'){
+		if(start == '' || end == ''){
+			alert('시작날짜와 종료날짜를 모두 입력해주세요');
+			return;
 		}
 		var data = {pageSize: pageSize, 
-					startDate: keyword.get('시작일'),
-					endDate: keyword.get('종료일')};
+					startDate: start,
+					endDate: end};
 	} else {
 		var data = {pageSize: pageSize, 
-					empName: keyword};
+					empName: empName};
 	}
-	
+		
 	$.ajax({
 		url: "/admin/emp/history/" + pageNum,
 		data: JSON.stringify(data),
@@ -160,33 +179,37 @@ function getPage(pageNum, keyword){
 			var block = "";
 			
 			// 테이블 정보
-			for(var i = 0; i < list.length; i++) {
-				var reason = list[i]['issuedContent'];
-				data += "<tr id='empHistoryList'>";
-				data += "<td align='center'>" + list[i]['emp'].empName + "</td>";
-				if(list[i]['emp'].pos.posName === list[i]['beforePos']) {
-					data += "<td colspan='2' align='center'>" + list[i]['beforePos'] + "</td>";
-				} else if (list[i]['beforePos'] === "-"){
-					data += "<td colspan='2' align='center'>" + "-" + "</td>";
-				} else {
-					data += "<td align='center'>" + list[i]['beforePos'] + "</td>";
-					data += "<td align='center'>" + list[i]['emp'].pos.posName + "</td>"
+			if(list == ''){
+				data += "<td colspan='8' align='center'>검색 결과가 없습니다.</td>";
+			} else {
+				for(var i = 0; i < list.length; i++) {
+					var reason = list[i]['issuedContent'];
+					data += "<tr id='empHistoryList'>";
+					data += "<td align='center'>" + list[i]['emp'].empName + "</td>";
+					if(list[i]['emp'].pos.posName === list[i]['beforePos']) {
+						data += "<td colspan='2' align='center'>" + list[i]['beforePos'] + "</td>";
+					} else if (list[i]['beforePos'] === "-"){
+						data += "<td colspan='2' align='center'>" + "-" + "</td>";
+					} else {
+						data += "<td align='center'>" + list[i]['beforePos'] + "</td>";
+						data += "<td align='center'>" + list[i]['emp'].pos.posName + "</td>"
+					}
+					
+					if(list[i]['beforeDept'] === list[i]['emp'].dept.deptName ){
+						data += "<td colspan='2' align='center'>" + list[i]['beforeDept'] + "</td>";
+					} else if(list[i]['beforeDept'] === "-") {
+						data += "<td colspan='2' align='center'>" + "-" + "</td>";
+					} else {
+						data += "<td align='center'>" + list[i]['beforeDept'] + "</td>";
+						data += "<td align='center'>" + list[i]['emp'].dept.deptName + "</td>"
+					}
+					
+					data += "<td align='center'>" + list[i]['issuedOrder'] + "</td>";
+					data += "<td align='center'>" + list[i]['issuedDate'] + "</td>";
+					data += "<td width='10%'  align='center'><button class='btn btn-primary' href='#' onclick=reasonModal();>상세내용</td>";
+					data += "<input type='hidden' id='why' value='"+ reason + "'/> "
 				}
-				
-				if(list[i]['beforeDept'] === list[i]['emp'].dept.deptName ){
-					data += "<td colspan='2' align='center'>" + list[i]['beforeDept'] + "</td>";
-				} else if(list[i]['beforeDept'] === "-") {
-					data += "<td colspan='2' align='center'>" + "-" + "</td>";
-				} else {
-					data += "<td align='center'>" + list[i]['beforeDept'] + "</td>";
-					data += "<td align='center'>" + list[i]['emp'].dept.deptName + "</td>"
-				}
-				
-				data += "<td align='center'>" + list[i]['issuedOrder'] + "</td>";
-				data += "<td align='center'>" + list[i]['issuedDate'] + "</td>";
-				data += "<td width='10%'  align='center'><button class='btn btn-primary' href='#' onclick=reasonModal('" + reason + "');>상세내용</td>";
 			}
-			
 			// 이전 버튼 활성화
 			if(!result['first']){
 				block += "<li class='page-item'><a class='page-link' href='javascript:getPage(" + 1 + ")'>처음</a></li>";

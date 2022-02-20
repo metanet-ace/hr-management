@@ -2,6 +2,7 @@ package com.metanet.domain;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -176,17 +176,15 @@ public class EmployeeServiceImpl {
 		empHisRepo.save(empHis);
 	}
 	
-	// 페이징 + 전체) 히스토리 리스트
-	public Page<EmpHistoryVO> getAllEmpHistory(Pageable pageable){
-		return empHisRepo.findAll(pageable);
-	}
 	// 페이징 + 조건) 히스토리 리스트
 	public Page<EmpHistoryVO> getEmpHistoryList(HashMap<String, String> data, Pageable pageable){
-		
-		if(data.get("empName") != null) {
+		System.out.println(data.get("empName"));
+		System.out.println("시작" + data.get("startDate"));
+	
+		if(data.get("empName") != "" && data.get("empName") != null ) {
 			return empHisRepo.findByEmpEmpNameContaining(data.get("empName"), pageable);
 		} else if (data.get("startDate") != null && data.get("endDate") != null) {
-			
+			System.out.println("dafsdfasdjkfhasldjkfhasdjlkf");
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			
 			try {
@@ -203,6 +201,33 @@ public class EmployeeServiceImpl {
 		return empHisRepo.findAll(pageable);
 	}
 	
+	// 페이징 + 조건) 퇴사자 리스트
+	public Page<EmployeeVO> getEmpRetireList(HashMap<String, String> data, Pageable pageable){
+		System.out.println(data.get("empName"));
+		if(data.get("empName") != "" && data.get("empName") != null) {
+			return empRepo.findByEmpNameContainingAndEmpRetdateIsNotNull(data.get("empName"), pageable);
+		} else if (data.get("startDate") != null && data.get("endDate") != null) {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			try {
+				Date startDate = sdf.parse(data.get("startDate"));
+				Date endDate = sdf.parse(data.get("endDate"));
+				// 종료일은 1일을 더해주어야 한다.
+				endDate.setDate(endDate.getDate()+1);
+				return empRepo.findByEmpRetdateBetweenAndEmpRetdateIsNotNull(startDate, endDate, pageable);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return empRepo.findAllByEmpRetdateIsNotNull(pageable);
+	}
+	
+	// 퇴사자 정보 출력
+	public Map<String, Object> getEmpRetireInfo(int empNo) {
+		return empMapper.findByEmpNoJoinHistory(empNo);
+	}
 	// 출근 시간 등록 
 	public EmpWorkingtimeVO insertStartTime(int empNo) {
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
@@ -301,4 +326,5 @@ public class EmployeeServiceImpl {
 		
 		return empMapper.findTotalTime(empNo);
 	}
+	
 }
