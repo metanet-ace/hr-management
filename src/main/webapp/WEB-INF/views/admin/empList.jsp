@@ -20,7 +20,7 @@ textarea {
 		$("#updateHumanResource").on("click", function(e) {
 			e.preventDefault();
 
-			if (confirm("정말로 변경하시겠습니까?") == true) {
+			if (confirm("변경 내용을 저장하시겠습니까?") == true) {
 
 				var array = [];
 
@@ -75,7 +75,7 @@ textarea {
 		$("#updateRetire").on("click", function(e){
 			e.preventDefault();
 			
-			if (confirm("정말로 변경하시겠습니까?") == true) {
+			if (confirm("변경 내용을 저장하시겠습니까?") == true) {
 
 				var array = [];
 

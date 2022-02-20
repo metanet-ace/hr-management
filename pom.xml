@@ -257,7 +257,7 @@
 					<webResources>
 						<resource>
 							<!-- 로컬 lib파일 경로 -->
-							<directory>${project.basedir}/local-repo</directory>
+							<directory>${project.lib.path}</directory>
 							<includes>
 								<include>barcodes-7.1.14.jar</include>
 								<include>font-asian-7.1.14.jar</include>

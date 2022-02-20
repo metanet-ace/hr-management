@@ -22,6 +22,7 @@
                             <li><a href="/admin/emp/deptList">부서 관리</a></li>
                    			<li><a href="/admin/emp">인사 이동</a></li>
                             <li><a href="/admin/emp/history">인사 이동 히스토리</a></li>
+                            <li><a href="/admin/emp/retire">퇴사자 관리</a></li>
                         </ul>
                     </li>
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i

@@ -214,6 +214,16 @@ public class EmployeeController {
 		return new ResponseEntity<>(empRetirePage, HttpStatus.OK);
 	}
 	
+	// 퇴사요청 취소 컨트롤러
+	@PostMapping(value="/admin/emp/retire/cancle", produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<String> cancleRetire(@RequestBody EmployeeVO emp){
+		int empNo = emp.getEmpNo();
+		empService.cancleRetire(empNo);
+		
+		return new ResponseEntity<>("success", HttpStatus.OK);
+	}
+	
 	// 출근 시간 등록 컨트롤러 
 	@PostMapping("/emp/recordTime")
 	@ResponseBody

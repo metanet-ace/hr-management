@@ -129,9 +129,22 @@ $(document).ready(function() {
             Content body end
         ***********************************-->
 <script>
-function reasonModal(reason){
-	$(".modal-body").html(reason);
-	$("#reasonModal").modal("show");
+function check(empNo){
+	if (confirm("퇴사 상태를 변경하시겠습니까?") == true) {
+		var data = {empNo: empNo};
+		$.ajax({
+			url: "/admin/emp/retire/cancle",
+			data: JSON.stringify(data),
+			type: "POST",
+			contentType : 'application/json',
+			success: function(result){
+				console.log(result)
+				window.location.reload();
+			}
+		});
+	} else {
+		
+	}
 }
 
 function closeBtn(){
@@ -187,7 +200,7 @@ function getPage(pageNum){
 				data += "<td align='center'>" + list[i][0]['empRetdate'] + "</td>";
 				data += "<td align='center'>"  + list[i][1] + "</td>";
 				data += "<td width= '20%' align='center'><button class='btn btn-primary' href='#' onclick=download(" + list[i][0]['empNo'] + ");>경력증명서 출력</td>";
-				data += "<td width='10%' align='center'><button class='btn btn-primary' href='#' onclick=reasonModal('" + "취소" + "');>취소</td>";
+				data += "<td width='10%' align='center'><button class='btn btn-primary' href='#' onclick=check('" + list[i][0]['empNo'] + "');>취소</td>";
 			}
 			
 			}

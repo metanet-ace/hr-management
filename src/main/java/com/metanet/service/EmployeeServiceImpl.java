@@ -228,6 +228,15 @@ public class EmployeeServiceImpl {
 	public Map<String, Object> getEmpRetireInfo(int empNo) {
 		return empMapper.findByEmpNoJoinHistory(empNo);
 	}
+	
+	// 퇴사 처리 취소
+	public EmployeeVO cancleRetire(int empNo) {
+		EmployeeVO emp = empRepo.findByEmpNo(empNo);
+		emp.setEmpRetdate(null);
+		
+		return empRepo.save(emp);
+	}
+	
 	// 출근 시간 등록 
 	public EmpWorkingtimeVO insertStartTime(int empNo) {
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);

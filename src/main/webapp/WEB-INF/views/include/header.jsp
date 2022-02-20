@@ -157,17 +157,14 @@
                                     <i class="mdi mdi-account"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item">
+                                    <a href="/emp/detail?empNo=${sessionEmp.empNo }" class="dropdown-item">
                                         <i class="icon-user"></i>
                                         <span class="ml-2">
                                         <sec:authorize access="isAuthenticated()">
                                         	<sec:authentication property="principal.username" />
                                         </sec:authorize>
+                                        <br/>${sessionEmp.empName}님
                                         </span>
-                                    </a>
-                                    <a href="./email-inbox.html" class="dropdown-item">
-                                        <i class="icon-envelope-open"></i>
-                                        <span class="ml-2">Inbox </span>
                                     </a>
                                     <a href="/logout" class="dropdown-item">
                                         <i class="icon-key"></i>
