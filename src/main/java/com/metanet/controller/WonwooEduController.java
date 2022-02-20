@@ -188,7 +188,8 @@ public class WonwooEduController {
 
 		return "/noticeDetail";
 	}
-
+	
+	//사원용 교육과정 업데이트 페이지
 	@GetMapping("/update")
 	public String eduUpdateView(Model model, HttpServletRequest request) {
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
@@ -197,13 +198,19 @@ public class WonwooEduController {
 		model.addAttribute("title", "교육 정보수정");
 		return "/admin/edu/update";
 	}
-
+	
+	//사원용 교육과정 업데이트 수행 페이지
 	@PostMapping("/update")
 	public String eduUpdateAction(@ModelAttribute("eduVO") EduVO eduVO, @Valid EduVO eduVO2, Errors errors,
-			@RequestParam MultipartFile uploadfile, FileDTO fileDTO, HttpServletRequest request, Model model)
+			@RequestParam MultipartFile uploadfile, FileDTO fileDTO,
+			HttpServletRequest request, Model model, LogVO logVO)
 			throws IllegalStateException, IOException {
-		// System.out.println(eduVO.getEduRefile());
-
+		
+		int empNo = Integer.parseInt(request.getParameter("empNo"));
+		logVO.setLogIp(Util.getUserIp(request));
+		logVO.setEmpNo(empNo);
+		logVO.setLogTarget("교육과정 수정");
+		
 		// 새로운 파일이 들어온다면
 		if (!uploadfile.isEmpty()) {
 
@@ -247,6 +254,8 @@ public class WonwooEduController {
 			}
 			model.addAttribute("title", "교육 정보수정");
 			wonwooEduService.eduUpdate(eduVO);
+			logVO.setLogDesc("교육 정보수정 파일(O)");
+			wonwooEduService.writeLog(logVO);
 			return "redirect:/edu/detail?edu_no=" + Integer.parseInt(request.getParameter("eduNo"));
 		} else {
 			if (errors.hasErrors()) {
@@ -262,6 +271,8 @@ public class WonwooEduController {
 			}
 			model.addAttribute("title", "교육 정보수정");
 			wonwooEduService.eduUpdateNoModifyFile(eduVO);
+			logVO.setLogDesc("교육 정보수정 파일(X)");
+			wonwooEduService.writeLog(logVO);
 			return "redirect:/edu/detail?edu_no=" + Integer.parseInt(request.getParameter("eduNo"));
 		}
 	}
@@ -278,8 +289,12 @@ public class WonwooEduController {
 	@PostMapping("/updateNotice")
 	public String updateNoticeAction(@ModelAttribute("noticeVO") NoticeVO noticeVO, @Valid NoticeVO noticeVO2,
 			Errors errors, @RequestParam MultipartFile uploadfile, FileDTO fileDTO, HttpServletRequest request,
-			Model model) throws IllegalStateException, IOException {
-
+			Model model, LogVO logVO) throws IllegalStateException, IOException {
+		
+		logVO.setLogIp(Util.getUserIp(request));
+		logVO.setEmpNo(noticeVO.getEmpNo());
+		logVO.setLogTarget("공지사항 수정");
+		
 		if (!uploadfile.isEmpty()) {
 			if (noticeVO.getNoticeFile() != null) {
 				String path = request.getSession().getServletContext().getRealPath("resources") + "\\noticeFiles";
@@ -319,6 +334,8 @@ public class WonwooEduController {
 			}
 			model.addAttribute("title", "공지사항 정보수정");
 			wonwooEduService.noticeUpdate(noticeVO);
+			logVO.setLogDesc("공지사항 정보수정(파일O)");
+			wonwooEduService.writeLog(logVO);
 			return "redirect:./noticeDetail?notice_no=" + Integer.parseInt(request.getParameter("noticeNo"));
 
 		} else {
@@ -335,12 +352,20 @@ public class WonwooEduController {
 			}
 			model.addAttribute("title", "공지사항 정보수정");
 			wonwooEduService.noticeUpdateNoModifyFile(noticeVO);
+			logVO.setLogDesc("공지사항 정보수정(파일X)");
+			wonwooEduService.writeLog(logVO);
 			return "redirect:./noticeDetail?notice_no=" + Integer.parseInt(request.getParameter("noticeNo"));
 		}
 	}
-
+	
+	//인사팀 교육과정 삭제
 	@GetMapping("/delete")
-	public String eduDelete(HttpServletRequest request) {
+	public String eduDelete(HttpServletRequest request, LogVO logVO) {
+		int empNo = Integer.parseInt(request.getParameter("empNo"));
+		logVO.setLogIp(Util.getUserIp(request));
+		logVO.setEmpNo(empNo);
+		logVO.setLogTarget("공지사항 삭제");
+		
 		// 해당경로 이전 파일 삭제
 		String eduRefile = request.getParameter("edu_refile");
 		System.out.println("eduRefile");
@@ -355,11 +380,18 @@ public class WonwooEduController {
 		}
 		int edu_no = Integer.parseInt(request.getParameter("edu_no"));
 		wonwooEduService.eduDelete(edu_no);
+		logVO.setLogDesc("공지사항 삭제 성공");
+		wonwooEduService.writeLog(logVO);
 		return "redirect:/edu/list";
 	}
-
+	
 	@GetMapping("/deleteNotice")
-	public String deleteNotice(HttpServletRequest request) {
+	public String deleteNotice(HttpServletRequest request, LogVO logVO) {
+		int empNo = Integer.parseInt(request.getParameter("empNo"));
+		logVO.setLogIp(Util.getUserIp(request));
+		logVO.setEmpNo(empNo);
+		logVO.setLogTarget("공지사항 삭제");
+		
 		// 해당경로 이전 파일 삭제
 		String noticeRefile = request.getParameter("notice_refile");
 		System.out.println(noticeRefile);
@@ -376,6 +408,8 @@ public class WonwooEduController {
 		}
 		int notice_no = Integer.parseInt(request.getParameter("notice_no"));
 		wonwooEduService.noticeDelete(notice_no);
+		logVO.setLogDesc("공지사항 삭제 성공");
+		wonwooEduService.writeLog(logVO);
 		return "redirect:/edu/notice";
 	}
 
@@ -479,10 +513,14 @@ public class WonwooEduController {
 
 	@PostMapping("/add")
 	public String eduAdd(@Valid EduVO eduVO, Errors errors, Model model, @RequestParam MultipartFile uploadfile,
-			FileDTO fileDTO) throws IllegalStateException, IOException {
+			FileDTO fileDTO,@RequestParam("empNo") String empNo, LogVO logVO, HttpServletRequest request) throws IllegalStateException, IOException {
+		
+		logVO.setLogIp(Util.getUserIp(request));
+		logVO.setEmpNo(Integer.parseInt(empNo));
+		logVO.setLogTarget("교육 과정 등록");
+		
 		if (!uploadfile.isEmpty()) {
 			String eduFile = uploadfile.getOriginalFilename();
-			System.out.println(eduFile);
 			eduVO.setEduFile(eduFile);
 
 			FileDTO dto = new FileDTO(UUID.randomUUID().toString(), uploadfile.getOriginalFilename(),
@@ -492,7 +530,6 @@ public class WonwooEduController {
 			uploadfile.transferTo(newFileName);
 
 			String eduRefile = newFileName.getName();
-			System.out.println(eduRefile);
 			eduVO.setEduRefile(eduRefile);
 
 			if (errors.hasErrors()) {
@@ -506,7 +543,8 @@ public class WonwooEduController {
 				return "/admin/edu/add";
 			}
 			wonwooEduService.eduAdd(eduVO);
-			System.out.println("교육 과정 추가");
+			logVO.setLogDesc("교육과정 등록 성공(파일O)");
+			wonwooEduService.writeLog(logVO);
 			return "redirect:/edu/list";
 
 		} else {
@@ -521,7 +559,8 @@ public class WonwooEduController {
 				return "/admin/edu/add";
 			}
 			wonwooEduService.eduAddNoFile(eduVO);
-			System.out.println("교육 과정 추가");
+			logVO.setLogDesc("교육과정 등록 성공(파일X)");
+			wonwooEduService.writeLog(logVO);
 			return "redirect:/edu/list";
 		}
 	}
@@ -541,7 +580,6 @@ public class WonwooEduController {
 		
 		logVO.setLogIp(Util.getUserIp(request));
 		logVO.setEmpNo(Integer.parseInt(empNo));
-		logVO.setLogWriter(empName);
 		logVO.setLogTarget("공지사항 등록");
 
 		if (!uploadfile.isEmpty()) {

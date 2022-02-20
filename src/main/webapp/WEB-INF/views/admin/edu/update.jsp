@@ -34,6 +34,7 @@
 							<div class="form-validation">
 								<form class="form-valide" action="/edu/update" method="post" onsubmit="return updateCheck()" enctype="multipart/form-data">
 									<input type="hidden" name="eduNo" value="${eduVO.eduNo}">
+									<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
 									<div class="row">
 										<div class="col-xl-6">
 											<div class="form-group row">

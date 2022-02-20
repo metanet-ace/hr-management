@@ -22,8 +22,6 @@
 							<div class="form-validation">
 								<form class="form-valide" action="./noticeAdd" method="post"
 									enctype="multipart/form-data">
-										<h1>${sessionEmp.empNo }</h1>
-										<h1>${sessionEmp.empName }</h1>
 									<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
 									<input type="hidden" name="empName" value="${sessionEmp.empName }">
 									<div class="row">
