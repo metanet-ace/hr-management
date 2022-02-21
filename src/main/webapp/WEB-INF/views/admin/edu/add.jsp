@@ -43,6 +43,8 @@ function checkStart(){
 						<div class="card-body">
 							<div class="form-validation">
 								<form class="form-valide" action="./add" method="post" enctype="multipart/form-data">
+									<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
+									<input type="hidden" name="empName" value="${sessionEmp.empName }">
 									<div class="row">
 										<div class="col-xl-6">
 											<div class="form-group row">

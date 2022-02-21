@@ -7,9 +7,9 @@
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
 
 <script type="text/javascript">
-	function del(no, fileName){
+	function del(no, fileName, empNo){
 		if(confirm("해당 교육과정을 삭제하시겠습니까?")){
-			location.href="/edu/delete?edu_no="+no+"&edu_refile="+fileName;
+			location.href="/edu/delete?edu_no="+no+"&edu_refile="+fileName+"&empNo="+empNo;
 		}
 	}
 	
@@ -151,7 +151,7 @@
 											<div class="form-group row">
 												<div class="col-lg-8 ml-auto">
 													<button onclick="update(${detail.eduNo})" class="btn btn-primary">수정</button>
-													<button onclick="del('${detail.eduNo}', '${detail.eduRefile}')" class="btn btn-primary">삭제</button>
+													<button onclick="del('${detail.eduNo}', '${detail.eduRefile}', '${sessionEmp.empNo}')" class="btn btn-primary">삭제</button>
 													<button type="button" onclick="location.href='/edu/list';" class="btn btn-primary">돌아가기</button>
 												</div>
 											</div>

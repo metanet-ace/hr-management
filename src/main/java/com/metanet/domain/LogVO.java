@@ -13,8 +13,6 @@ public class LogVO {
 	
 	private String logIp;
 	
-	private String logWriter;
-	
 	private String logDate;
 	
 	private String logTarget;

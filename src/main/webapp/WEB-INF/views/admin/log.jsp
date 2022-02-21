@@ -49,7 +49,6 @@ $(document).ready(function(){
 				<option value="">====</option>
 				<option value="logIp">아이피</option>
 				<option value="empNo">사원번호</option>
-				<option value="logWriter">기록자</option>
 				<option value="logDate">기록일</option>
 				<option value="logTarget">로그장소</option>
 			</select> <input type="text" id="kwd" name="keyword" value="${pageInfo.keyword}" class="form-control form-cotrol-sm" style="margin: 10px"> 
@@ -62,7 +61,6 @@ $(document).ready(function(){
 					<th>로그번호</th>
 					<th>아이피</th>
 					<th>사원번호</th>
-					<th>기록자</th>
 					<th>기록일</th>
 					<th>로그장소</th>
 					<th>로그내용</th>
@@ -76,8 +74,7 @@ $(document).ready(function(){
 					<tr>
 						<td>${list.logNo }</td>
 						<td>${list.logIp }</td>
-						<td>${list.empNo }</td>
-						<td>${list.logWriter}</td>
+						<td><a href="/emp/detail?empNo=${list.empNo }">${list.empNo }</a></td>
 						<td>${list.logDate}</td>
 						<td>${list.logTarget}</td>
 						<td>${list.logDesc }</td>

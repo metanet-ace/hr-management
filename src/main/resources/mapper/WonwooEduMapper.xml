@@ -40,7 +40,7 @@
 			<when test="keyField =='logIp' and keyword != null and keyword !=''">
 				SELECT *
 				FROM (SELECT rownum rnum, a.*
-				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, 
 				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
 				LOG_TARGET, LOG_DESC
 				FROM LOG WHERE LOG_IP like '%'||#{keyword}||'%'
@@ -50,29 +50,17 @@
 			<when test="keyField =='empNo' and keyword != null and keyword !=''">
 				SELECT *
 				FROM (SELECT rownum rnum, a.*
-				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO,
 				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
 				LOG_TARGET, LOG_DESC
 				FROM LOG WHERE EMP_NO like '%'||#{keyword}||'%'
 				ORDER BY LOG_NO DESC) a )
 				WHERE rnum BETWEEN #{startNum} AND #{endNum}
-			</when>
-			
-			<when test="keyField =='logWriter' and keyword != null and keyword !=''">
-				SELECT *
-				FROM (SELECT rownum rnum, a.*
-				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
-				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
-				LOG_TARGET, LOG_DESC
-				FROM LOG WHERE LOG_WRITER like '%'||#{keyword}||'%'
-				ORDER BY LOG_NO DESC) a )
-				WHERE rnum BETWEEN #{startNum} AND #{endNum}
-			</when>
-			
+			</when>			
 			<when test="keyField =='logDate' and keyword != null and keyword !=''">
 				SELECT *
 				FROM (SELECT rownum rnum, a.*
-				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, 
 				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
 				LOG_TARGET, LOG_DESC
 				FROM LOG WHERE LOG_DATE like '%'||#{keyword}||'%'
@@ -82,7 +70,7 @@
 			<when test="keyField =='logTarget' and keyword != null and keyword !=''">
 				SELECT *
 				FROM (SELECT rownum rnum, a.*
-				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, 
 				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
 				LOG_TARGET, LOG_DESC
 				FROM LOG WHERE LOG_TARGET like '%'||#{keyword}||'%'
@@ -92,7 +80,7 @@
 			<otherwise>
 				SELECT *
 				FROM (SELECT rownum rnum, a.*
-				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, LOG_WRITER,
+				FROM (SELECT LOG_NO, LOG_IP, EMP_NO,
 				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
 				LOG_TARGET, LOG_DESC
 				FROM LOG ORDER BY LOG_NO DESC) a )
@@ -129,11 +117,6 @@
 				WHERE emp_no like '%'||#{keyword}||'%'
 			</when>
 			<when
-				test="keyField =='logWriter' and keyword != null and keyword !=''">
-				WHERE log_writer like '%'||#{keyword}||'%'
-			</when>
-			
-			<when
 				test="keyField =='logDate' and keyword != null and keyword !=''">
 				WHERE log_date like '%'||#{keyword}||'%'
 			</when>
@@ -149,7 +132,6 @@
 		INSERT INTO LOG
 		VALUES (seq_log_no.nextval,
 		#{logIp},
-		#{logWriter},
 		sysdate,
 		#{logTarget},
 		#{logDesc},
