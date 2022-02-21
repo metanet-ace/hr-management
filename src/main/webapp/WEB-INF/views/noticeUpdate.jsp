@@ -57,7 +57,7 @@
 												</label>
 												<div class="col-lg-6">
 													<textarea class="form-control" id="noticeContent" name="noticeContent"
-														style="width: 1200px; height: 600px;"
+														style="width: 1200px; height: 500px;"
 														placeholder="내용을 입력해주세요.">${noticeVO.noticeContent }</textarea>
 													<span style="color: #ff0000;">${valid_noticeContent}</span>
 												</div>
@@ -78,108 +78,18 @@
                                                     			<input
 																type="file" class="form-control" id="uploadfile"
 																name="uploadfile">
+														<input type="hidden" name="noticeFile" value="${noticeVO.noticeFile}" />
 														</c:when>
 														<c:otherwise>
                                                     			${noticeVO.noticeFile}
                                                     			<input
 																type="file" class="form-control" id="uploadfile"
 																name="uploadfile">
+																<input type="hidden" name="noticeFile" value="${noticeVO.noticeFile}" />
 														</c:otherwise>
 													</c:choose>
 												</div>
 											</div>
-
-											<%-- <div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="eduLoc">장소
-													<span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduLoc"
-														name="eduLoc" value="${eduVO.eduLoc }" placeholder="장소를 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduLoc}</span>
-												</div>
-											</div>
-											<div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="eduTime">총
-													이수 시간 <span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduTime"
-														name="eduTime" value="${eduVO.eduTime }" placeholder="총 이수 시간을 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduTime}</span>
-												</div>
-											</div>
-											<div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="eduTeacher">담당
-													강사<span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduTeacher"
-														name="eduTeacher" value="${eduVO.eduTeacher }" placeholder="담당 강사를 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduTeacher}</span>
-												</div>
-											</div>
-										</div>
-										<div class="col-xl-6">
-											<div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="eduPeople">인원
-													<span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduPeople"
-														name="eduPeople" value="${eduVO.eduPeople }" placeholder="인원을 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduPeople}</span>
-												</div>
-											</div>
-											<div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="eduTarget">대상
-													<span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduTarget"
-														name="eduTarget" value="${eduVO.eduTarget }"placeholder="대상을 입력해주세요.">
-														<span style="color: #ff0000;">${valid_eduTarget}</span>
-												</div>
-											</div>
-											<div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="eduStart">시작일
-													<span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<input type="text" class="form-control" id="datepicker" value="${eduVO.eduStart }" name="eduStart">
-													<span style="color: #ff0000;">${valid_eduStart}</span>												
-												</div>
-											</div>
-											<div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="eduEnd">종료일
-													<span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduEnd" value="${eduVO.eduEnd }"
-														name="eduEnd">
-													<span style="color: #ff0000;">${valid_eduEnd}</span>
-												</div>
-											</div>
-											<div class="form-group row">
-												<label class="col-lg-4 col-form-label" for="eduCost">비용
-													<span class="text-danger">*</span>
-												</label>
-												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduCost" value="${eduVO.eduCost }"
-														name="eduCost" placeholder="비용을 입력해주세요.">
-													<span style="color: #ff0000;">${valid_eduCost}</span>
-												</div>
-											</div>
-											<div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="uploadfile">첨부파일
-                                                        <span class="text-danger">*</span>
-                                                    </label>
-                                                    <div class="col-lg-6">
-                                                        <input type="file" class="form-control" id="uploadfile" name="uploadfile">
-                                                    </div>
-                                                </div> --%>
-
-
 											<div class="form-group row">
 												<div class="col-lg-8 ml-auto">
 													<button type="submit" class="btn btn-primary">수정</button>
