@@ -47,7 +47,7 @@
   	         finalCode =finalCode+ makingColorCode[Math.floor(Math.random() * 16)];
   	      }
   	      return finalCode;
-  	   }
+  	   	}
   	</script>
         <!--**********************************
             Content body start
