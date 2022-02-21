@@ -38,7 +38,7 @@ $(document).ready(function(){
 						alert("패스워드가 틀렸습니다.");
 						return;
 					}else{
-						if(confirm("변경하시겠습니까?")){
+						if(confirm("변경하시겠습니까? 변경 후 로그인 페이지로 이동합니다.")){
 							$("#pwUpdateForm").submit();
 						}
 					}
