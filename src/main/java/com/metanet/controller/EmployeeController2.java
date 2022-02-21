@@ -107,6 +107,7 @@ public class EmployeeController2 {
 			// 사원등록 실패시, 입력 데이터를 유지
 			model.addAttribute("emp", emp);
 			model.addAttribute("dept", service.dept());
+			model.addAttribute("pos", service.pos());
 
 			// 유효성 통과 못한 필드와 메시지를 핸들링
 			Map<String, String> validatorResult = service.validateHandling(errors);
