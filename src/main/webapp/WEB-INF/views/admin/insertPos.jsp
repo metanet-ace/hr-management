@@ -6,67 +6,50 @@
 
 <script>
 $(document).ready(function(){
-	$("#empNoCheck").on("click", function(){
-		var no = $("#empNo").val();
+	$("#sub").on("click", function(){
+		var min = $("#posMinsal").val();
+		var max = $("#posMaxsal").val();
 		var pattern = /^[0-9]+$/;
 		
-		if($("#empNo").val() == ""){
-			alert("부서장을 입력해주세요.")
-			$("#empNo").focus();
+		if($("#posName").val()==""){
+			alert("직급명을 입력해주세요.");
+			$("#posName").focus;
+			
+			return false;
+		}
+		
+		else if($("#posMinsal").val()==""){
+			alert("최소연봉을 입력해주세요.");
+			$("#posMinsal").focus;
+			
+			return false
+		}
+		
+		else if($("#posMaxsal").val()==""){
+			alert("최대연봉을 입력해주세요.");
+			$("#posMaxsal").focus;
+			
+			return false
 		}
 		
 		
-		else if(!pattern.test(no)){
-			alert("부서장은 사원번호로, 숫자만 입력가능합니다.")
-			$("#empNo").focus().select();
+		
+		else if(!pattern.test(min)){
+			alert("최소연봉은 숫자만 입력가능합니다.")
+			$("#posMinsal").focus();
 			return;
+		}else if(!pattern.test(max)){
+			alert("최대연봉은 숫자만 입력가능합니다.")
+			$("#posMaxsal").focus();
+			return;
+		}
+		else if(confirm("직급을 등록하시겠습니까?")){
+			$("#insert").submit();
+			return false;
 		}
 	})
 })
 
-
-function fn_empNoCheck(){
-			$.ajax({
-				url: "/empNoCheck", 
-				type: "POST",
-				dataType: "JSON",
-				data: {"empNo" : $("#empNo").val()},
-				success: function(data){
-					if(data == 0){
-						$("empNoCheck").attr("value", "N");
-						alert("등록되어있지 않은 사원번호입니다.");
-						$("#empNo").focus();
-					}else if(data == 1){
-						$("#empNoCheck").attr("value", "Y");
-						alert("등록되어있는 사원번호입니다.");
-						$("#empNo").attr("readonly", "readonly");
-					}
-					
-					
-				}
-			})
-		}
-		
-function fnSubmit(){
-	if($("#deptName").val() == ""){
-		alert("부서명을 입력해주세요.");
-		$("#deptName").focus();
-		
-		return false;
-	}
-	
-	if($("#empNoCheck").val() != 'Y'){
-		alert("사원번호를 확인해주세요.");
-		$("#empNoCheck").focus();
-		
-		return false;
-	}
-	
-	if(confirm("부서를 등록하시겠습니까?")){
-		$("#insert").submit();
-		return false;
-	}
-}
 </script>
 
 <!--**********************************
@@ -99,41 +82,45 @@ function fnSubmit(){
 					</div>
 					<div class="card-body">
 						<div class="form-validation">
-							<form id="insert" class="form-valide" action="/admin/emp/insertDept"
-								method="post">
+							<form id="insert" class="form-valide"
+								action="/admin/emp/insertPos" method="post">
 								<div class="row">
 									<div class="col-xl-6">
 
 										<div class="form-group row">
-											<label class="col-lg-4 col-form-label" for="deptName">부서명<span
+											<label class="col-lg-4 col-form-label" for="posName">직급명<span
 												class="text-danger">*</span></label>
 											<div class="col-lg-6">
-												<input type="text" class="form-control" id="deptName"
-													name="deptName">
+												<input type="text" class="form-control" id="posName"
+													name="posName">
 											</div>
 										</div>
+
+
+
 									</div>
-
-
 									<div class="col-xl-6">
-
 										<div class="form-group row">
-											<label class="col-lg-4 col-form-label" for="empNo">부서장<span
+											<label class="col-lg-4 col-form-label" for="posMinsal">최소연봉<span
 												class="text-danger">*</span></label>
 											<div class="col-lg-6">
-												<input type="text" class="form-control" id="empNo"
-													name="empNo" placeholder="사원번호로 입력해주세요.">
-												<div class="col-lg-8 ml-auto">
-												<button type="button" class="btn btn-primary" id="empNoCheck"
-													name="empNoCheck" onclick="fn_empNoCheck(); return false;"
-													value="N">사원번호 확인</button></div>
-											</div>
+												<input type="text" class="form-control" id="posMinsal"
+													name="posMinsal">
+
+											</div>만 원
+										</div>
+										<div class="form-group row">
+											<label class="col-lg-4 col-form-label" for="posMaxsal">최대연봉<span
+												class="text-danger">*</span></label>
+											<div class="col-lg-6">
+												<input type="text" class="form-control" id="posMaxsal"
+													name="posMaxsal">
+											</div>만 원
 										</div>
 
 										<div class="form-group row">
 											<div class="col-lg-8 ml-auto">
-												<button type="button" class="btn btn-primary"
-													onclick="fnSubmit(); return false;">Submit</button>
+												<button type="button" class="btn btn-primary" id="sub" name="sub">Submit</button>
 											</div>
 										</div>
 									</div>
@@ -175,7 +162,6 @@ function fnSubmit(){
         ***********************************-->
 
 
-</div>
 <!--**********************************
         Main wrapper end
     ***********************************-->

@@ -4,22 +4,23 @@
 
 	<c:import url="/WEB-INF/views/include/header.jsp" />
 	<c:import url="/WEB-INF/views/include/sidebar.jsp" />
-	
-
 <script type="text/javascript">
 function update(no){
-	if(confirm("부서 수정 페이지로 이동하시겠습니까?")){
-		location.href="/admin/emp/updateDeptPage?deptNo="+no;
+	if(confirm("직급 수정 페이지로 이동하시겠습니까?")){
+		location.href="/admin/emp/updatePosPage?posNo="+no;
 	}
 }
-
 function del(no){
-	if(confirm("해당 부서를 삭제하시겠습니까?")){
-		location.href="/admin/emp/deleteDept?deptNo="+no;
+	console.log("1234567892108765432")
+
+	if(confirm("해당 직급을 삭제하시겠습니까?")){
+		location.href="/admin/emp/deletePos?posNo="+no;
 	}
 }
 
-</script>
+</script>	
+
+
         <!--**********************************
             Content body start
         ***********************************-->
@@ -33,18 +34,19 @@ function del(no){
                                 <div class="table-responsive1">
                                 <table class="table table-striped" border=1>
                                 
-                                	<h2>${dept.deptName}</h2>
+                                	<h2>${pos.posName}</h2>
                                         <thead>
                                             <tr align="center">
-                                                <th>부서장</th>
-                                                <th>부서장 사원번호</th>
+                                                <th>직급</th>
+                                                <th>최소연봉</th>
+                                                <th>최대연봉</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                               <tr align="center">
-                                                <td>${dept.empName }</td>
-                                          
-                                                <td>${dept.deptHead }</td>
+                                                <td>${pos.posName }</td>
+                                          		<td>${pos.posMinsal } 만 원</td>
+                                                <td>${pos.posMaxsal } 만 원</td>
                                             </tr>
                                        		
                                         </tbody>
@@ -55,29 +57,16 @@ function del(no){
                                     <table class="table table-striped" border=1>
                                         <thead>
                                             <tr align="center">
-                                                <th>부서원</th>
+                                                <th>사원</th>
                                                 <th>사원번호</th>
-                                                <th>부서 생성일</th>
-                                                <th>부서 수정일</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                             <c:forEach items="${deptDetail }" var="detail">
+                                             <c:forEach items="${posDetail }" var="detail">
                                               <tr align="center">
-                                              <c:if test="${detail.deptHead != detail.empNo }">
                                               <c:if test="${detail.empRetdate == null }">
                                                 <td>${detail.empName }</td>
                                                 <td>${detail.empNo }</td>
-                                                <td>${detail.deptDate }</td>
-                                                <td>
-                                                <c:if test="${detail.deptModify != null}">
-                                                ${detail.deptModify }
-                                                </c:if>
-                                                <c:if test="${detail.deptModify == null}">
-                                                ---
-                                                </c:if>
-                                                </td>
-                                                </c:if>
                                                 </c:if>
                                             </tr>
                                        		 </c:forEach> 
@@ -85,9 +74,8 @@ function del(no){
                                         </tbody>
                                         
                                     </table>
-                                     <button type="button" onClick="update(${dept.deptNo});" class="btn btn-primary">부서 수정</button>
-                                     <button type="button" onClick="del(${dept.deptNo});" class="btn btn-danger">부서 삭제</button>
-                                     
+                                     <button type="button" onClick="update(${pos.posNo});" class="btn btn-primary">직급 수정</button>
+                                     <button type="button" onClick="del(${pos.posNo});" class="btn btn-danger">직급 삭제</button>
                                 </div>
                                 
                             </div>
@@ -101,4 +89,5 @@ function del(no){
         <!--**********************************
             Content body end
         ***********************************-->
+
 <c:import url="/WEB-INF/views/include/footer.jsp" />
