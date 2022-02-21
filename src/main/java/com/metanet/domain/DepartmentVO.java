@@ -24,7 +24,7 @@ public class DepartmentVO {
 	
 	private String deptName;
 	
-	private int deptHead;
+	private Integer deptHead;
 	
 	@Transient
 	private Date deptDate; 

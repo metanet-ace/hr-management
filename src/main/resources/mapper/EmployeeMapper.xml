@@ -47,8 +47,8 @@
 		SELECT ew.WORK_START, ew.WORK_END, ew.WORK_TYPE
 		FROM EMP_WORKINGHOUR ew 
 		WHERE ew.EMP_NO = #{empNo}
-		AND ew.WORK_START BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD') AND TO_DATE(#{enddate}, 'YYYYMMDD')
-		OR ew.WORK_END BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD') AND TO_DATE(#{enddate}, 'YYYYMMDD')
+		AND (ew.WORK_START BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD') AND TO_DATE(#{enddate}, 'YYYYMMDD')
+		OR ew.WORK_END BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD') AND TO_DATE(#{enddate}, 'YYYYMMDD'))
 	</select>	
 	
 	<select id="findStartTime" resultType="com.metanet.domain.EmpWorkingtimeVO">

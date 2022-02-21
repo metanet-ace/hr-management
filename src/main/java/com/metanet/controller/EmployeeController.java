@@ -381,7 +381,7 @@ public class EmployeeController {
 	   
 	    String startTime = null;
 	    String endTime = null;
-	    
+
 	    if(workVo == null) {
 	    	// 출근을 아직 안눌렀다면 
 	    	model.addAttribute("totalTime", totalTimeStr);

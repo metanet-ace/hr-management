@@ -33,6 +33,6 @@ public interface EmployeeMapper {
 	public EmpWorkingtimeVO findEndTime(Map<String, Object> map);
 	
 	// 사원의 이번주 근무한 총 시간 출력하기
-	public int findTotalTime(int empNo);
+	public Integer findTotalTime(int empNo);
 	
 }

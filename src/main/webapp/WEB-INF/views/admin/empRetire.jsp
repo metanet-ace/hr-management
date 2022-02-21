@@ -137,6 +137,7 @@ function check(empNo){
 			data: JSON.stringify(data),
 			type: "POST",
 			contentType : 'application/json',
+			dataType: "text",
 			success: function(result){
 				console.log(result)
 				window.location.reload();
