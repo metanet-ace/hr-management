@@ -137,4 +137,10 @@ public class WonwooEduServiceImpl implements WonwooEduService {
 		wonwooEduMapper.writeLog(logVO);
 	}
 
+
+	@Override
+	public List<EduVO> empEduCalendarList(int empNo) {
+		return wonwooEduMapper.empEduCalendarList(empNo);
+	}
+
 }

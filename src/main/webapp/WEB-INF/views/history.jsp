@@ -40,7 +40,7 @@ form {
 			<input type="submit" class="btn btn-outline-info btn-sm" value="찾기">
 		</form>
 		<br>
-		
+		<div style="float:right" ><input type="button" class="btn btn-light" value="달력으로" onclick="location.href='/edu/empEduCalendar'"></div>
 		<table class="table table-striped" border=1>
 			<thead>
 				<tr>

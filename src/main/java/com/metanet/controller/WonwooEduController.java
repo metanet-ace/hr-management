@@ -30,9 +30,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.metanet.domain.EduVO;
+import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.FileDTO;
 import com.metanet.domain.LogVO;
 import com.metanet.domain.NoticeVO;
@@ -460,7 +463,7 @@ public class WonwooEduController {
 			PaginationDTO pageDto = new PaginationDTO(total, pdto);
 
 			model.addAttribute("paging", pageDto);
-			model.addAttribute("title", "사원 교육 히스토리");
+			model.addAttribute("title", "내 교육 정보");
 
 			return "/history";
 		}
@@ -566,7 +569,10 @@ public class WonwooEduController {
 	}
 
 	@GetMapping("/noticeAdd")
-	public String noticeAdd(Model model) {
+	public String noticeAdd(Model model, @SessionAttribute("sessionEmp") EmployeeVO emp) {
+		if(emp.getDept().getDeptNo() != 1) {
+			return "redirect:/signin";
+		}
 		model.addAttribute("title", "공지사항 등록");
 		return "/noticeAdd";
 	}
@@ -574,7 +580,10 @@ public class WonwooEduController {
 	@PostMapping("/noticeAdd")
 	public String noticeAdd(@Valid NoticeVO noticeVO, Errors errors, Model model,
 			@RequestParam MultipartFile uploadfile, HttpServletRequest request, @RequestParam("empNo") String empNo,
-			@RequestParam("empName") String empName, FileDTO fileDTO, LogVO logVO) {
+			@RequestParam("empName") String empName, FileDTO fileDTO, LogVO logVO, @SessionAttribute("sessionEmp") EmployeeVO emp) {
+		if(emp.getDept().getDeptNo() != 1) {
+			return "redirect:/signin";
+		}
 		noticeVO.setEmpNo(Integer.parseInt(empNo));
 		noticeVO.setNoticeWriter(empName);
 		
@@ -643,6 +652,14 @@ public class WonwooEduController {
 			logVO.setLogDesc("공지사항 등록 성공(파일X)");
 			wonwooEduService.writeLog(logVO);
 			return "redirect:/edu/notice";
-		}
+		}	
 	}
+	//사원 교육 과정 달력
+		@GetMapping("/empEduCalendar")
+		public String eduCalendar(Model model, @SessionAttribute("sessionEmp") EmployeeVO emp) {
+			model.addAttribute("title", "교육 일정 달력");
+			model.addAttribute("calList", wonwooEduService.empEduCalendarList(emp.getEmpNo()));
+			return "/empEduCalendar";
+		}
+	
 }
