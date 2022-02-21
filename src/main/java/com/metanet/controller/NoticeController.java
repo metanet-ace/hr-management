@@ -2,10 +2,6 @@ package com.metanet.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -14,12 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -42,6 +33,9 @@ import com.metanet.service.WonwooEduService;
 
 @Controller
 public class NoticeController {
+	
+	@Value("${spring.servlet.multipart.location}")
+	String filePath;
 	
 	@Autowired
 	WonwooEduService service;
@@ -126,22 +120,8 @@ public class NoticeController {
 			if (!uploadfile.isEmpty()) {
 				System.out.println("noticeVO: " + noticeVO.getNoticeFile());
 				if (noticeVO.getNoticeFile() != null) {
+					File file = new File(filePath + "\\" + noticeVO.getNoticeRefile());
 					
-					String folderPath = request.getSession().getServletContext().getRealPath("resources");
-					System.out.println("FolderPath : " + folderPath);
-					String root = folderPath + "\\noticeFiles";
-
-					File folder = new File(root);
-
-					if (!folder.exists()) {
-						folder.mkdirs();
-					}
-					
-					String path = request.getSession().getServletContext().getRealPath("resources") + "\\noticeFiles";
-					System.out.println("Path : " + path);
-
-					File file = new File(path + noticeVO.getNoticeRefile());
-
 					if (file.exists()) {
 						file.delete(); // 파일 삭제
 					}
@@ -198,27 +178,6 @@ public class NoticeController {
 			}
 		}
 		
-		@GetMapping("/downloadNoticeFile")
-		public ResponseEntity<Resource> downloadNoticeFile(@ModelAttribute FileDTO dto, HttpServletRequest request)
-				throws IOException {
-			String path = request.getSession().getServletContext().getRealPath("resources");
-			System.out.println("Path : " + path);
-			String root = path + "\\noticeFiles";
-
-			Path Realpath = Paths.get(root + "/" + dto.getUuid() + "_" + dto.getFileName());
-			String contentType = Files.probeContentType(Realpath);
-
-			HttpHeaders headers = new HttpHeaders();
-
-			headers.setContentDisposition(
-					ContentDisposition.builder("attachment").filename(dto.getFileName(), StandardCharsets.UTF_8).build());
-			headers.add(HttpHeaders.CONTENT_TYPE, contentType);
-
-			Resource resource = new InputStreamResource(Files.newInputStream(Realpath));
-			return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-
-		}
-		
 		@GetMapping("/noticeAdd")
 		public String noticeAdd(Model model, @SessionAttribute("sessionEmp") EmployeeVO emp) {
 			if(emp.getDept().getDeptNo() != 1) {
@@ -231,7 +190,7 @@ public class NoticeController {
 		@PostMapping("/noticeAdd")
 		public String noticeAdd(@Valid NoticeVO noticeVO, Errors errors, Model model,
 				@RequestParam MultipartFile uploadfile, HttpServletRequest request, @RequestParam("empNo") String empNo,
-				@RequestParam("empName") String empName, FileDTO fileDTO, LogVO logVO, @SessionAttribute("sessionEmp") EmployeeVO emp) {
+				@RequestParam("empName") String empName, FileDTO fileDTO, LogVO logVO, @SessionAttribute("sessionEmp") EmployeeVO emp) throws IllegalStateException, IOException {
 			if(emp.getDept().getDeptNo() != 1) {
 				return "redirect:/signin";
 			}
@@ -243,35 +202,19 @@ public class NoticeController {
 			logVO.setLogTarget("공지사항 등록");
 
 			if (!uploadfile.isEmpty()) {
-				// 저장할 경로 가져오기
-				String path = request.getSession().getServletContext().getRealPath("resources");
-				System.out.println("Path : " + path);
-				String root = path + "\\noticeFiles";
-
-				File file = new File(root);
-
-				if (!file.exists()) {
-					file.mkdirs();
-				}
-
+				
 				String noticeFile = uploadfile.getOriginalFilename();
 				noticeVO.setNoticeFile(noticeFile);
 
 				FileDTO dto = new FileDTO(UUID.randomUUID().toString(), noticeFile, uploadfile.getContentType());
 				File newFileName = new File(dto.getUuid() + "_" + dto.getFileName());
-				File changeFile = new File(root + "\\" + newFileName.getName());
+				
+				uploadfile.transferTo(newFileName);
 
-				try {
-					uploadfile.transferTo(changeFile);
-					String noticeRefile = newFileName.getName();
-					noticeVO.setNoticeRefile(noticeRefile);
-
-					System.out.println("파일 업로드 성공");
-				} catch (IllegalStateException | IOException e) {
-					System.out.println("파일 업로드 실패");
-					e.printStackTrace();
-				}
-
+				String noticeRefile = newFileName.getName();
+				System.out.println(noticeRefile);
+				noticeVO.setNoticeRefile(noticeRefile);
+				
 				if (errors.hasErrors()) {
 					// 공지사항 등록 실패시, 입력 데이터를 유지
 					model.addAttribute("noticeVO", noticeVO);
@@ -317,11 +260,8 @@ public class NoticeController {
 			String noticeRefile = request.getParameter("notice_refile");
 			System.out.println(noticeRefile);
 			if (noticeRefile != null) {
-				String path = request.getSession().getServletContext().getRealPath("resources");
-				System.out.println("Path : " + path);
-				String root = path + "\\noticeFiles";
-
-				File file = new File(root + "\\" + noticeRefile);
+				
+				File file = new File(filePath + "\\" + noticeRefile);
 
 				if (file.exists()) {
 					file.delete(); // 파일 삭제
