@@ -49,6 +49,7 @@ $(document).ready(function(){
 				type="submit" value="찾기">
 		</form>
 		<br>
+		<div style="float:right" ><input type="button" class="btn btn-light" value="달력으로" onclick="location.href='/edu/calendar'"></div>
 		<table class="table table-striped" border=1>
 			<thead>
 				<tr>

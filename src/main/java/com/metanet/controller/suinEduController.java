@@ -44,6 +44,7 @@ public class suinEduController {
 		service.eduProgress();
 	}
 	
+	//등록된 교육 과정 목록
 	@RequestMapping(value={"/list", "/list/{pageNum}", "/list/{pageNum}/{keyField}/{keyword}"})
 	public String eduList(@PathVariable(value = "pageNum", required = false) Integer p,
 						  @PathVariable(value = "keyField", required = false) String keyField,
@@ -78,12 +79,13 @@ public class suinEduController {
 		PaginationDTO pageDto = new PaginationDTO(total, pdto);
 
 		model.addAttribute("paging", pageDto);
-		model.addAttribute("title", "교육 전체리스트");
+		model.addAttribute("title", "교육 목록");
 		model.addAttribute("keyField", keyField);
 		model.addAttribute("keyword", keyword);
 		return "admin/edu/list";
 	}
 	
+	//교육 인원 배정 페이지 출력 관련
 	@RequestMapping(value={"/allocation/{eduNo}", "/allocation/{eduNo}/{pageNum}", "/allocation/{eduNo}/{pageNum}/{keyField}/{keyword}"})
 	public String eduAllocation(@PathVariable("eduNo") int eduNo,
 								@PathVariable(value = "pageNum", required = false) Integer p,
@@ -126,6 +128,7 @@ public class suinEduController {
         return "/admin/edu/allocation";
 	}
 	
+	//교육 인원 배정
 	@ResponseBody
 	@PostMapping("/allocation")
 	public void eduAllocCheck(@RequestBody Map<String, Object> param) {
@@ -160,9 +163,6 @@ public class suinEduController {
 		// 페이지 관련 정보
 		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
 		model.addAttribute("pageInfo", pdto);
-
-		// 페이징 처리된 리스트(쿼리에서 쓰임/ 현재 페이지 넘버와 키워드 보내줌)
-		//model.addAttribute("list", service.getEduHistoryList(pdto));
 		
 		map.put("keyField", keyField);
 		map.put("keyword", keyword);
@@ -175,10 +175,11 @@ public class suinEduController {
 		model.addAttribute("eduHistoryList", service.getEduHistoryList(pdto));
 		model.addAttribute("keyField", keyField);
 		model.addAttribute("keyword", keyword);
-		model.addAttribute("title","교육 이수사항 조회");
+		model.addAttribute("title","교육 진행 관리");
 		return "/admin/edu/history";
 	}
 	
+	//교육 점수 등록
 	@ResponseBody
 	@PostMapping("/score")
 	public void eduScore(@RequestBody Map<String, String[]> map) {
@@ -195,4 +196,13 @@ public class suinEduController {
 		System.out.println(list);
 		service.eduScoreUpdate(list);
 	}
+	
+	//교육 과정 달력
+	@GetMapping("/calendar")
+	public String eduCalendar(Model model) {
+		model.addAttribute("title", "교육 일정 달력");
+		model.addAttribute("calList", service.eduCalendarList());
+		return "/admin/edu/eduCalendar";
+	}
+	
 }
