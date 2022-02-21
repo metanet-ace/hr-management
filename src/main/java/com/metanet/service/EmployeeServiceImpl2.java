@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO2;
+import com.metanet.domain.PositionVO;
 import com.metanet.persistence.EmployeeMapper2;
 
 @Service
@@ -130,5 +131,53 @@ public class EmployeeServiceImpl2 implements EmployeeService2 {
 	@Override
 	public int deleteDept(int deptNo) {
 		return empMapper.deleteDept(deptNo);
+	}
+	
+	//직급리스트
+	@Override
+	public List<PositionVO> posList(){
+		return empMapper.posList();
+	}
+	
+	//직급이름, 번호 불러오기
+	@Override
+	public List<PositionVO> pos(){
+		return empMapper.pos();
+	}
+	
+	//직급추가(인사팀)
+	@Override
+	public void insertPos(PositionVO pos) {
+		empMapper.insertPos(pos);
+	}
+	
+	//직급상세(연봉)
+	@Override
+	public PositionVO selectSal(int posNo) {
+		return empMapper.selectSal(posNo);
+	}
+	
+	//직급상세(사원)
+	@Override
+	public List<PositionVO> selectPos(int posNo){
+		return empMapper.selectPos(posNo);
+	}
+	
+	//직급수정(인사팀)
+	@Override
+	public void updatePos(PositionVO pos) {
+		empMapper.updatePos(pos);
+	}
+	
+	//직급 삭제 전 사원직급0번이동
+	@Override
+	public int empPos(EmployeeVO2 emp) {
+		return empMapper.empPos(emp);
+	}
+	
+	//직급삭제
+	@Override
+	public int deletePos(int posNo) {
+		return empMapper.deletePos(posNo);
 	}
 }

@@ -8,6 +8,7 @@ import org.springframework.validation.Errors;
 import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO2;
+import com.metanet.domain.PositionVO;
 
 public interface EmployeeService2 {
 	public int insertEmp(EmployeeVO2 emp); // 사원등록(인사팀)
@@ -28,4 +29,13 @@ public interface EmployeeService2 {
 	
 	public int empDept(EmployeeVO2 emp);	//부서 삭제 전 사원들의 부서이동
 	public int deleteDept(int deptNo);	//부서삭제
+	
+	public List<PositionVO> posList();	// 직급리스트조회(인사팀)
+	public List<PositionVO> pos();	//직급이름, 번호 불러오기
+	public void insertPos(PositionVO pos);	//직급추가(인사팀)
+	public PositionVO selectSal(int posNo);	//직급상세(연봉)
+	public List<PositionVO> selectPos(int posNo);	//직급상세(사원)
+	public void updatePos(PositionVO pos);	//직급수정(인사팀)
+	public int empPos(EmployeeVO2 emp);	//직급 삭제 전 사원들 직급0번이동
+	public int deletePos(int posNo);	//직급삭제
 }

@@ -210,85 +210,14 @@
                                                     <label class="col-lg-4 col-form-label" for="posNo">직급<span
                                                             class="text-danger">*</span></label>
                                                     <div class="col-lg-6">
-                                                    <c:choose>
-                                                      <c:when test="${emp.posNo eq 1}">
-                                                        <select class="form-control" id="posNo" name="posNo" >
-                                                            <option value="">직급을 선택해주세요</option>
-                                                            <option value=1 selected>사원</option>
-                                                            <option value=2>대리</option>
-                                                            <option value=3>과장</option>
-                                                            <option value=4>차장</option>
-                                                            <option value=5>부장</option>
-                                                            <option value=6>사장</option>
+                                                    
+                                                        <select class="form-control" id="posNo" name="posNo">
+                                                        	
+                                                            <option value="">직급은 선택해주세요</option>
+                                                            <c:forEach items="${pos }" var="pos">
+                                                            <option value="${pos.posNo }" <c:if test="${pos.posNo eq emp.posNo}">selected</c:if>>${pos.posName }</option>
+                                                            </c:forEach>
                                                         </select>
-                                                      </c:when>
-                                                      <c:when test="${emp.posNo eq 2}">
-                                                        <select class="form-control" id="posNo" name="posNo" >
-                                                            <option value="">직급을 선택해주세요</option>
-                                                            <option value=1>사원</option>
-                                                            <option value=2 selected>대리</option>
-                                                            <option value=3>과장</option>
-                                                            <option value=4>차장</option>
-                                                            <option value=5>부장</option>
-                                                            <option value=6>사장</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:when test="${emp.posNo eq 3}">
-                                                        <select class="form-control" id="posNo" name="posNo" >
-                                                            <option value="">직급을 선택해주세요</option>
-                                                            <option value=1>사원</option>
-                                                            <option value=2>대리</option>
-                                                            <option value=3 selected>과장</option>
-                                                            <option value=4>차장</option>
-                                                            <option value=5>부장</option>
-                                                            <option value=6>사장</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:when test="${emp.posNo eq 4}">
-                                                        <select class="form-control" id="posNo" name="posNo" >
-                                                            <option value="">직급을 선택해주세요</option>
-                                                            <option value=1>사원</option>
-                                                            <option value=2>대리</option>
-                                                            <option value=3>과장</option>
-                                                            <option value=4 selected>차장</option>
-                                                            <option value=5>부장</option>
-                                                            <option value=6>사장</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:when test="${emp.posNo eq 5}">
-                                                        <select class="form-control" id="posNo" name="posNo" >
-                                                            <option value="">직급을 선택해주세요</option>
-                                                            <option value=1>사원</option>
-                                                            <option value=2>대리</option>
-                                                            <option value=3>과장</option>
-                                                            <option value=4>차장</option>
-                                                            <option value=5 selected>부장</option>
-                                                            <option value=6>사장</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:when test="${emp.posNo eq 6}">
-                                                        <select class="form-control" id="posNo" name="posNo" >
-                                                            <option value="">직급을 선택해주세요</option>
-                                                            <option value=1>사원</option>
-                                                            <option value=2>대리</option>
-                                                            <option value=3>과장</option>
-                                                            <option value=4>차장</option>
-                                                            <option value=5>부장</option>
-                                                            <option value=6 selected>사장</option>
-                                                        </select>
-                                                      </c:when>
-                                                      <c:otherwise>
-                                                        <select class="form-control" id="posNo" name="posNo" >
-                                                            <option value="">직급을 선택해주세요</option>
-                                                            <option value=1>사원</option>
-                                                            <option value=2>대리</option>
-                                                            <option value=3>과장</option>
-                                                            <option value=4>차장</option>
-                                                            <option value=5>부장</option>
-                                                            <option value=6>사장</option>
-                                                        </select>
-                                                      </c:otherwise>
-                                                    </c:choose>
                                                         <span style="color: #ff0000;">${valid_posNo}</span>
                                                     </div>
                                                 </div>

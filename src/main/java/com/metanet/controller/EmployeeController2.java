@@ -30,6 +30,7 @@ import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.EmployeeVO2;
 import com.metanet.domain.PasswordVO;
+import com.metanet.domain.PositionVO;
 import com.metanet.service.EmployeeService2;
 
 @Controller
@@ -46,6 +47,7 @@ public class EmployeeController2 {
 	public String insertEmployeePage(Model model) {
 		model.addAttribute("title", "사원등록 페이지");
 		model.addAttribute("dept", service.dept());
+		model.addAttribute("pos", service.pos());
 		return "/admin/insertEmp";
 	}
 
@@ -362,21 +364,21 @@ public class EmployeeController2 {
 	@PostMapping("/admin/emp/updateDept")
 	public String updateDept(DeptVO dept, int empNo, Model model) {
 		int empNoResult = service.empNoCheck(empNo);
-		
+
 		try {
-			if(empNoResult == 0) {
+			if (empNoResult == 0) {
 				return "/admin/updateDept";
-			}else if(empNoResult == 1) {
+			} else if (empNoResult == 1) {
 				service.updateDept(dept);
 				return "redirect:/admin/emp/deptList";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return "redirect:/";
 	}
-	
+
 	// 부서삭제(삭제 전 부서0번이동)
 	@GetMapping("/admin/emp/deleteDept")
 	public String deptDelete(@RequestParam("deptNo") int deptNo, EmployeeVO2 emp, HttpServletRequest request) {
@@ -384,6 +386,71 @@ public class EmployeeController2 {
 		service.deleteDept(deptNo);
 
 		return "redirect:/admin/emp/deptList";
-			
+
+	}
+
+	// 직급리스트조회(인사팀)
+	@GetMapping("/admin/emp/posList")
+	public String posList(Model model, HttpServletRequest request) {
+		model.addAttribute("posList", service.posList());
+		model.addAttribute("title", "직급 리스트");
+
+		return "/admin/posList";
+	}
+
+	// 직급등록페이지 이동(인사팀)
+	@GetMapping("/admin/emp/insertPosPage")
+	public String insertPosPage(Model model) {
+		model.addAttribute("title", "직급등록 페이지");
+
+		return "/admin/insertPos";
+	}
+
+	// 직급등록(인사팀)
+	@PostMapping("/admin/emp/insertPos")
+	public String insertPos(PositionVO pos, Model model) {
+		service.insertPos(pos);
+
+		return "redirect:/admin/emp/posList";
+	}
+
+	// 직급 상세정보(인사팀)
+	@GetMapping("/admin/emp/posDetail")
+	public String selectPosition(@RequestParam("posNo") int posNo, Model model) {
+		List<PositionVO> listPos = new ArrayList<PositionVO>();
+		listPos = service.selectPos(posNo);
+		PositionVO pos = service.selectSal(posNo);
+		model.addAttribute("pos", pos);
+		model.addAttribute("posDetail", listPos);
+		model.addAttribute("title", pos.getPosName() + " 상세보기");
+
+		return "/admin/posDetail";
+	}
+
+	// 직급 수정페이지이동(인사팀)
+	@GetMapping("/admin/emp/updatePosPage")
+	public String updatePosPage(@RequestParam("posNo") int posNo, Model model) {
+		PositionVO pos = service.selectSal(posNo);
+		model.addAttribute("pos", pos);
+		model.addAttribute("title", pos.getPosName() + " 수정페이지");
+
+		return "/admin/updatePos";
+	}
+
+	// 직급 수정(인사팀)
+	@PostMapping("/admin/emp/updatePos")
+	public String updatePos(PositionVO pos, Model model) {
+		service.updatePos(pos);
+		return "redirect:/admin/emp/posDetail?posNo=" + pos.getPosNo();
+	}
+
+	// 직급삭제(삭제 전 직급0번이동)
+	@GetMapping("/admin/emp/deletePos")
+	public String posDelete(@RequestParam("posNo") int posNo, EmployeeVO2 emp, HttpServletRequest request) {
+		service.empPos(emp);
+		service.deletePos(posNo);
+
+		return "redirect:/admin/emp/posList";
+
 	}
 }
