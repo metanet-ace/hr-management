@@ -21,11 +21,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.metanet.domain.EduHistoryVO;
 import com.metanet.domain.EduVO;
+import com.metanet.domain.EmployeeVO;
+import com.metanet.domain.LogVO;
 import com.metanet.domain.PageDTO;
 import com.metanet.domain.PaginationDTO;
+import com.metanet.persistence.Util;
 import com.metanet.service.WonwooEduService;
 import com.metanet.service.suinEduService;
 
@@ -37,9 +41,11 @@ public class suinEduController {
 	@Autowired
 	private suinEduService service;
 	
+	@Autowired
+	private WonwooEduService logService;
+	
 	@Scheduled(cron="0 0 0 * * ?", zone="Asia/Seoul")
 	public void schedulerTest() throws ParseException {
-		System.out.println("Scheduler Test..." + new Date());
 		service.eduAttendance();
 		service.eduProgress();
 	}
@@ -131,10 +137,14 @@ public class suinEduController {
 	//교육 인원 배정
 	@ResponseBody
 	@PostMapping("/allocation")
-	public void eduAllocCheck(@RequestBody Map<String, Object> param) {
-		System.out.println("empNo"+param.get("empNo"));
-		System.out.println("eduNo"+param.get("eduNo"));
+	public void eduAllocCheck(@RequestBody Map<String, Object> param, HttpServletRequest request, 
+			LogVO log, @SessionAttribute("sessionEmp") EmployeeVO emp) {
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(emp.getEmpNo());
+		log.setLogTarget("교육인원 할당");
+		log.setLogDesc("교육번호: " +param.get("eduNo") +" 배정된 사원: "+param.get("empNo"));
 		service.eduHistoryAdd(param);
+		logService.writeLog(log);
 	}
 	
 	@RequestMapping(value={"/admin/history", "/admin/history/{pageNum}", "/admin/history/{pageNum}/{keyField}/{keyword}"})
@@ -143,7 +153,6 @@ public class suinEduController {
 										  @PathVariable(value="keyword", required=false) String keyword,
 										  Model model, HttpServletRequest request) {
 		Map<String, String> map = new HashMap<String, String>();
-		System.out.println("keyField: " + keyField +" keyword: " + keyword);
 		
 		if(request.getParameter("keyField") != null) {
 			keyField = request.getParameter("keyField");
@@ -158,8 +167,6 @@ public class suinEduController {
 		}
 		model.addAttribute("tempPageNum", pageNum);
 
-		System.out.println(keyField);
-		System.out.println(keyword);
 		// 페이지 관련 정보
 		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
 		model.addAttribute("pageInfo", pdto);
@@ -182,19 +189,25 @@ public class suinEduController {
 	//교육 점수 등록
 	@ResponseBody
 	@PostMapping("/score")
-	public void eduScore(@RequestBody Map<String, String[]> map) {
-		System.out.println(map.get("score"));
-		System.out.println(map.get("eduHisno"));
-		System.out.println("map.isEmpty(): "+map.isEmpty());
+	public void eduScore(@RequestBody Map<String, String[]> map, HttpServletRequest request, 
+			LogVO log, @SessionAttribute("sessionEmp") EmployeeVO emp) {
+		
 		List<EduHistoryVO> list = new ArrayList<EduHistoryVO>();
+		Map<String, String> logData = new HashMap<String, String>();
 		for(int i = 0; i < map.get("score").length; i++) {
 			EduHistoryVO vo = new EduHistoryVO();
 			vo.setEduHisno(Integer.parseInt(map.get("eduHisno")[i]));
 			vo.setScore(map.get("score")[i]);
 			list.add(vo);
+			logData.put("교육 등록 번호: "+map.get("eduHisno")[i], "점수: "+map.get("score")[i]);
 		}
-		System.out.println(list);
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(emp.getEmpNo());
+		log.setLogTarget("교육 점수 입력");
+		log.setLogDesc(""+logData);
+		logService.writeLog(log);
 		service.eduScoreUpdate(list);
+		
 	}
 	
 	//교육 과정 달력
