@@ -4,10 +4,29 @@
 
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
+
 <!DOCTYPE html>
 <html>
-<head>
-</head>
+<script type="text/javascript">
+let now = new Date();
+let year =  now.getFullYear();
+let month = now.getMonth()+1;
+let date = now.getDate();
+var today = new Date(year+'-'+ month +'-'+ date);
+
+function checkStart(){
+	start = new Date($('#eduStart').val());
+	if(start.valueOf() < today.valueOf()){
+		alert("교육 시작일은 현재 날짜 이후만 가능합니다.");
+		$("#eduStart").val('');
+	}else {
+		$("#eduEnd").attr("min",$('#eduStart').val());
+		$("#eduEnd").val('');
+		$("#eduEnd").attr("readonly",false);
+	}
+}
+</script>
+
 <body>
 	<!--**********************************
             Content body start
@@ -23,7 +42,9 @@
 						</div>
 						<div class="card-body">
 							<div class="form-validation">
-								<form class="form-valide" action="/edu/add" method="post">
+								<form class="form-valide" action="./add" method="post" enctype="multipart/form-data">
+									<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
+									<input type="hidden" name="empName" value="${sessionEmp.empName }">
 									<div class="row">
 										<div class="col-xl-6">
 											<div class="form-group row">
@@ -32,7 +53,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTitle"
-														name="eduTitle" placeholder="교육명">
+														name="eduTitle" value="${eduVO.eduTitle }" placeholder="교육명을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTitle}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -40,9 +62,8 @@
 													상세 <span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<textarea class="form-control" id="eduDesc"
-														name="eduDesc" rows="5"
-														placeholder=""></textarea>
+													<textarea class="form-control" id="eduDesc" name="eduDesc" rows="5" placeholder="교육 상세를 입력해주세요.">${eduVO.eduDesc }</textarea>
+														<span style="color: #ff0000;">${valid_eduDesc}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -51,7 +72,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduLoc"
-														name="eduLoc" placeholder="장소">
+														name="eduLoc" value="${eduVO.eduLoc }" placeholder="장소를 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduLoc}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -60,7 +82,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTime"
-														name="eduTime" placeholder="총이수시간">
+														name="eduTime" value="${eduVO.eduTime }" placeholder="총 이수 시간을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTime}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -69,7 +92,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTeacher"
-														name="eduTeacher" placeholder="교육 상세">
+														name="eduTeacher" value="${eduVO.eduTeacher }" placeholder="담당 강사를 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTeacher}</span>
 												</div>
 											</div>
 										</div>
@@ -80,7 +104,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduPeople"
-														name="eduPeople" placeholder="인원">
+														name="eduPeople" value="${eduVO.eduPeople }" placeholder="인원을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduPeople}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -89,7 +114,8 @@
 												</label>
 												<div class="col-lg-6">
 													<input type="text" class="form-control" id="eduTarget"
-														name="eduTarget" placeholder="대상">
+														name="eduTarget" value="${eduVO.eduTarget }"placeholder="대상을 입력해주세요.">
+														<span style="color: #ff0000;">${valid_eduTarget}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -97,8 +123,9 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduStart"
-															name="eduStart">												
+													<input type="date" class="form-control" id="eduStart" value="${eduVO.eduStart }"
+															name="eduStart" onchange="checkStart();">
+													<span style="color: #ff0000;">${valid_eduStart}</span>												
 												</div>
 											</div>
 											<div class="form-group row">
@@ -106,8 +133,9 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="date" class="form-control" id="eduEnd"
-														name="eduEnd">
+													<input type="date" class="form-control" id="eduEnd" value="${eduVO.eduEnd }"
+														name="eduEnd" readonly="readonly">
+													<span style="color: #ff0000;">${valid_eduEnd}</span>
 												</div>
 											</div>
 											<div class="form-group row">
@@ -115,15 +143,25 @@
 													<span class="text-danger">*</span>
 												</label>
 												<div class="col-lg-6">
-													<input type="text" class="form-control" id="eduCost"
-														name="eduCost" placeholder="비용">
+													<input type="text" class="form-control" id="eduCost" value="${eduVO.eduCost }"
+														name="eduCost" placeholder="비용을 입력해주세요.">
+													<span style="color: #ff0000;">${valid_eduCost}</span>
 												</div>
 											</div>
+											<div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="uploadfile">첨부파일
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6">
+                                                        <input type="file" class="form-control" id="uploadfile" name="uploadfile">
+                                                    </div>
+                                                </div>
 
 
 											<div class="form-group row">
 												<div class="col-lg-8 ml-auto">
 													<button type="submit" class="btn btn-primary">등록</button>
+													<button type="button" onclick="location.href='./list';" class="btn btn-primary">취소</button>
 												</div>
 											</div>
 										</div>

@@ -4,21 +4,6 @@
 
 <!-- namespace는 @mapper로 설정된 경로 입력  -->        
 <mapper namespace="com.metanet.persistence.suinEduMapper">
-    <insert id="eduInsert" parameterType="com.metanet.domain.EduVO">
-        INSERT INTO edu
-        VALUES (seq_edu_no.nextval, 
-        		#{eduTitle}, 
-        		#{eduDesc}, 
-        		#{eduLoc}, 
-        		#{eduTime}, 
-        		#{eduTeacher}, 
-        		#{eduPeople}, 
-        		#{eduTarget}, 
-        		#{eduStart}, 
-        		#{eduEnd}, 
-        		#{eduCost},
-        		0)
-    </insert>
     
     <select id="eduHistorySelect" resultType="com.metanet.domain.AttendanceVO">
 	     <![CDATA[
@@ -34,10 +19,178 @@
     </select>
     
     <update id="eduAttendanceUpdate" parameterType="java.util.List">
-    	<foreach item="item" index="index" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
+    	<foreach item="item" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
     		update edu_history
     		 set attendance = #{item.attendance}
     		 where edu_hisno = #{item.eduHisno}
     	</foreach>
     </update>
+    
+    <select id="eduHistoryListSelect" resultType="com.metanet.domain.EduHistoryVO">
+    	select * 
+    	from (select rownum rn, history_list.*
+    	from (select h.edu_hisno, d.edu_title, e.emp_no, e.emp_name, h.attendance, h.score
+    	from employee e, edu d, edu_history h
+    	where e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			and d.edu_title like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"empNo".equals(keyField) '>
+    			and h.emp_no = #{keyword}
+    		</when>
+    		<when test='"empName".equals(keyField) '>
+    			and e.emp_name like '%' || #{keyword} || '%'
+    		</when>
+    	</choose>
+    	order by decode(edu_progress,'pre', 2, 'ing', 1, 'post', 3), h.edu_hisno) history_list) WHERE rn BETWEEN #{startNum} AND #{endNum}
+    </select>
+    
+    <select id="eduHistorytotalCount" parameterType="Map" resultType="Integer">
+    	select count(*)
+    	from employee e, edu d, edu_history h, department dept
+    	where e.emp_no = h.emp_no
+    	and d.edu_no = h.edu_no
+    	and dept.dept_no = e.dept_no
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			and d.edu_title like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"empNo".equals(keyField) '>
+    			and h.emp_no = #{keyword}
+    		</when>
+    		<when test='"empName".equals(keyField) '>
+    			and e.emp_name like '%' || #{keyword} || '%'
+    		</when>
+    	</choose>
+    </select>
+    
+    <select id="getTotalCountEduList" parameterType="Map" resultType="Integer">
+    	select count(*)
+    	from edu
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			where edu_title like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"eduTarget".equals(keyField) '>
+    			where edu_target like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"eduProgress".equals(keyField) '>
+    			<choose>
+    				<when test='"진행중".equals(keyword) '>
+    					where edu_progress = 'ing'
+    				</when>
+    				<when test='"진행예정".equals(keyword) '>
+    					where edu_progress = 'pre'
+    				</when>
+    				<when test='"진행종료".equals(keyword) '>
+    					where edu_progress = 'post'
+    				</when>
+    				<otherwise>
+    					where edu_progress = '-'
+    				</otherwise>
+    			</choose>
+    		</when>
+    	</choose>
+    </select>
+    
+    <select id="eduListSelect" resultType="com.metanet.domain.EduVO">
+    	select *
+    	from (select rownum rn , edu_list.*
+    	from (select EDU_NO, EDU_TITLE, EDU_PEOPLE, EDU_TARGET, 
+			   TO_CHAR(EDU_START, 'YYYY-MM-DD') as EDU_START, 
+			   TO_CHAR(EDU_END, 'YYYY-MM-DD') as EDU_END,
+			   EDU_PROGRESS
+    	from edu
+    	<choose>
+    		<when test='"eduTitle".equals(keyField) '>
+    			where edu_title like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"eduTarget".equals(keyField) '>
+    			where edu_target like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"eduProgress".equals(keyField) '>
+    			<choose>
+    				<when test='"진행중".equals(keyword) '>
+    					where edu_progress = 'ing'
+    				</when>
+    				<when test='"진행예정".equals(keyword) '>
+    					where edu_progress = 'pre'
+    				</when>
+    				<when test='"진행종료".equals(keyword) '>
+    					where edu_progress = 'post'
+    				</when>
+    				<otherwise>
+    					where edu_progress = '-'
+    				</otherwise>
+    			</choose>
+    		</when>
+    	</choose> order by decode(edu_progress,'pre', 1, 'ing', 2, 'post', 3) , edu_no desc) edu_list ) where rn between ${startNum} and ${endNum}
+    </select>
+    
+    <select id="getTotalCountForAllocation" parameterType="Map" resultType="Integer">
+    	select count(*)
+    	from employee e, department dept, position pos
+    	where dept.dept_no = e.dept_no
+    	and pos.pos_no = e.pos_no
+    	<choose>
+    		<when test='"deptName".equals(keyField) '>
+    			and dept.dept_name like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"posName".equals(keyField) '>
+    			and pos.pos_name = #{keyword}
+    		</when>
+    	</choose>
+    </select>
+    
+    <select id="empListForAllocationSelect" resultType="com.metanet.domain.EmpListVO">
+    	select *
+    	from(select rownum rn, emp_list.* 
+    	from(select e.emp_no, e.emp_name, pos.pos_name, dept.dept_name
+    	from employee e, department dept, position pos
+    	where dept.dept_no = e.dept_no
+    	and pos.pos_no = e.pos_no
+    	<choose>
+    		<when test='"deptName".equals(keyField) '>
+    			and dept.dept_name like '%' || #{keyword} || '%'
+    		</when>
+    		<when test='"posName".equals(keyField) '>
+    			and pos.pos_name = #{keyword}
+    		</when>
+    	</choose>) emp_list) where rn between #{startNum} and #{endNum}
+    </select>
+    
+    <insert id="eduHistroyInsert" parameterType="Map">
+    <foreach collection="empNo" item="value" index="key" separator=";" open="DECLARE BEGIN" close="; END;">
+    	insert into edu_history values(SEQ_EDU_HISNO.NEXTVAL, #{eduNo}, #{value}, 0, null)
+    </foreach>
+    </insert>
+    
+    <update id="eduScoreUpdate" parameterType="List">
+    	<foreach collection="list" item="vo" separator=";" open="DECLARE BEGIN" close="; END;">
+    	update edu_history
+    	set score = upper(#{vo.score})
+    	where edu_hisno = #{vo.eduHisno}
+    	</foreach>
+    </update>
+    
+    <select id="eduProgressList" resultType="com.metanet.domain.EduVO">
+    	select edu_no, edu_start, edu_end
+    	from edu
+    	where edu_end+1 > SYSDATE
+    </select>
+    
+    <update id="eduProgressUpdate" parameterType="List">
+     	<foreach item="item" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
+    		update edu
+    		set edu_progress = #{item.eduProgress}
+    		where edu_no = #{item.eduNo}
+    	</foreach>
+    </update>
+    
+    <select id="eduCalendarListSelect" resultType="com.metanet.domain.EduVO">
+    	select edu_no, edu_title, to_char(edu_start,'yyyy-mm-dd') edu_start, to_char(edu_end,'yyyy-mm-dd') edu_end
+    	from edu
+    </select>
 </mapper>	

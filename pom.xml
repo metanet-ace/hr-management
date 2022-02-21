@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.6.2</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.metanet</groupId>
 	<artifactId>hr</artifactId>
@@ -16,7 +17,12 @@
 	<description>metanet hr project </description>
 	<properties>
 		<java.version>11</java.version>
+		<!-- 로컬 jar 경로 설정 -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	 	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	    <project.lib.path>${project.basedir}/src/main/webapp/WEB-INF/lib</project.lib.path>
 	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -56,10 +62,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		
-		<!-- JSP 사용을 위한 의존성 -->
+
+			<!-- JSP 사용을 위한 의존성 -->
 		</dependency>
-			<dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
@@ -67,7 +73,7 @@
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
-	
+
 		<!-- 스프링 시큐리티 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -78,8 +84,140 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+		</dependency>
+		
+		<!-- QueryDSL Setting -->
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-apt</artifactId>
+		</dependency>
 	
+		<!-- validation -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+	
+		<!-- itext -->
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>barcodes</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/barcodes-7.1.14.jar</systemPath>
+		</dependency>	
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>font-asian</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/font-asian-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>forms</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/forms-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>hyph</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/hyph-7.1.14.jar</systemPath>
+		</dependency>
+				
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>io</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/io-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>kernel</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/kernel-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>layout</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/layout-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>pdfa</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/pdfa-7.1.14.jar</systemPath>
+		</dependency>
+		
+			
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>pdftest</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/pdftest-7.1.14.jar</systemPath>
+		</dependency>
+		
+			
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>sign</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/sign-7.1.14.jar</systemPath>
+		</dependency>
+		
+			
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>styled-xml-parser</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/styled-xml-parser-7.1.14.jar</systemPath>
+		</dependency>
+		
+			
+		<dependency>
+			<groupId>com.itext</groupId>
+			<artifactId>svg</artifactId>
+			<version>7.1.14</version>
+			<scope>system</scope>
+			<systemPath>${project.lib.path}/svg-7.1.14.jar</systemPath>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.itextpdf/html2pdf -->
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>html2pdf</artifactId>
+		    <version>3.0.3</version>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -92,6 +230,51 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>apt-maven-plugin</artifactId>
+				<version>1.1.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/main/querydsl</outputDirectory>
+							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- war plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+		
+				<configuration>
+					<webResources>
+						<resource>
+							<!-- 로컬 lib파일 경로 -->
+							<directory>${project.lib.path}</directory>
+							<includes>
+								<include>barcodes-7.1.14.jar</include>
+								<include>font-asian-7.1.14.jar</include>
+								<include>forms-7.1.14.jar</include>
+								<include>hyph-7.1.14.jar</include>
+								<include>io-7.1.14.jar</include>
+								<include>kernel-7.1.14.jar</include>
+								<include>layout-7.1.14.jar</include>
+								<include>pdfa-7.1.14.jar</include>
+								<include>pdftest-7.1.14.jar</include>
+								<include>sign-7.1.14.jar</include>
+								<include>styled-xml-parser-7.1.14.jar</include>
+								<include>svg-7.1.14.jar</include>
+							</includes>
+							<targetPath>WEB-INF/lib</targetPath>
+						</resource>
+					</webResources>
 				</configuration>
 			</plugin>
 		</plugins>

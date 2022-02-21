@@ -1,8 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.metanet.persistence.EmployeeMapper">
-	<select id="getEmpList" resultType="com.metanet.domain.EmployeeVO">
-		SELECT *
+	<update id="updateEmp" parameterType="com.metanet.domain.EmployeeVO">
+		UPDATE EMPLOYEE
+		<choose>
+			<when test="batisDeptNo != null and batisPosNo != null">
+				SET DEPT_NO = #{batisDeptNo},
+				POS_NO = #{batisPosNo}
+			</when>
+			<when test="batisDeptNo != null and batisPosNo == null">
+				SET DEPT_NO = #{batisDeptNo},
+			</when>
+			<when test="batisDeptNo == null and batisPosNo != null">
+				SET POS_NO = #{batisPosNo}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		WHERE EMP_NO = #{empNo}
+	</update>
+	
+	<insert id="saveHistory">
+		INSERT INTO EMP_HISTORY
+		VALUES (SEQ_EMP_HISNO.nextval, #{batisEmpNo}, #{posNo}, #{beforePos}, #{deptNo}, #{beforeDept}, #{issuedDate}, #{issuedOrder}, #{issuedContent} )
+	</insert>
+	
+	<select id="findByEmpNo" resultType="com.metanet.domain.EmployeeVO">
+		SELECT EMP_NO, DEPT_NO AS BATIS_DEPT_NO, POS_NO AS BATIS_POS_NO, EMP_NAME, EMP_GENDER, EMP_PHONE, EMP_SAL, EMP_EMAIL, EMP_HIREDATE, EMP_RETDATE,
+		EMP_SSC, EMP_DEGREE, EMP_CAREER, EMP_PWD, EMP_PHOTO, EMP_MIL
 		FROM EMPLOYEE
+		WHERE EMP_NO = #{value}
 	</select>
+	
+	<select id="findByEmpNoJoinHistory" resultType="map">
+		SELECT e.*, eh.ISSUED_CONTENT, d.DEPT_NAME, p.POS_NAME
+		FROM EMPLOYEE e, EMP_HISTORY eh, DEPARTMENT d, POSITION p
+		WHERE e.EMP_NO = eh.EMP_NO
+		AND e.DEPT_NO = d.DEPT_NO
+		AND e.POS_NO = p.POS_NO
+		AND e.EMP_RETDATE IS NOT NULL 
+		AND eh.ISSUED_ORDER = '퇴사' 
+		AND e.EMP_NO = #{empNo}
+	</select>
+	
+	<select id="findWorkingDate" resultType="map">
+		SELECT ew.WORK_START, ew.WORK_END, ew.WORK_TYPE
+		FROM EMP_WORKINGHOUR ew 
+		WHERE ew.EMP_NO = #{empNo}
+		<!-- AND (ew.WORK_START BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD') AND TO_DATE(#{enddate}, 'YYYYMMDD')
+		OR ew.WORK_END BETWEEN TO_DATE(#{startdate}, 'YYYYMMDD') AND TO_DATE(#{enddate}, 'YYYYMMDD')) -->
+	</select>	
+	
+	<select id="findStartTime" resultType="com.metanet.domain.EmpWorkingtimeVO">
+		SELECT *
+		FROM EMP_WORKINGHOUR ew 
+		WHERE ew.EMP_NO = #{empNo} 
+		AND TO_CHAR(ew.WORK_START, 'YY/MM/DD') = TO_CHAR(sysdate, 'YY/MM/DD')
+		AND WORK_TYPE = #{type}
+	</select>
+	
+	<select id="findEndTime" resultType="com.metanet.domain.EmpWorkingtimeVO">
+		SELECT *
+		FROM EMP_WORKINGHOUR ew 
+		WHERE ew.EMP_NO = #{empNo} 
+		AND TO_CHAR(ew.WORK_END, 'YY/MM/DD') = TO_CHAR(sysdate, 'YY/MM/DD')
+		AND WORK_TYPE = #{type}
+	</select>
+	
+	<select id="findTotalTime" resultType="int">
+	SELECT
+		SUM((e.WORK_END - s.WORK_START) *24 * 60 * 60)
+	FROM
+		(
+		SELECT *
+		FROM EMP_WORKINGHOUR ew
+		WHERE WORK_START BETWEEN 
+			(SELECT trunc(sysdate, 'iw')
+			   FROM dual)
+		AND (SELECT trunc(sysdate, 'iw')+ 7
+			   FROM dual)
+		AND WORK_TYPE = '출근'
+		AND EMP_NO = #{empNo}
+		) s,
+		(
+		SELECT *
+		   FROM EMP_WORKINGHOUR ew
+		  WHERE WORK_END BETWEEN 
+			(SELECT trunc(sysdate, 'iw')
+			   FROM dual)
+		AND (SELECT trunc(sysdate, 'iw')+ 7
+			FROM dual)
+		AND WORK_TYPE = '퇴근'
+		AND EMP_NO = #{empNo}
+		) e
+	WHERE TO_CHAR(e.WORK_END, 'YY/MM/DD') = TO_CHAR(s.WORK_START, 'YY/MM/DD')
+	</select>
+	
 </mapper>

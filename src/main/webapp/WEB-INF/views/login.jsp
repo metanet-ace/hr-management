@@ -23,7 +23,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label><strong>패스워드</strong></label>
-                                            <input type="text" class="form-control" name="empPwd">
+                                            <input type="password" class="form-control" name="empPwd">
                                         </div>
                                       
                                         <div class="text-center">
