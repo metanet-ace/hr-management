@@ -54,7 +54,7 @@
 	<select id="deptList" resultType="com.metanet.domain.DepartmentVO">
 		select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name
 		from department d, employee e
-        where d.dept_head = e.emp_no
+        where d.dept_head = e.emp_no and d.dept_no > 0
 		order by d.dept_no desc
 	</select>
 	
@@ -117,6 +117,7 @@
 	<select id="posList" resultType="com.metanet.domain.PositionVO">
 		select *
 		from position
+		where pos_no > 0
 		order by pos_no desc
 	</select>
 	
@@ -161,7 +162,7 @@
 		where pos_no = #{posNo}
 	</update>
 	
-	<!-- 부서 삭제 -->
+	<!-- 직급 삭제 -->
 	<delete id="deletePos" parameterType="int">
 		delete 
 		from position

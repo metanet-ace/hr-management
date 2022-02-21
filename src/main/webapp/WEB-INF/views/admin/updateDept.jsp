@@ -61,22 +61,6 @@ function fnSubmit(){
         ***********************************-->
 <div class="content-body">
 	<div class="container-fluid">
-		<div class="row page-titles mx-0">
-			<div class="col-sm-6 p-md-0">
-				<div class="welcome-text">
-					<h4>Hi, welcome back!</h4>
-					<p class="mb-1">Validation</p>
-				</div>
-			</div>
-			<div
-				class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-					<li class="breadcrumb-item active"><a
-						href="javascript:void(0)">Validation</a></li>
-				</ol>
-			</div>
-		</div>
 		<!-- row -->
 		<div class="row">
 			<div class="col-lg-12">
@@ -111,10 +95,9 @@ function fnSubmit(){
 											<div class="col-lg-6">
 												<input type="text" class="form-control" id="empNo"
 													name="empNo" placeholder="사원번호로 입력해주세요." value="${dept.deptHead }">
-												<div class="col-lg-8 ml-auto">
-												<button type="button" class="btn btn-primary" id="empNoCheck"
+													<button type="button" class="btn btn-primary" id="empNoCheck"
 													name="empNoCheck" onclick="fn_empNoCheck(); return false;"
-													value="N">사원번호 확인</button></div>
+													value="N">사원번호 확인</button>
 											</div>
 										</div>
 
