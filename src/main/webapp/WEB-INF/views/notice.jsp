@@ -53,10 +53,11 @@ $(document).ready(function(){
 			</select> <input type="text" id="kwd" name="keyword" value="${pageInfo.keyword}" class="form-control form-cotrol-sm" style="margin: 10px"> 
 			<input type="submit" class="btn btn-outline-info btn-sm" value="찾기">
 		</form>
-		
+		<c:if test="${sessionEmp.dept.deptNo eq 1}">	
 		<div style="float:right; margin:10px;">
 		<button class="btn btn-primary" onclick="location.href='./noticeAdd';">공지사항 등록</button>
 		</div>
+		</c:if>
 		<br>
 		<table class="table table-striped" border=1>
 			<thead>
