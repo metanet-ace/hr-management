@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		security.csrf().disable();
 		// 시큐리티 로그인 페이지를 대체할 커스템 페이지 지정
 		security.formLogin().loginPage("/signin").defaultSuccessUrl("/loginSuccess");
-		// security.logout().invalidateHttpSession(true).logoutSuccessUrl("/signin");
+		security.logout().invalidateHttpSession(true).logoutSuccessUrl("/signin");
 		security.exceptionHandling().accessDeniedPage("/accessDenied");
 	
 		

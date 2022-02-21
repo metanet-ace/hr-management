@@ -112,7 +112,7 @@
                                        ${sessionEmp.empName}님
                                         </span>
                                     </a>
-                                    <a href="/selfLogout" class="dropdown-item"> 
+                                    <a href="/logout" class="dropdown-item"> 
                                         <i class="icon-key"></i>
                                         <span class="ml-2">Logout </span>
                                     </a>

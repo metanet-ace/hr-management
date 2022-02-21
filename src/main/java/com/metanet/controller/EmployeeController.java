@@ -374,18 +374,6 @@ public class EmployeeController {
 		return "loginWithSecurity";
 	}
 	
-	@GetMapping("/selfLogout")
-	public String logout(LogVO log, HttpServletRequest request, @SessionAttribute("sessionEmp") EmployeeVO emp) {
-		// 로그 저장
-		int empNo = emp.getEmpNo();
-		log.setLogIp(Util.getUserIp(request));
-		log.setEmpNo(empNo);
-		log.setLogTarget("로그아웃");
-		log.setLogDesc("로그아웃 성공");
-		
-		logService.writeLog(log);
-		return "redirect:/logout";
-	}
 	// 시큐리티 사용한 로그인 성공시 이동하는 화면
 	@GetMapping("/loginSuccess")
 	public String login(Authentication authentication, Model model, LogVO log, HttpServletRequest request) {
