@@ -37,4 +37,7 @@ public class DepartmentVO {
 	
 	@Transient
 	private int empNo;
+	
+	@Transient
+	private Date empRetdate;
 }

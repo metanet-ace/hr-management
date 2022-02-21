@@ -51,4 +51,6 @@ public interface WonwooEduService {
 	public int logTotalCount(PageDTO pdto);
 	
 	public void writeLog(LogVO logVO);
+
+	public List<EduVO> empEduCalendarList(int empNo);
 }

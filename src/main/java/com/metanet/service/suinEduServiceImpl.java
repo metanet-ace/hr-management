@@ -112,4 +112,9 @@ public class suinEduServiceImpl implements suinEduService {
 		return mapper.eduListSelect(pdto);
 	}
 
+	@Override
+	public List<EduVO> eduCalendarList() {
+		return mapper.eduCalendarListSelect();
+	}
+
 }

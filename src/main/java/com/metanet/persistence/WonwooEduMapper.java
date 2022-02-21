@@ -54,4 +54,6 @@ public interface WonwooEduMapper {
 
 	public void writeLog(LogVO logVO);
 
+	public List<EduVO> empEduCalendarList(int empNo);
+
 }

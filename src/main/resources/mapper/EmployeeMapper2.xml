@@ -54,7 +54,7 @@
 	<select id="deptList" resultType="com.metanet.domain.DepartmentVO">
 		select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name
 		from department d, employee e
-        where d.dept_head = e.emp_no
+        where d.dept_head = e.emp_no and d.dept_no > 0
 		order by d.dept_no desc
 	</select>
 	
@@ -68,18 +68,19 @@
 	<select id="empNoCheck" parameterType="com.metanet.domain.EmployeeVO2" resultType="int">
 		select count(*)
 		from employee
-		where emp_no = #{empNo}
+		where emp_no = #{empNo} and emp_retdate is null
 	</select>
 	
 	<!-- 부서이름, 번호 불러오기 -->
 	<select id="dept" resultType="com.metanet.domain.DeptVO">
 		select dept_name, dept_no
 		from department
+		where dept_no > 0
 	</select>
 	
 	<!-- 부서원 상세보기 -->
 	<select id="selectDept" resultType="com.metanet.domain.DepartmentVO">
-		select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name, e.emp_no
+		select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name, e.emp_no, e.emp_retdate
 		from department d, employee e
 		where d.dept_no = #{deptNo} and e.dept_no = #{deptNo}
 	</select>
@@ -110,5 +111,61 @@
 		delete 
 		from department
 		where dept_no = #{deptNo}
+	</delete>
+	
+	<!-- 직급 리스트보기(인사팀) -->
+	<select id="posList" resultType="com.metanet.domain.PositionVO">
+		select *
+		from position
+		where pos_no > 0
+		order by pos_no desc
+	</select>
+	
+	<!-- 직급이름, 번호 불러오기 -->
+	<select id="pos" resultType="com.metanet.domain.PositionVO">
+		select pos_name, pos_no
+		from position
+		where pos_no > 0
+	</select>
+	
+	<!-- 직급 추가(인사팀) -->
+	<insert id="insertPos" parameterType="com.metanet.domain.PositionVO">
+		insert into position
+		values (seq_pos_no.nextval, #{posName}, #{posMinsal}, #{posMaxsal})
+	</insert> 
+	
+	<!-- 직급 상세보기(연봉) -->
+	<select id="selectSal" resultType="com.metanet.domain.PositionVO">
+		select pos_name, pos_minsal, pos_maxsal, pos_no
+        from position
+        where pos_no = #{posNo}
+	</select>
+	
+	<!-- 직급 상세보기(사원) -->
+	<select id="selectPos" resultType="com.metanet.domain.PositionVO">
+		select e.emp_name, e.emp_no, e.emp_retdate
+        from employee e, position p
+        where e.pos_no = p.pos_no and p.pos_no = #{posNo}
+	</select>
+	
+	<!-- 직급 수정하기(인사팀) -->
+	<update id="updatePos" parameterType="com.metanet.domain.PositionVO">
+		update position
+		set pos_name = #{posName}, pos_minsal = #{posMinsal}, pos_maxsal = #{posMaxsal}
+		where pos_no = #{posNo}
+	</update>
+	
+	<!-- 직급 삭제 전 사원들의 직급이동 -->
+	<update id="empPos" parameterType="com.metanet.domain.EmployeeVO2">
+		update employee
+		set pos_no = 0
+		where pos_no = #{posNo}
+	</update>
+	
+	<!-- 직급 삭제 -->
+	<delete id="deletePos" parameterType="int">
+		delete 
+		from position
+		where pos_no = #{posNo}
 	</delete>
 </mapper>

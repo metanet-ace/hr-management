@@ -325,4 +325,11 @@
 		UPDATE NOTICE SET NOTICE_TITLE=#{noticeTitle},
 		NOTICE_CONTENT=#{noticeContent} WHERE NOTICE_NO=#{noticeNo}
 	</update>
+	
+	<select id="empEduCalendarList" resultType="com.metanet.domain.EduVO">
+		select d.edu_no, d.edu_title, to_char(d.edu_start,'yyyy-mm-dd') edu_start, to_char(edu_end,'yyyy-mm-dd') edu_end
+    	from edu d, edu_history h 
+    	where h.emp_no = #{empNo}
+    	and d.edu_no = h.edu_no
+	</select>
 </mapper>

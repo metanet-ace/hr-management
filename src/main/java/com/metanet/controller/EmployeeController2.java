@@ -22,21 +22,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.EmployeeVO2;
+import com.metanet.domain.LogVO;
 import com.metanet.domain.PasswordVO;
+import com.metanet.domain.PositionVO;
+import com.metanet.persistence.Util;
 import com.metanet.service.EmployeeService2;
+import com.metanet.service.WonwooEduService;
 
 @Controller
 public class EmployeeController2 {
 
 	@Autowired
 	EmployeeService2 service;
+	
+	@Autowired
+	WonwooEduService logService;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -46,15 +53,20 @@ public class EmployeeController2 {
 	public String insertEmployeePage(Model model) {
 		model.addAttribute("title", "사원등록 페이지");
 		model.addAttribute("dept", service.dept());
+		model.addAttribute("pos", service.pos());
 		return "/admin/insertEmp";
 	}
 
 	// 사원등록하기(인사팀)
 	@PostMapping("/admin/emp/insertEmp")
 	public String insertEmployee(@Valid EmployeeVO2 emp, Errors errors, HttpServletRequest request, Model model,
-			@RequestParam(name = "upfile", required = false) MultipartFile mfile) {
+			@RequestParam(name = "upfile", required = false) MultipartFile mfile, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
 		// parameter 값이 없어도 오류가 나지 않게 하기 위해서 required = false
-
+		
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("사원 등록(인사팀)");
+		
 		// 파일 저장 폴더 지정
 		String savePath = request.getSession().getServletContext().getRealPath("resources/employeeImages");
 
@@ -105,6 +117,7 @@ public class EmployeeController2 {
 			// 사원등록 실패시, 입력 데이터를 유지
 			model.addAttribute("emp", emp);
 			model.addAttribute("dept", service.dept());
+			model.addAttribute("pos", service.pos());
 
 			// 유효성 통과 못한 필드와 메시지를 핸들링
 			Map<String, String> validatorResult = service.validateHandling(errors);
@@ -115,10 +128,13 @@ public class EmployeeController2 {
 		}
 
 		if (service.insertEmp(emp) > 0) {
+			log.setLogDesc("사원 등록 성공");
+			logService.writeLog(log);
 			return "redirect:/admin/emp";
 		} else {
-			model.addAttribute("message", "사원 등록 실패");
-			return "/admin/edu/list";
+			log.setLogDesc("사원 등록 실패");
+			logService.writeLog(log);
+			return "redirect:/";
 		}
 
 	}
@@ -146,7 +162,12 @@ public class EmployeeController2 {
 	// 사원수정하기(인사팀) : 비밀번호변경X
 	@PostMapping("/admin/emp/updateEmp")
 	public String updateEmployee(@Valid EmployeeVO2 emp, Errors errors, HttpServletRequest request, Model model,
-			@RequestParam(name = "upfile", required = false) MultipartFile mfile) {
+			@RequestParam(name = "upfile", required = false) MultipartFile mfile, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+		
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("사원 정보 수정(인사팀)");
+		
 		// 파일 저장 경로
 		String savePath = request.getSession().getServletContext().getRealPath("resources/employeeImages");
 
@@ -215,17 +236,26 @@ public class EmployeeController2 {
 		}
 
 		if (service.updateEmp(emp) > 0) {
+			log.setLogDesc("사원 수정 성공");
+			logService.writeLog(log);
 			return "redirect:/admin/emp/detail?empNo=" + emp.getEmpNo();
 		} else {
-			model.addAttribute("message", "수정 실패");
+			log.setLogDesc("사원 수정 실패");
+			logService.writeLog(log);
 			return "/admin/updateEmp";
 		}
 	}
 
 	// 사원비밀번호 0000 수정(인사팀)
 	@GetMapping("/admin/emp/updatePwd")
-	public String updatePwd(EmployeeVO2 emp, HttpServletRequest request) {
+	public String updatePwd(EmployeeVO2 emp, HttpServletRequest request, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("비밀번호 0000으로 변경(인사팀)");
+		
 		service.updatePwd(emp);
+		log.setLogDesc("사원 비밀번호 0000으로 변경 성공");
+		logService.writeLog(log);
 		return "redirect:/admin/emp/detail?empNo=" + Integer.parseInt(request.getParameter("empNo"));
 	}
 
@@ -269,7 +299,11 @@ public class EmployeeController2 {
 	// 비밀번호 수정(공통)
 	@PostMapping("/emp/pwUpdate")
 	public String pwUpdate(@Valid PasswordVO pass, Errors errors, Model model, int empNo, String pw1,
-			RedirectAttributes rttr, HttpSession session) {
+			HttpSession session, HttpServletRequest request, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("비밀번호 수정");
+		
 		String hashedPw = "{bcrypt}" + BCrypt.hashpw(pw1, BCrypt.gensalt());
 		// 유효성 검사
 
@@ -287,7 +321,9 @@ public class EmployeeController2 {
 		System.out.println("hashedPw = " + hashedPw);
 		service.pwUpdate(empNo, hashedPw);
 		session.invalidate();
-		rttr.addFlashAttribute("msg", "비밀번호 수정이 완료되었습니다. 다시 로그인해주세요.");
+		
+		log.setLogDesc("비밀번호 수정 성공");
+		logService.writeLog(log);
 
 		return "redirect:/logout";
 	}
@@ -318,7 +354,11 @@ public class EmployeeController2 {
 
 	// 부서등록(인사팀)
 	@PostMapping("/admin/emp/insertDept")
-	public String insertDept(DeptVO dept, int empNo, Model model) {
+	public String insertDept(DeptVO dept, int empNo, Model model, HttpServletRequest request, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("부서 등록(인사팀)");
+		
 		int empNoResult = service.empNoCheck(empNo);
 
 		try {
@@ -326,6 +366,8 @@ public class EmployeeController2 {
 				return "/admin/insertDept";
 			} else if (empNoResult == 1) {
 				service.insertDept(dept);
+				log.setLogDesc("부서 등록 성공");
+				logService.writeLog(log);
 				return "redirect:/admin/emp/deptList";
 			}
 		} catch (Exception e) {
@@ -360,30 +402,130 @@ public class EmployeeController2 {
 
 	// 부서수정(인사팀)
 	@PostMapping("/admin/emp/updateDept")
-	public String updateDept(DeptVO dept, int empNo, Model model) {
-		int empNoResult = service.empNoCheck(empNo);
+	public String updateDept(DeptVO dept, int empNo, Model model, HttpServletRequest request, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("부서 수정(인사팀)");
 		
+		int empNoResult = service.empNoCheck(empNo);
+
 		try {
-			if(empNoResult == 0) {
+			if (empNoResult == 0) {
 				return "/admin/updateDept";
-			}else if(empNoResult == 1) {
+			} else if (empNoResult == 1) {
 				service.updateDept(dept);
+				log.setLogDesc("부서 수정 성공");
+				logService.writeLog(log);
 				return "redirect:/admin/emp/deptList";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return "redirect:/";
 	}
-	
+
 	// 부서삭제(삭제 전 부서0번이동)
 	@GetMapping("/admin/emp/deleteDept")
-	public String deptDelete(@RequestParam("deptNo") int deptNo, EmployeeVO2 emp, HttpServletRequest request) {
+	public String deptDelete(@RequestParam("deptNo") int deptNo, EmployeeVO2 emp, HttpServletRequest request, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("부서 삭제(인사팀)");
+		
 		service.empDept(emp);
 		service.deleteDept(deptNo);
 
+		log.setLogDesc("부서 삭제 성공");
+		logService.writeLog(log);
+		
 		return "redirect:/admin/emp/deptList";
-			
+
+	}
+
+	// 직급리스트조회(인사팀)
+	@GetMapping("/admin/emp/posList")
+	public String posList(Model model, HttpServletRequest request) {
+		model.addAttribute("posList", service.posList());
+		model.addAttribute("title", "직급 리스트");
+
+		return "/admin/posList";
+	}
+
+	// 직급등록페이지 이동(인사팀)
+	@GetMapping("/admin/emp/insertPosPage")
+	public String insertPosPage(Model model) {
+		model.addAttribute("title", "직급등록 페이지");
+
+		return "/admin/insertPos";
+	}
+
+	// 직급등록(인사팀)
+	@PostMapping("/admin/emp/insertPos")
+	public String insertPos(PositionVO pos, Model model, HttpServletRequest request, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("직급 등록(인사팀)");
+		
+		service.insertPos(pos);
+
+		log.setLogDesc("직급 등록 성공");
+		logService.writeLog(log);
+		
+		return "redirect:/admin/emp/posList";
+	}
+
+	// 직급 상세정보(인사팀)
+	@GetMapping("/admin/emp/posDetail")
+	public String selectPosition(@RequestParam("posNo") int posNo, Model model) {
+		List<PositionVO> listPos = new ArrayList<PositionVO>();
+		listPos = service.selectPos(posNo);
+		PositionVO pos = service.selectSal(posNo);
+		model.addAttribute("pos", pos);
+		model.addAttribute("posDetail", listPos);
+		model.addAttribute("title", pos.getPosName() + " 상세보기");
+
+		return "/admin/posDetail";
+	}
+
+	// 직급 수정페이지이동(인사팀)
+	@GetMapping("/admin/emp/updatePosPage")
+	public String updatePosPage(@RequestParam("posNo") int posNo, Model model) {
+		PositionVO pos = service.selectSal(posNo);
+		model.addAttribute("pos", pos);
+		model.addAttribute("title", pos.getPosName() + " 수정페이지");
+
+		return "/admin/updatePos";
+	}
+
+	// 직급 수정(인사팀)
+	@PostMapping("/admin/emp/updatePos")
+	public String updatePos(PositionVO pos, Model model, HttpServletRequest request, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("직급 수정(인사팀)");
+		
+		service.updatePos(pos);
+		
+		log.setLogDesc("직급 수정 성공");
+		logService.writeLog(log);
+		
+		return "redirect:/admin/emp/posDetail?posNo=" + pos.getPosNo();
+	}
+
+	// 직급삭제(삭제 전 직급0번이동)
+	@GetMapping("/admin/emp/deletePos")
+	public String posDelete(@RequestParam("posNo") int posNo, EmployeeVO2 emp, HttpServletRequest request, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empVo.getEmpNo());
+		log.setLogTarget("직급 삭제(인사팀)");
+		
+		service.empPos(emp);
+		service.deletePos(posNo);
+		
+		log.setLogDesc("직급 삭제 성공");
+		logService.writeLog(log);
+
+		return "redirect:/admin/emp/posList";
+
 	}
 }
