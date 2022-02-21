@@ -39,4 +39,6 @@ public interface suinEduMapper {
 
 	public List<EduVO> eduListSelect(PageDTO pdto);
 
+	public List<EduVO> eduCalendarListSelect();
+
 }

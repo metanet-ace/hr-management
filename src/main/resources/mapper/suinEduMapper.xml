@@ -188,4 +188,9 @@
     		where edu_no = #{item.eduNo}
     	</foreach>
     </update>
+    
+    <select id="eduCalendarListSelect" resultType="com.metanet.domain.EduVO">
+    	select edu_no, edu_title, to_char(edu_start,'yyyy-mm-dd') edu_start, to_char(edu_end,'yyyy-mm-dd') edu_end
+    	from edu
+    </select>
 </mapper>	
