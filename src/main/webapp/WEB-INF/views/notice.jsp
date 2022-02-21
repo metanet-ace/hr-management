@@ -43,7 +43,11 @@ $(document).ready(function(){
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 공지사항 전체 리스트 출력 -->
+	<div class="row">
+	<div class="col-lg-1" >공지사항</div>
+	<div class="col-lg-11">
 		<form id="search_form" action="/edu/notice" method="post" class="form-inline d-flex justify-content-end">
+			
 			<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
 			<input type="hidden" name="a" value="list"> 
 			<select name="keyField" size="1" id="keyField" class="form-control form-control-sm">
@@ -53,7 +57,8 @@ $(document).ready(function(){
 			</select> <input type="text" id="kwd" name="keyword" value="${pageInfo.keyword}" class="form-control form-cotrol-sm" style="margin: 10px"> 
 			<input type="submit" class="btn btn-outline-info btn-sm" value="찾기">
 		</form>
-		
+	</div>
+	</div>
 		<div style="float:right; margin:10px;">
 		<button class="btn btn-primary" onclick="location.href='./noticeAdd';">공지사항 등록</button>
 		</div>

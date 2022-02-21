@@ -56,8 +56,11 @@ import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.EmpHistoryVO;
 import com.metanet.domain.EmpWorkingtimeVO;
 import com.metanet.domain.EmployeeVO;
+import com.metanet.domain.LogVO;
 import com.metanet.domain.PositionVO;
+import com.metanet.persistence.Util;
 import com.metanet.service.EmployeeServiceImpl;
+import com.metanet.service.WonwooEduService;
 
 @SessionAttributes("sessionEmp")
 @Controller
@@ -69,6 +72,8 @@ public class EmployeeController {
 	@Autowired
 	suinEduController batchCtrl;
 	
+	@Autowired
+	WonwooEduService logService;
 	// 인사이동 페이징(VIEW) 컨트롤러
 	@GetMapping("/admin/emp")
 	public String userList(Model model, @PageableDefault(size = 10, sort = "empNo",
@@ -117,7 +122,8 @@ public class EmployeeController {
 	// 인사 이동 (부서변경, 직급변경) 컨트롤러	
 	@PostMapping("/admin/hr")
 	@ResponseBody
-	public ResponseEntity<String> updateHumanResource(@RequestBody HashMap<String, Object> map) {
+	public ResponseEntity<String> updateHumanResource(@RequestBody HashMap<String, Object> map,
+			LogVO log, HttpServletRequest request, @SessionAttribute("sessionEmp") EmployeeVO emp) {
 		int deptNo = 0;
 		int posNo = 0;
 		
@@ -148,13 +154,23 @@ public class EmployeeController {
 			}
 		}
 		
+		
+		// 로그찍기 
+		int empNo = emp.getEmpNo();
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empNo);
+		log.setLogTarget("발령처리");
+		log.setLogDesc("발령처리 성공");
+		logService.writeLog(log);
+		
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	} 
 	
 	// 퇴사자 처리 컨트롤러
 	@PostMapping("/admin/retire")
 	@ResponseBody
-	public ResponseEntity<String> updateRetire(@RequestBody HashMap<String, Object> map){
+	public ResponseEntity<String> updateRetire(@RequestBody HashMap<String, Object> map, LogVO log,
+			HttpServletRequest request, @SessionAttribute("sessionEmp") EmployeeVO emp){
 		String retireReason = (String) map.get("retireReason");
 		Object targetEmpList = map.get("targetEmps");
 		
@@ -163,12 +179,21 @@ public class EmployeeController {
 			empService.updateRetire(targetNo, retireReason);
 		}
 		
+		// 로그찍기 
+		int empNo = emp.getEmpNo();
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empNo);
+		log.setLogTarget("퇴사처리");
+		log.setLogDesc("퇴사처리 성공");
+		logService.writeLog(log);
+		
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
 	// 히스토리 페이지
 	@GetMapping("/admin/emp/history")
-	public String empHistoryListView() {
+	public String empHistoryListView(Model model) {
+		model.addAttribute("title", "사원 인사이동 히스토리");
 		return "/admin/empHistory";
 	}
 	
@@ -192,7 +217,8 @@ public class EmployeeController {
 	
 	//퇴사자 페이지
 	@GetMapping("/admin/emp/retire")
-	public String empRetireListView() {
+	public String empRetireListView(Model model) {
+		model.addAttribute("title", "퇴사자 관리");
 		return "/admin/empRetire";
 	}
 	
@@ -343,16 +369,38 @@ public class EmployeeController {
 	
 	// 시큐리티 사용한 로그인 화면
 	@GetMapping("/signin")
-	public String loginView() {
+	public String loginView(Model model) {
+		model.addAttribute("title", "로그인 페이지");
 		return "loginWithSecurity";
 	}
-
+	
+	@GetMapping("/selfLogout")
+	public String logout(LogVO log, HttpServletRequest request, @SessionAttribute("sessionEmp") EmployeeVO emp) {
+		// 로그 저장
+		int empNo = emp.getEmpNo();
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empNo);
+		log.setLogTarget("로그아웃");
+		log.setLogDesc("로그아웃 성공");
+		
+		logService.writeLog(log);
+		return "redirect:/logout";
+	}
 	// 시큐리티 사용한 로그인 성공시 이동하는 화면
 	@GetMapping("/loginSuccess")
-	public String login(Authentication authentication, Model model) {
+	public String login(Authentication authentication, Model model, LogVO log, HttpServletRequest request) {
 	    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 	    EmployeeVO emp = empService.getLoginedEmp(Integer.parseInt(userDetails.getUsername()));
 		model.addAttribute("sessionEmp", emp );
+		
+		// 로그 저장
+		int empNo = emp.getEmpNo();
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empNo);
+		log.setLogTarget("로그인");
+		log.setLogDesc("로그인 성공");
+		logService.writeLog(log);
+		
 		try { 
 			batchCtrl.schedulerTest();
 		} catch (ParseException e) {
@@ -385,6 +433,7 @@ public class EmployeeController {
 	    if(workVo == null) {
 	    	// 출근을 아직 안눌렀다면 
 	    	model.addAttribute("totalTime", totalTimeStr);
+	    	model.addAttribute("title", "52시간 근태관리");
 	    	return "index";
 	    } 
 	    
@@ -393,6 +442,7 @@ public class EmployeeController {
 	    	startTime = sdf.format(workVo.getWorkStart());
 	    	model.addAttribute("startTime", startTime);
 	    	model.addAttribute("totalTime", totalTimeStr);
+	    	model.addAttribute("title", "52시간 근태관리");
 	    	return "index";
 	    }
 	    
@@ -402,7 +452,7 @@ public class EmployeeController {
     	model.addAttribute("startTime", startTime);
 		model.addAttribute("endTime", endTime);
 		model.addAttribute("totalTime", totalTimeStr);
-		
+		model.addAttribute("title", "52시간 근태관리");
 		return "index";
 	}
 	
@@ -414,7 +464,8 @@ public class EmployeeController {
 	
 	// pdf 다운로드 처리 컨트롤러
 	@GetMapping("/admin/pdf")
-	public ResponseEntity<Resource> pdfView(Model model, HttpServletRequest request, @RequestParam("empNo") int empNo) throws IOException {
+	public ResponseEntity<Resource> pdfView(Model model, HttpServletRequest request, @RequestParam("empNo") int empNo,
+			LogVO log, @SessionAttribute("sessionEmp") EmployeeVO emp) throws IOException {
 		
 		Map<String, Object> empInfo = empService.getEmpRetireInfo(empNo);
 	
@@ -499,6 +550,13 @@ public class EmployeeController {
 		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
 
 		Resource resource = new InputStreamResource(Files.newInputStream(path));
+		
+		// 로그 저장
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(emp.getEmpNo());
+		log.setLogTarget("경력증명서 출력");
+		log.setLogDesc("경력증명서 출력 성공");
+		logService.writeLog(log);
 		
 		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}

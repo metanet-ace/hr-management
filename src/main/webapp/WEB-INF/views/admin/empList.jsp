@@ -11,6 +11,9 @@ textarea {
 	border: none;
 	resize: none;
 }
+.card {
+ 			border: 1px solid;
+ }
 </style>
 <script>
 
@@ -248,7 +251,7 @@ textarea {
 			<div class="card text-center bg-dark text-white col-lg-8">
 				<div class="card-header">발령처리</div>
 				<div class="card-body">
-					<h1 class="text-white">선택한 인원 발령처리</h1>
+					<h1 class="text-white">선택 인원 발령처리</h1>
 					<br> <br> <br>
 					<form class="form-inline justify-content-right" action="/admin/emp"
 						method="post">
@@ -293,13 +296,13 @@ textarea {
 			<div class="card text-center bg-danger text-white col-lg-4">
 				<div class="card-header">퇴사자 등록</div>
 				<div class="card-body">
-					<h1 class="text-white">선택한 인원 퇴사처리</h1>
+					<h1 class="text-white">선택 인원 퇴사처리</h1>
 					<br> <br>
 					<form class="form-inline justify-content-right" action="/admin/emp"
 						method="post">
-						<label class=" col-lg-2 col-form-label" for="retireReason">사유<span
+						<label class=" col-lg-3 col-form-label" for="retireReason">사유<span
 							class="text-white">*</span></label>
-						<div class="col-lg-10" >
+						<div class="col-lg-12" >
 							<textarea rows="3" cols="200" id="retireReason" name="retireReason"></textarea>
 						</div>
 						<div class="col-lg-4"></div>

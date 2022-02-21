@@ -3,7 +3,11 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 	<c:import url="/WEB-INF/views/include/header.jsp" />
 	<c:import url="/WEB-INF/views/include/sidebar.jsp" />
- 	
+ 	<style>
+ 		.card {
+ 			border: 1px solid;
+ 		}
+ 	</style>
   	<script>
   		$(document).ready(function(){
   			// 페이지가 처음 로드될 때 캘린더 보여주기
@@ -26,19 +30,24 @@
                 	
 					<div class="col-lg-3  text-center">
 						<div class="card text-center border-dark mb-3" style="height: 100%;">
-							<div class="card-header text-center" style="display: block; font-size: 1.5em; color: black;">근태관리</div>
+							<div class="card-header text-center" style="display: block; font-size: 1.5em; color: black;">주 52시간제 근태관리</div>
 							<div class="card-body">
 								<button type="button" class="btn btn-outline-danger" id="startTime" onclick='recordTime();'>출근하기</button>
 								<button type="button" class="btn btn-outline-danger" id="endTime" onclick='recordEndTime();'>퇴근하기</button>
 								<br><br>
 								
+								<div class="card pt-3 pb-3">
 								<h4>금일 출근시간</h4>
 								<h5 id="start">${startTime}</h5>
+								</div>
+								<div class="card pt-3 pb-3">
 								<h4>금일 퇴근시간</h4>
 								<h5 id="end">${endTime}</h5>
+								</div>
+								<div class="card pt-3 pb-3">
 								<h4>이번주 누적근무 시간</h4>
 								<h5 id="total">${totalTime }</h5>
-								<h5></h5>
+								</div>
 							</div>
 							<div class="card-footer"></div>
 						</div>
@@ -80,15 +89,8 @@
 				
 				var calendarEl = document.getElementById('calendar');
 				var calendar = new FullCalendar.Calendar(calendarEl, {
-					headerToolbar: {
-						left: '',
-						center: 'title',
-						right: ''
-					},
-					locale : "ko",
-					dateClick : function(info) {
-						console.log(info);
-					},
+				    initialView: 'dayGridMonth',
+				    locale : "ko",
 					//navLinks: true,
 					editable : true,
 					events : list

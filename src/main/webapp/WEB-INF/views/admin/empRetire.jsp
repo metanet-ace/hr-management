@@ -251,7 +251,7 @@ function getPage(pageNum){
 function download(empNo){
 	
 	$.ajax({
-		url: "/admin/pdf?empNo=" + empNo,
+		url: "/admin/pdf",
 		type: "GET",
 		contentType : 'application/json',
 		success: function(result){

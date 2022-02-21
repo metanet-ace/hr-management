@@ -303,29 +303,33 @@ public class EmployeeServiceImpl {
 		Map<String, String> param = new HashMap<String, String>();
 		String strEmpNo = Integer.toString(empNo);
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
-		
-		System.out.println(dateFormat.format(cal.getTime()));
-		
-		int year = cal.get(Calendar.YEAR);
-		System.out.println("해당년도: " + cal.get(Calendar.YEAR));
-		int month = cal.get(Calendar.MONTH)+1;
-		System.out.println("해당월: " + cal.get(Calendar.MONTH) + 1); // MONTH는 0부터 시작
-		int startday = cal.getMinimum(Calendar.DAY_OF_MONTH);
-		System.out.println("첫번째 일: " + cal.getMinimum(Calendar.DAY_OF_MONTH));
-		int endday = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-		System.out.println("마지막 일(현재 날짜 기준 최대수)" + cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-		System.out.println("마지막 일(Calendar이 가진 최대수)" + cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-		
-		String start = Integer.toString(year) + "0" + Integer.toString(month) + Integer.toString(startday);
-		String end = Integer.toString(year) + "0" + Integer.toString(month) + Integer.toString(endday);
+		/*
+		 * SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		 * 
+		 * Calendar cal = Calendar.getInstance(); cal.setTime(new Date());
+		 * 
+		 * System.out.println(dateFormat.format(cal.getTime()));
+		 * 
+		 * int year = cal.get(Calendar.YEAR); System.out.println("해당년도: " +
+		 * cal.get(Calendar.YEAR)); int month = cal.get(Calendar.MONTH)+1;
+		 * System.out.println("해당월: " + cal.get(Calendar.MONTH) + 1); // MONTH는 0부터 시작
+		 * int startday = cal.getMinimum(Calendar.DAY_OF_MONTH);
+		 * System.out.println("첫번째 일: " + cal.getMinimum(Calendar.DAY_OF_MONTH)); int
+		 * endday = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		 * System.out.println("마지막 일(현재 날짜 기준 최대수)" +
+		 * cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		 * System.out.println("마지막 일(Calendar이 가진 최대수)" +
+		 * cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		 * 
+		 * String start = Integer.toString(year) + "0" + Integer.toString(month) +
+		 * Integer.toString(startday); String end = Integer.toString(year) + "0" +
+		 * Integer.toString(month) + Integer.toString(endday);
+		 */
 		
 		param.put("empNo", strEmpNo);
-		param.put("startdate", start);
-		param.put("enddate", end);
+		/*
+		 * param.put("startdate", start); param.put("enddate", end);
+		 */
 		
 		return empMapper.findWorkingDate(param);
 	}
