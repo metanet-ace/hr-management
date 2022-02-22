@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -30,6 +32,8 @@ import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.EmployeeVO2;
 import com.metanet.domain.LogVO;
+import com.metanet.domain.PageDTO;
+import com.metanet.domain.PaginationDTO;
 import com.metanet.domain.PasswordVO;
 import com.metanet.domain.PositionVO;
 import com.metanet.persistence.Util;
@@ -378,13 +382,44 @@ public class EmployeeController2 {
 	}
 
 	// 부서 상세정보(인사팀)
-	@GetMapping("/admin/emp/deptDetail")
-	public String selectDept(@RequestParam("deptNo") int deptNo, Model model) {
-		List<DepartmentVO> listDept = new ArrayList<DepartmentVO>();
-		listDept = service.selectDept(deptNo);
+	@RequestMapping("/admin/emp/deptDetail")
+	public String selectDept(@RequestParam("deptNo") int deptNo, HttpServletRequest request, Model model) {
 		DepartmentVO dept = service.selectD(deptNo);
 		model.addAttribute("dept", dept);
-		model.addAttribute("deptDetail", listDept);
+		
+		int pageNum = 1;
+		String keyField = "";
+		String keyword = "";
+		
+		if(request.getParameter("pageNum") != null) {
+			pageNum = Integer.parseInt((request.getParameter("pageNum")).trim());
+		}
+		model.addAttribute("tempPageNum", pageNum);
+		
+		if(request.getParameter("keyField") != null && request.getParameter("keyField") != "") {
+			keyField = request.getParameter("keyField");
+		}
+		
+		if (request.getParameter("keyword") != null && request.getParameter("keyword") != "") {
+			keyword = request.getParameter("keyword");
+		}
+		
+		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startNum", pdto.getStartNum());
+		map.put("endNum", pdto.getEndNum());
+		map.put("keyword", pdto.getkeyword());
+		map.put("deptNo", deptNo);
+		map.put("keyField", pdto.getkeyField());
+		model.addAttribute("pageInfo", map);
+
+		List<DepartmentVO> list = service.PagingSelectDept(map);
+		model.addAttribute("list", list);
+		
+		int total = service.deptTotalCount(map);
+		PaginationDTO pageDto = new PaginationDTO(total, pdto);
+		
+		model.addAttribute("paging", pageDto);
 		model.addAttribute("title", dept.getDeptName() + " 상세보기");
 
 		return "/admin/deptDetail";
@@ -475,15 +510,47 @@ public class EmployeeController2 {
 	}
 
 	// 직급 상세정보(인사팀)
-	@GetMapping("/admin/emp/posDetail")
-	public String selectPosition(@RequestParam("posNo") int posNo, Model model) {
-		List<PositionVO> listPos = new ArrayList<PositionVO>();
-		listPos = service.selectPos(posNo);
+	@RequestMapping("/admin/emp/posDetail")
+	public String selectPosition(@RequestParam("posNo") int posNo, HttpServletRequest request, Model model) {
 		PositionVO pos = service.selectSal(posNo);
 		model.addAttribute("pos", pos);
-		model.addAttribute("posDetail", listPos);
-		model.addAttribute("title", pos.getPosName() + " 상세보기");
+		
+		
+		int pageNum = 1;
+		String keyField = "";
+		String keyword = "";
+		
+		if(request.getParameter("pageNum") != null) {
+			pageNum = Integer.parseInt((request.getParameter("pageNum")).trim());
+		}
+		model.addAttribute("tempPageNum", pageNum);
+		
+		if(request.getParameter("keyField") != null && request.getParameter("keyField") != "") {
+			keyField = request.getParameter("keyField");
+		}
+		
+		if (request.getParameter("keyword") != null && request.getParameter("keyword") != "") {
+			keyword = request.getParameter("keyword");
+		}
+		
+		PageDTO pdto = new PageDTO(pageNum, keyField, keyword);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startNum", pdto.getStartNum());
+		map.put("endNum", pdto.getEndNum());
+		map.put("keyword", pdto.getkeyword());
+		map.put("posNo", posNo);
+		map.put("keyField", pdto.getkeyField());
+		model.addAttribute("pageInfo", map);
 
+		List<PositionVO> list = service.PagingSelectPos(map);
+		model.addAttribute("list", list);
+		
+		int total = service.posTotalCount(map);
+		PaginationDTO pageDto = new PaginationDTO(total, pdto);
+		
+		model.addAttribute("paging", pageDto);
+		model.addAttribute("title", pos.getPosName() + " 상세보기");
+		
 		return "/admin/posDetail";
 	}
 

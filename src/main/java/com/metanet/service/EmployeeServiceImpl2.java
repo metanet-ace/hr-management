@@ -96,86 +96,96 @@ public class EmployeeServiceImpl2 implements EmployeeService2 {
 	public void insertDept(DeptVO dept) {
 		empMapper.insertDept(dept);
 	}
-	
+
 	// 사원번호 확인
 	@Override
 	public int empNoCheck(int empNo) {
 		return empMapper.empNoCheck(empNo);
 	}
-	
-	// 부서원 상세정보(인사팀)
+
+	// 부서원상세보기
 	@Override
-	public List<DepartmentVO> selectDept(int deptNo) {
-		return empMapper.selectDept(deptNo);
+	public List<DepartmentVO> PagingSelectDept(Map<String, Object> map) {
+		return empMapper.PagingSelectDept(map);
 	}
-	
+
+	@Override
+	public int deptTotalCount(Map<String, Object> map) {
+		return empMapper.deptTotalCount(map);
+	}
+
 	// 부서장 상세보기
 	@Override
 	public DepartmentVO selectD(int deptNo) {
 		return empMapper.selectD(deptNo);
 	}
-	
+
 	// 부서수정(인사팀)
 	@Override
 	public void updateDept(DeptVO dept) {
 		empMapper.updateDept(dept);
 	}
-	
-	//부서 삭제 전 사원들의 부서이동
+
+	// 부서 삭제 전 사원들의 부서이동
 	@Override
 	public int empDept(EmployeeVO2 emp) {
 		return empMapper.empDept(emp);
 	}
-	
+
 	// 부서 삭제
 	@Override
 	public int deleteDept(int deptNo) {
 		return empMapper.deleteDept(deptNo);
 	}
-	
-	//직급리스트
+
+	// 직급리스트
 	@Override
-	public List<PositionVO> posList(){
+	public List<PositionVO> posList() {
 		return empMapper.posList();
 	}
-	
-	//직급이름, 번호 불러오기
+
+	// 직급이름, 번호 불러오기
 	@Override
-	public List<PositionVO> pos(){
+	public List<PositionVO> pos() {
 		return empMapper.pos();
 	}
-	
-	//직급추가(인사팀)
+
+	// 직급추가(인사팀)
 	@Override
 	public void insertPos(PositionVO pos) {
 		empMapper.insertPos(pos);
 	}
-	
-	//직급상세(연봉)
+
+	// 직급상세(연봉)
 	@Override
 	public PositionVO selectSal(int posNo) {
 		return empMapper.selectSal(posNo);
 	}
-	
-	//직급상세(사원)
+
+	// 직급상세(사원)
 	@Override
-	public List<PositionVO> selectPos(int posNo){
-		return empMapper.selectPos(posNo);
+	public List<PositionVO> PagingSelectPos(Map<String, Object> map) {
+		return empMapper.PagingSelectPos(map);
 	}
-	
-	//직급수정(인사팀)
+
+	@Override
+	public int posTotalCount(Map<String, Object> map) {
+		return empMapper.posTotalCount(map);
+	}
+
+	// 직급수정(인사팀)
 	@Override
 	public void updatePos(PositionVO pos) {
 		empMapper.updatePos(pos);
 	}
-	
-	//직급 삭제 전 사원직급0번이동
+
+	// 직급 삭제 전 사원직급0번이동
 	@Override
 	public int empPos(EmployeeVO2 emp) {
 		return empMapper.empPos(emp);
 	}
-	
-	//직급삭제
+
+	// 직급삭제
 	@Override
 	public int deletePos(int posNo) {
 		return empMapper.deletePos(posNo);

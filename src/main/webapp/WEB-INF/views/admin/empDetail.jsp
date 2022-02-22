@@ -20,17 +20,21 @@ function upPwd(no){
         ***********************************-->
 <div class="content-body">
 	<div class="container-fluid">
-		
+		<div class="row page-titles mx-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>${empDetail.empName }님의 정보</h4>
+            </div>
+         </div>
+      </div>
 		<!-- row -->
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="card">
-					<div class="card-header">
-						<h4 class="card-title">Form Validation</h4>
-					</div>
 					<div class="card-body">
 						<div class="form-validation">
 							<form class="form-valide" align="center">
+							<br><br>
 							<c:if test="${empDetail.empPhoto != null }">
 							<img src="${ pageContext.servletContext.contextPath }/resources/employeeImages/${ empDetail.empRePhoto }" style="width: 250px; height: 300px">
 							</c:if>
