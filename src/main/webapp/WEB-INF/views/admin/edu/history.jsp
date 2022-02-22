@@ -17,9 +17,6 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-	console.log("ready");
-	console.log("keyField: " + '${keyField}');
-	
 	//검색 후 select-option 유지
 	$("#keyField").val("${keyField}").attr("selected","selected");
 
@@ -87,7 +84,7 @@ function modifyScore(){
 		</div>
 		<!-- 교육 히스토리 리스트 출력 -->
 			<form id="search_form" action="/edu/admin/history" method="post" class="form-inline de-flex justify-content-end">
-				<select name="keyField" id="field" class="form-control form-control-sm" >
+				<select name="keyField" id="keyField" class="form-control form-control-sm" >
 					<option value="">=====</option>
 					<option value="eduTitle">교육명</option>
 					<option value="empNo">사원번호</option>
