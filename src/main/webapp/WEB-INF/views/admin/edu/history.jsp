@@ -101,7 +101,7 @@ function modifyScore(){
 					<th>교육명</th>
 					<th>사원번호</th>
 					<th>성명</th>
-					<th>출석률</th>
+					<th>진행률</th>
 					<th>점수<span class="scoreMsg"></span></th>
 				</tr>
 			</thead>

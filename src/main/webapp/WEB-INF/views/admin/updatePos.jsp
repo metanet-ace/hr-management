@@ -43,7 +43,7 @@ $(document).ready(function(){
 			$("#posMaxsal").focus();
 			return;
 		}
-		else if(confirm("직급을 등록하시겠습니까?")){
+		else if(confirm("해당 직급을 수정하시겠습니까?")){
 			$("#update").submit();
 			return false;
 		}

@@ -44,13 +44,17 @@
         ***********************************-->
 	<div class="content-body">
 		<div class="container-fluid">
+		<div class="row page-titles mx-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>[${detail.eduTitle }] 정보 상세</h4>
+            </div>
+         </div>
+     	 </div>
 			<!-- row -->
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="card">
-						<div class="card-header">
-							<h4 class="card-title">교육 과정 조회</h4>
-						</div>
 						<div class="card-body">
 							<div class="form-validation">
 								<div class="form-valide">

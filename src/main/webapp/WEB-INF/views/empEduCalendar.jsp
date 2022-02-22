@@ -9,7 +9,7 @@
   			var calList = [];
   			
   			<c:forEach items="${calList }" var="list">
-  				calList.push({title: "${list.eduTitle}", start:"${list.eduStart}", end: "${list.eduEnd}", url:"/edu/detail?edu_no=${list.eduNo}", color:ColorCode() });
+  				calList.push({title: "${list.eduTitle}", start:"${list.eduStart}", end: "${list.eduEnd}", url:"/edu/eduEmpDetail?edu_no=${list.eduNo}", color:ColorCode() });
   			</c:forEach >
 
   			var calendarEl = document.getElementById('calendar');

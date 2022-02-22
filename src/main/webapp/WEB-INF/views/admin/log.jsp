@@ -56,7 +56,7 @@ $(document).ready(function(){
 				<option value="">====</option>
 				<option value="logIp">아이피</option>
 				<option value="empNo">사원번호</option>
-				<option value="logDate">기록일</option>
+				<option value="logDate">기록일(yyyy-mm-dd)</option>
 				<option value="logTarget">로그장소</option>
 			</select> <input type="text" id="kwd" name="keyword" value="${pageInfo.keyword}" class="form-control form-cotrol-sm" style="margin: 10px"> 
 			<input type="submit" class="btn btn-outline-info btn-sm" value="찾기">

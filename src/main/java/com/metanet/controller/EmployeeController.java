@@ -376,6 +376,7 @@ public class EmployeeController {
 		return "loginWithSecurity";
 	}
 	
+	// 로그아웃
 	@GetMapping("/selfLogout")
 	public String logout(LogVO log, HttpServletRequest request, @SessionAttribute("sessionEmp") EmployeeVO emp) {
 		// 로그 저장

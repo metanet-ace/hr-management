@@ -52,7 +52,7 @@ form {
 			<thead>
 				<tr>
 					<th>교육명</th>
-					<th>출석률</th>
+					<th>진행률</th>
 					<th>점수</th>
 				</tr>
 			</thead>

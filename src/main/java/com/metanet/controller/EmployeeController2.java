@@ -322,14 +322,12 @@ public class EmployeeController2 {
 			}
 			return "/empUpPwd";
 		}
-		System.out.println("hashedPw = " + hashedPw);
 		service.pwUpdate(empNo, hashedPw);
-		session.invalidate();
 		
 		log.setLogDesc("비밀번호 수정 성공");
 		logService.writeLog(log);
 
-		return "redirect:/logout";
+		return "redirect:/selfLogout";
 	}
 
 	// 부서리스트조회(인사팀)

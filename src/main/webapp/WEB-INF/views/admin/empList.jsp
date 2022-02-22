@@ -284,8 +284,7 @@ textarea {
 								</c:forEach>
 							</select>
 						</div>
-						<label class="col-lg-3 col-form-label" for="reason">사유<span
-							class="text-danger">*</span></label>
+						<label class="col-lg-3 col-form-label" for="reason">사유</label>
 						<div class="col-lg-9" style="margin-top: 2em;">
 							<textarea rows="1" cols="100" id="reason" name="reason"></textarea>
 						</div>

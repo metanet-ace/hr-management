@@ -29,9 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// 현재는 부서번호로 권한을 주기 때문에 ROLE_이 붙으면 안되므로 hasAuthority 사용 
 				.antMatchers("/admin/**").hasAuthority("인사팀")
 				.antMatchers("/edu/log", "/edu/update", "/edu/delete", 
-						"/edu/add", "/updateNotice",  "/noticeAdd", "/deleteNotice",
+						"/edu/add", "/updateNotice",  "/noticeAdd", "/deleteNotice", "/edu/detail",
 						"/edu/list/**", "/edu/allocation/**", "/edu/score", "/edu/calendar").hasAuthority("인사팀")
-				.antMatchers("/", "/main", "/notice", "/edu/detail", "/edu/eduEmpDetail","/edu/history", "/edu/download", 
+				.antMatchers("/", "/main", "/notice", "/edu/eduEmpDetail","/edu/history", "/edu/download", 
 						"/edu/empEduCalendar", "/noticeDetail").authenticated();
 				
 		

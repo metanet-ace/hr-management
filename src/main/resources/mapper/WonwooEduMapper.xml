@@ -63,7 +63,7 @@
 				FROM (SELECT LOG_NO, LOG_IP, EMP_NO, 
 				TO_CHAR(LOG_DATE, 'YYYY-MM-DD HH24:MI:SS') as LOG_DATE,
 				LOG_TARGET, LOG_DESC
-				FROM LOG WHERE LOG_DATE like '%'||#{keyword}||'%'
+				FROM LOG WHERE LOG_DATE like TO_DATE(#{keyword}, 'YYYY-MM-DD')
 				ORDER BY LOG_NO DESC) a )
 				WHERE rnum BETWEEN #{startNum} AND #{endNum}
 			</when>
