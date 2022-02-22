@@ -15,6 +15,10 @@ function del(no){
 		location.href="/admin/emp/deletePos?posNo="+no;
 	}
 }
+
+$(document).ready(function(){
+	$("#keyField").val("${keyField}").attr("selected","selected");
+})
 </script>
 
 
@@ -62,6 +66,7 @@ function del(no){
 								<input type="hidden" name="posNo" value="${pos.posNo }">
 								<select name="keyField" id="keyField" size="1"
 									class="form-control form-control-sm">
+									<option value="">=====</option>
 									<option value="empNo">사원번호</option>
 									<option value="empName">이름</option>
 								</select> <input type="text" id="kwd" name="keyword"

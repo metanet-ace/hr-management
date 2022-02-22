@@ -412,6 +412,7 @@ public class EmployeeController2 {
 		map.put("deptNo", deptNo);
 		map.put("keyField", pdto.getkeyField());
 		model.addAttribute("pageInfo", map);
+		//model.addAttribute("keyField", pdto.getkeyField());
 
 		List<DepartmentVO> list = service.PagingSelectDept(map);
 		model.addAttribute("list", list);
@@ -541,6 +542,7 @@ public class EmployeeController2 {
 		map.put("posNo", posNo);
 		map.put("keyField", pdto.getkeyField());
 		model.addAttribute("pageInfo", map);
+		model.addAttribute("keyField", pdto.getkeyField());
 
 		List<PositionVO> list = service.PagingSelectPos(map);
 		model.addAttribute("list", list);
