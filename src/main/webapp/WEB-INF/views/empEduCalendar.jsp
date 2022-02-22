@@ -9,9 +9,7 @@
   			var calList = [];
   			
   			<c:forEach items="${calList }" var="list">
-  				console.log(${list.eduNo});
   				calList.push({title: "${list.eduTitle}", start:"${list.eduStart}", end: "${list.eduEnd}", url:"/edu/detail?edu_no=${list.eduNo}", color:ColorCode() });
-  				console.log(calList);
   			</c:forEach >
 
   			var calendarEl = document.getElementById('calendar');
@@ -29,9 +27,6 @@
 					right: 'today prev,next listButton'
 				},
 				locale : "ko",
-				dateClick : function(info) {
-					console.log(info);
-				},
 				editable : true,
 				events : calList,
 				locale : "ko",
@@ -55,6 +50,13 @@
 		<div class="content-body">
 			<!-- row -->
 			<div class="container-fluid">
+				<div class="row page-titles mx-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>교육 과정 달력</h4>
+            </div>
+         </div>
+      </div>
 				<div id="calendar" style="padding-right:200px; padding-left:200px"></div>
 			</div>
 		</div>

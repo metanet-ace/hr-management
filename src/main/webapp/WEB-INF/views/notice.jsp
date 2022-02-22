@@ -43,7 +43,13 @@ $(document).ready(function(){
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 공지사항 전체 리스트 출력 -->
-
+		<div class="row page-titles mx-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>공지사항</h4>
+            </div>
+         </div>
+      </div>
 		<form id="search_form" action="/notice" method="post" class="form-inline d-flex justify-content-end">
 			<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
 			<input type="hidden" name="a" value="list"> 
