@@ -39,14 +39,14 @@ $(document).ready(function(){
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 교육 히스토리 리스트 출력 -->
-		<form id="search_form" action="/edu/list" method="post">
-			<select name="keyField" id="keyField" size="1">
+		<form id="search_form" action="/edu/list" method="post" class="form-inline de-flex justify-content-end">
+			<select name="keyField" id="keyField" size="1" class="form-control form-cotrol-sm">
 				<option value="">====</option>
 				<option value="eduTitle">교육명</option>
 				<option value="eduTarget">교육대상</option>
 				<option value="eduProgress">진행상태</option>
-			</select> <input type="text" id="kwd" name="keyword" value="${keyword}"> <input
-				type="submit" value="찾기">
+			</select> <input type="text" class="form-control form-cotrol-sm" id="kwd" name="keyword" value="${keyword}"> 
+			<input type="submit" value="찾기" class="btn btn-outline-info btn-sm">
 		</form>
 		<br>
 		<div style="float:right" ><input type="button" class="btn btn-light" value="달력으로" onclick="location.href='/edu/calendar'"></div>

@@ -7,22 +7,22 @@
     
     <select id="eduHistorySelect" resultType="com.metanet.domain.AttendanceVO">
 	     <![CDATA[
-	    	select h.edu_hisno, 
-	    		   to_char(e.edu_start,'yyyymmdd') as edu_start, 
+	    	select h.edu_hisno,
+	    		   to_char(e.edu_start,'yyyymmdd') as edu_start,
 	    		   to_char(e.edu_end,'yyyymmdd') as edu_end, 
 	    		   h.attendance 
 	    	from edu_history h, edu e
 	    	where h.edu_no = e.edu_no
-	    	and attendance < 100 
-	    	and edu_start < sysdate
+	    	and h.attendance < 100 
+	    	and e.edu_start < sysdate
 	    ]]>
     </select>
     
     <update id="eduAttendanceUpdate" parameterType="java.util.List">
     	<foreach item="item" collection="list" separator=";" open="DECLARE BEGIN" close="; END;">
     		update edu_history
-    		 set attendance = #{item.attendance}
-    		 where edu_hisno = #{item.eduHisno}
+    		set attendance = #{item.attendance}
+    		where edu_hisno = #{item.eduHisno}
     	</foreach>
     </update>
     

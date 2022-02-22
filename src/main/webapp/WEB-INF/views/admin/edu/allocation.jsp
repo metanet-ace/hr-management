@@ -64,14 +64,14 @@ function eduAllocation(){
 <body>
 <div class="content-body">
 	<div class="container-fluid">
-		<form id="search_form" action="/edu/allocation/${eduNo}" method="post">
-			<select name="keyField" id="keyField" size="1">
+		<form id="search_form" action="/edu/allocation/${eduNo}" method="post" class="form-inline de-flex justify-content-end">
+			<select name="keyField" id="keyField" size="1" class="form-control form-cotrol-sm">
 				<option value="">==</option>
 				<option value="deptName">부서</option>
 				<option value="posName">직급</option>
 			</select> 
-			<input type="text" id="kwd" name="keyword" value="${keyword}"> 
-			<input type="submit" value="찾기">
+			<input type="text" id="kwd" name="keyword" value="${keyword}" class="form-control form-cotrol-sm"> 
+			<input type="submit" class="btn btn-outline-info btn-sm" value="찾기">
 		</form>
 		<br>
 		<div style='width: 80px; float: right; margin-bottom: 0.5em;'>

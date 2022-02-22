@@ -29,25 +29,35 @@ public class suinEduServiceImpl implements suinEduService {
 	@Override
 	public void eduAttendance() throws ParseException {
 		List<AttendanceVO> list = mapper.eduHistorySelect();
-		Calendar getToday = Calendar.getInstance();
-		getToday.setTime(new Date());
-		
-		for(AttendanceVO vo : list) {
-			Date startD = new SimpleDateFormat("yyyyMMdd").parse(vo.getEduStart());
-			Date endD = new SimpleDateFormat("yyyyMMdd").parse(vo.getEduEnd());
-			System.out.println(vo.getEduHisno() +" : "+ startD);
-			Calendar start = Calendar.getInstance();
-			Calendar end = Calendar.getInstance();
+		System.out.println(list);
+		if(!list.isEmpty()) {
+			System.out.println("list is not null");
+			Calendar getToday = Calendar.getInstance();
+			getToday.setTime(new Date());
 			
-			start.setTime(startD);
-			end.setTime(endD);
-			
-			float diffSecBunja = (getToday.getTimeInMillis() - start.getTimeInMillis());
-			float diffSecBunmo = (end.getTimeInMillis() - start.getTimeInMillis());
-			
-			vo.setAttendance((diffSecBunja/diffSecBunmo)*100);			
+			for(AttendanceVO vo : list) {
+				Date startD = new SimpleDateFormat("yyyyMMdd").parse(vo.getEduStart());
+				Date endD = new SimpleDateFormat("yyyyMMdd").parse(vo.getEduEnd());
+				System.out.println(vo.getEduHisno() +" : "+ startD);
+				Calendar start = Calendar.getInstance();
+				Calendar end = Calendar.getInstance();
+				
+				start.setTime(startD);
+				end.setTime(endD);
+				
+				float diffSecBunja = (getToday.getTimeInMillis() - start.getTimeInMillis());
+				float diffSecBunmo = (end.getTimeInMillis() - start.getTimeInMillis());
+				
+				if((getToday.getTimeInMillis() - start.getTimeInMillis()) < 0) {
+					vo.setAttendance(0);
+				} else if((diffSecBunja/diffSecBunmo)*100 > 100) {
+					vo.setAttendance(100);
+				} else {
+					vo.setAttendance((diffSecBunja/diffSecBunmo)*100);
+				}
+			}
+			mapper.eduAttendanceUpdate(list);
 		}
-		mapper.eduAttendanceUpdate(list);
 	}
 
 	@Override
@@ -69,22 +79,25 @@ public class suinEduServiceImpl implements suinEduService {
 	@Override
 	public void eduProgress() throws ParseException {
 		List<EduVO> list = mapper.eduProgressList();
-
-		Date today = new Date();
 		
-		for(EduVO vo : list) {
-			Date startD = new SimpleDateFormat("yyyy-MM-dd").parse(vo.getEduStart());
-			Date endD = new SimpleDateFormat("yyyy-MM-dd").parse(vo.getEduEnd());
+		if(!list.isEmpty()) {
+			Date today = new Date();
+			
+			for(EduVO vo : list) {
+				Date startD = new SimpleDateFormat("yyyy-MM-dd").parse(vo.getEduStart());
+				Date endD = new SimpleDateFormat("yyyy-MM-dd").parse(vo.getEduEnd());
 
-			if(today.before(startD)) {
-				vo.setEduProgress("pre");
-			} else if (today.after(endD)) {
-				vo.setEduProgress("post");
-			} else {
-				vo.setEduProgress("ing");
+				if(today.before(startD)) {
+					vo.setEduProgress("pre");
+				} else if (today.after(endD)) {
+					vo.setEduProgress("post");
+				} else {
+					vo.setEduProgress("ing");
+				}
 			}
+			mapper.eduProgressUpdate(list);
 		}
-		mapper.eduProgressUpdate(list);
+		
 	}
 
 	@Override
