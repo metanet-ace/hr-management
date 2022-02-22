@@ -16,6 +16,13 @@ function deptWriteForm(){
         ***********************************-->
         <div class="content-body">
             <div class="container-fluid">
+            <div class="row page-titles mx-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>부서 목록</h4>
+            </div>
+         </div>
+      </div>
                 <!-- row -->
                 <div class="row">
                     <div class="col-12">

@@ -79,10 +79,52 @@
 	</select>
 	
 	<!-- 부서원 상세보기 -->
-	<select id="selectDept" resultType="com.metanet.domain.DepartmentVO">
-		select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name, e.emp_no, e.emp_retdate
-		from department d, employee e
-		where d.dept_no = #{deptNo} and e.dept_no = #{deptNo}
+	<select id="PagingSelectDept" parameterType="map" resultType="com.metanet.domain.DepartmentVO">
+		<choose>
+			<when test="keyField == 'empName' and keyword != null and keyword != ''">
+				select * 
+				from(select rownum rnum, a.*
+				from (select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name, e.emp_no, e.emp_retdate
+				from department d, employee e
+				where e.emp_name like '%' || #{keyword} || '%'
+				and d.dept_no = #{deptNo} and e.dept_no = #{deptNo}
+				order by e.emp_no desc) a )
+				where rnum between #{startNum} and #{endNum}
+			</when>
+			<when test="keyField == 'empNo' and keyword != null and keyword != ''">
+				select * 
+				from(select rownum rnum, a.*
+				from (select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name, e.emp_no, e.emp_retdate
+				from department d, employee e
+				where e.emp_no like '%' || #{keyword} || '%'
+				and d.dept_no = #{deptNo} and e.dept_no = #{deptNo}
+				order by e.emp_no desc) a )
+				where rnum between #{startNum} and #{endNum}
+			</when>
+			<otherwise>
+				select *
+				from(select rownum rnum, a.*
+				from (select d.dept_no, d.dept_name, d.dept_head, d.dept_date, d.dept_modify, e.emp_name, e.emp_no, e.emp_retdate
+				from department d, employee e
+				where d.dept_no = #{deptNo} and e.dept_no = #{deptNo}
+				order by emp_no desc) a )
+				where rnum between #{startNum} and #{endNum}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="deptTotalCount" parameterType="Map" resultType="Integer">
+		select count(*) from department d, employee e
+		<choose>
+			<when test="keyField == 'empName' and keyword != null and keyword != ''">
+				where e.emp_name like '%' || #{keyword} || '%'
+					and d.dept_no = #{deptNo} and e.dept_no = #{deptNo}
+			</when>
+			<when test="keyField == 'empNo' and keyword != null and keyword != ''">
+				where e.emp_no like '%' || #{keyword} || '%'
+					and d.dept_no = #{deptNo} and e.dept_no = #{deptNo}
+			</when>
+		</choose>
 	</select>
 	
 	<!-- 부서장 상세보기 -->
@@ -142,10 +184,52 @@
 	</select>
 	
 	<!-- 직급 상세보기(사원) -->
-	<select id="selectPos" resultType="com.metanet.domain.PositionVO">
-		select e.emp_name, e.emp_no, e.emp_retdate
-        from employee e, position p
-        where e.pos_no = p.pos_no and p.pos_no = #{posNo}
+	<select id="PagingSelectPos" parameterType="map" resultType="com.metanet.domain.PositionVO">
+		<choose>
+			<when test="keyField == 'empName' and keyword != null and keyword != ''">
+				select *
+				from(select rownum rnum, a.*
+				from (select e.emp_name, e.emp_no, e.emp_retdate
+				from employee e, position p
+				where e.emp_name like '%' || #{keyword} || '%'
+				and e.pos_no = p.pos_no and p.pos_no = #{posNo} 
+				order by e.emp_no desc) a )
+				where rnum between #{startNum} and #{endNum}
+			</when>
+			<when test="keyField == 'empNo' and keyword != null and keyword != ''">
+				select *
+				from(select rownum rnum, a.*
+				from (select e.emp_name, e.emp_no, e.emp_retdate
+				from employee e, position p
+				where e.emp_no like '%' || #{keyword} || '%'
+				and e.pos_no = p.pos_no and p.pos_no = #{posNo} 
+				order by e.emp_no desc) a )
+				where rnum between #{startNum} and #{endNum}
+			</when>
+			<otherwise>
+				select *
+				from(select rownum rnum, a.*
+				from (select e.emp_name, e.emp_no, e.emp_retdate
+				from employee e, position p
+				where e.pos_no = p.pos_no and p.pos_no = #{posNo} 
+				order by emp_no desc) a )
+				where rnum between #{startNum} and #{endNum}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="posTotalCount" parameterType="Map" resultType="Integer">
+		select count(*) from employee e, position p
+		<choose>
+			<when test="keyField == 'empName' and keyword != null and keyword != ''">
+				where e.emp_name like '%' || #{keyword} || '%'
+					and e.pos_no = p.pos_no and p.pos_no = #{posNo} 
+			</when>
+			<when test="keyField == 'empNo' and keyword != null and keyword != ''">
+				where e.emp_no like '%' || #{keyword} || '%'
+					and e.pos_no = p.pos_no and p.pos_no = #{posNo} 
+			</when>
+		</choose>
 	</select>
 	
 	<!-- 직급 수정하기(인사팀) -->
