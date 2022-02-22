@@ -27,7 +27,7 @@ import com.metanet.persistence.PositionRepository;
 import com.metanet.persistence.QuerydslRepository;
 
 @Service
-public class EmployeeServiceImpl {
+public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Autowired
 	EmployeeMapper empMapper;
@@ -51,40 +51,48 @@ public class EmployeeServiceImpl {
 	QuerydslRepository qdslRepo;
 	
 	// 세션에 로그인 된 사원 정보 넣어주기
+	@Override
 	public EmployeeVO getLoginedEmp(int empNo) {
 		return empRepo.findByEmpNo(empNo);
 	}
 	
 	// 페이징 처리된 사원 전체 리스트 
+	@Override
 	public Page<EmployeeVO> getEmpList(Pageable pageable){
 		return empRepo.findAllByEmpRetdateIsNull(pageable);
 	}
 	
 	// 페이징 처리되고 부서 검색으로 출력된 전체 리스트
+	@Override
 	public Page<EmployeeVO> getEmpListWithDept(String deptName, Pageable pageable){
 		return empRepo.findByDeptDeptNameContainingAndEmpRetdateIsNull(deptName, pageable);
 	}
 	
 	// 페이징 처리되고 직급 검색으로 출력된 전체 리스트
+	@Override
 	public Page<EmployeeVO> getEmpListWithPos(String posName, Pageable pageable){
 		return empRepo.findByPosPosNameContainingAndEmpRetdateIsNull(posName, pageable);
 	}
 	
 	// 페이징 처리되고 이름 검색으로 출력된 사원 리스트
+	@Override
 	public Page<EmployeeVO> getEmpListWithName(String empName, Pageable pageable){
 		return empRepo.findByEmpNameContainingAndEmpRetdateIsNull(empName, pageable);
 	}
 
 	// 부서 전체 출력 
+	@Override
 	public List<DepartmentVO> getDeptList(){
 		return deptRepo.findAll();
 	}
 	
 	// 직급 전체 출력 
+	@Override
 	public List<PositionVO> getPosList(){
 		return posRepo.findAll();
 	}
 	// 사원의 부서, 직급이동(UPDATE)
+	@Override
 	public int updateEmpDeptAndPos(int empNo, int deptNo, int posNo, String reason){
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 
@@ -109,6 +117,7 @@ public class EmployeeServiceImpl {
 		return empMapper.saveHistory(empHis); 
 	}
 	// 사원의 부서이동(UPDATE)
+	@Override
 	public int updateEmpDept(int empNo, int deptNo, String reason)	{
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 
@@ -134,6 +143,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 사원의 직급이동(UPDATE)
+	@Override
 	public int updateEmpPos(int empNo, int posNo, String reason)	{
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 		// 사원의 기존 부서, 직급 정보 저장 
@@ -158,6 +168,7 @@ public class EmployeeServiceImpl {
 	}	
 	
 	// 퇴사자 처리
+	@Override
 	public void updateRetire(int empNo, String retireReason) {
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 		emp.setEmpRetdate(new Date());
@@ -177,6 +188,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 페이징 + 조건) 히스토리 리스트
+	@Override
 	public Page<EmpHistoryVO> getEmpHistoryList(HashMap<String, String> data, Pageable pageable){
 		System.out.println(data.get("empName"));
 		System.out.println("시작" + data.get("startDate"));
@@ -202,6 +214,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 페이징 + 조건) 퇴사자 리스트
+	@Override
 	public Page<EmployeeVO> getEmpRetireList(HashMap<String, String> data, Pageable pageable){
 		System.out.println(data.get("empName"));
 		if(data.get("empName") != "" && data.get("empName") != null) {
@@ -225,11 +238,13 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 퇴사자 정보 출력
+	@Override
 	public Map<String, Object> getEmpRetireInfo(int empNo) {
 		return empMapper.findByEmpNoJoinHistory(empNo);
 	}
 	
 	// 퇴사 처리 취소
+	@Override
 	public EmployeeVO cancleRetire(int empNo) {
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 		emp.setEmpRetdate(null);
@@ -238,6 +253,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 출근 시간 등록 
+	@Override
 	public EmpWorkingtimeVO insertStartTime(int empNo) {
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 
@@ -250,6 +266,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 오늘 출근한 시간 보기
+	@Override
 	public EmpWorkingtimeVO findStartWorkingTime(int empNo) {
 		String type = "출근";
 		Map<String, Object> param = new HashMap<>();
@@ -262,6 +279,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 퇴근 시간 등록
+	@Override
 	public EmpWorkingtimeVO insertEndTime(int empNo) {
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 
@@ -274,6 +292,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 퇴근 시간 등록 + 52시간 초과 시에
+	@Override
 	public EmpWorkingtimeVO insertEndTime(int empNo, Date time) {
 		EmployeeVO emp = empRepo.findByEmpNo(empNo);
 		
@@ -286,6 +305,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 오늘 퇴근한 시간 보기
+	@Override
 	public EmpWorkingtimeVO findEndWorkingTime(int empNo) {
 		String type = "퇴근";
 		Map<String, Object> param = new HashMap<>();
@@ -298,6 +318,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 근무 시간 기록 비즈니스 로직
+	@Override
 	public List<Map<String, Object>> selectWorkingTime(int empNo, Map<String, String> map){
 		
 		Map<String, String> param = new HashMap<String, String>();
@@ -335,6 +356,7 @@ public class EmployeeServiceImpl {
 	}
 	
 	// 일주일 동안 근무한 총 시간 출력
+	@Override
 	public Integer findTotalTime(int empNo) {
 		if(empMapper.findTotalTime(empNo) == null) {
 			return 0;
