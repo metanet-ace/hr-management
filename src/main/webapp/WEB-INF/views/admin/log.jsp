@@ -43,6 +43,13 @@ $(document).ready(function(){
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 공지사항 전체 리스트 출력 -->
+		<div class="row page-titles mx-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>로그 기록</h4>
+            </div>
+         </div>
+      </div>
 		<form id="search_form" action="/edu/log" method="post" class="form-inline d-flex justify-content-end">
 			<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
 			<select name="keyField" size="1" id="keyField" class="form-control form-control-sm">

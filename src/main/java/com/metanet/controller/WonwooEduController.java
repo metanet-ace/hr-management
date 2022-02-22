@@ -380,7 +380,6 @@ public class WonwooEduController {
 	//사원 교육 과정 달력
 		@GetMapping("/empEduCalendar")
 		public String eduCalendar(Model model, @SessionAttribute("sessionEmp") EmployeeVO emp) {
-			System.out.println("여기요!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + wonwooEduService.empEduCalendarList(emp.getEmpNo()));
 			model.addAttribute("title", "교육 일정 달력");
 			model.addAttribute("calList", wonwooEduService.empEduCalendarList(emp.getEmpNo()));
 			return "/empEduCalendar";
