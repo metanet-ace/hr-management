@@ -31,6 +31,24 @@
 		background-repeat : no-repeat; 
 		background-size : cover;
 	}
+	
+	#logo{
+		text-align: center;
+		width: 50%;
+		display: inline;
+		margin-left: 50px;
+		marg
+	}
+	
+	#title{
+		font-size: 40px;
+		color: ffffff;
+		vertical-align: center;
+	}
+	
+	#logodiv {
+		text-align: center;
+	}
 	</style>
 <body>
     <div class="authincation" >
@@ -41,9 +59,12 @@
                         <div class="row no-gutters" style="margin-top: 200px;">
                             <div class="col-xl-12" >
                                 <div class="auth-form" >
-                                    <h4 class="text-center mb-4">메타넷 인사관리시스템 로그인</h4>
+                                <div id="logodiv">
+                                    <img class="mb-3" id="logo" src="/assets/icons/metanet-logo2.png">
+                                </div>
+                                    <div class="text-center" id="title">인사관리시스템</div>
                                     <form method="post">
-                                        <div class="form-group">
+                                        <div class="form-group mt-2" >
                                             <label><strong>아이디</strong></label>
                                             <input type="text" class="form-control" name="username">
                                         </div>

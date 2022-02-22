@@ -36,6 +36,13 @@ $(document).ready(function() {
         ***********************************-->
 <div class="content-body">
 	<div class="container-fluid">
+	<div class="row page-titles mx-0 mb-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>인사 이동 기록</h4>
+            </div>
+         </div>
+      </div>
 		<div class="row">
 			<div class="col-lg-2 col-sm-1">
 				<div class="form-group row justify-content-start"

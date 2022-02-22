@@ -160,6 +160,13 @@ textarea {
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 사원 리스트 출력 -->
+		<div class="row page-titles mx-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>인사 이동</h4>
+            </div>
+         </div>
+      </div>
 		<div class="row" >
 			<div class="col-lg-2">
 				<button class="btn btn-primary" style="margin-top: 0.5em;" id="selectAll">전체선택</button>
