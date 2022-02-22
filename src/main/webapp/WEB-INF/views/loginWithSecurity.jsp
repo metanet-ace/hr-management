@@ -30,7 +30,7 @@
 		background-image: url('/assets/images/metanet.jpg'); 
 		height: 800px; 
 		background-repeat : no-repeat; 
-		background-size : cover;"
+		background-size : cover;
 	}
 	</style>
 <body>
