@@ -78,6 +78,13 @@ function modifyScore(){
         ***********************************-->
 <div class="content-body">
 	<div class="container-fluid">
+		<div class="row page-titles mx-0">
+			<div class="col-sm-6 p-md-0">
+				<div class="welcome-text">
+					<h4>교육 진행 사항 조회</h4>
+				</div>
+			</div>
+		</div>
 		<!-- 교육 히스토리 리스트 출력 -->
 			<form id="search_form" action="/edu/admin/history" method="post" class="form-inline de-flex justify-content-end">
 				<select name="keyField" id="field" class="form-control form-control-sm" >

@@ -29,9 +29,8 @@ public class suinEduServiceImpl implements suinEduService {
 	@Override
 	public void eduAttendance() throws ParseException {
 		List<AttendanceVO> list = mapper.eduHistorySelect();
-		System.out.println(list);
+		
 		if(!list.isEmpty()) {
-			System.out.println("list is not null");
 			Calendar getToday = Calendar.getInstance();
 			getToday.setTime(new Date());
 			
