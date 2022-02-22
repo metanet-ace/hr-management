@@ -215,7 +215,7 @@ public class suinEduController {
 	public String eduCalendar(Model model) {
 		model.addAttribute("title", "교육 일정 달력");
 		model.addAttribute("calList", service.eduCalendarList());
-		return "/admin/edu/eduCalendar";
+		return "/admin/edu/calendar";
 	}
 	
 }
