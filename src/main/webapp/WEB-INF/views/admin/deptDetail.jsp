@@ -19,6 +19,10 @@ function del(no){
 	}
 }
 
+$(document).ready(function(){
+	$("#keyField").val("${pageInfo.keyField}").attr("selected","selected");
+})
+
 </script>
 <!--**********************************
             Content body start
@@ -62,6 +66,7 @@ function del(no){
 								<input type="hidden" name="deptNo" value="${dept.deptNo }">
 								<select name="keyField" id="keyField" size="1"
 									class="form-control form-control-sm">
+									<option value="">=====</option>
 									<option value="empNo">사원번호</option>
 									<option value="empName">이름</option>
 								</select> <input type="text" id="kwd" name="keyword"
