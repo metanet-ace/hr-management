@@ -61,7 +61,7 @@ import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.LogVO;
 import com.metanet.domain.PositionVO;
 import com.metanet.persistence.Util;
-import com.metanet.service.EmployeeService;
+import com.metanet.service.EmployeeServiceImpl;
 import com.metanet.service.WonwooEduService;
 
 @SessionAttributes("sessionEmp")
@@ -69,7 +69,7 @@ import com.metanet.service.WonwooEduService;
 public class EmployeeController {
 	
 	@Autowired
-	EmployeeService empService;
+	EmployeeServiceImpl empService;
 	
 	@Autowired
 	suinEduController batchCtrl;
