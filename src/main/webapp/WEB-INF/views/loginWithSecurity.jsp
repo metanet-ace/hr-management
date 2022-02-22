@@ -27,8 +27,7 @@
 	<style>
 	.authincation {
 		height: 100vh;
-		background-image: url('/assets/images/metanet.jpg'); 
-		height: 800px; 
+		background-image: url('/assets/images/main.jpg'); 
 		background-repeat : no-repeat; 
 		background-size : cover;
 	}

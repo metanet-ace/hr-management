@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -374,11 +376,26 @@ public class EmployeeController {
 		return "loginWithSecurity";
 	}
 	
+	@GetMapping("/selfLogout")
+	public String logout(LogVO log, HttpServletRequest request, @SessionAttribute("sessionEmp") EmployeeVO emp) {
+		// 로그 저장
+		int empNo = emp.getEmpNo();
+		log.setLogIp(Util.getUserIp(request));
+		log.setEmpNo(empNo);
+		log.setLogTarget("로그아웃");
+		log.setLogDesc("로그아웃 성공");
+		
+		logService.writeLog(log);
+		return "redirect:/signin";
+	}
+	
 	// 시큐리티 사용한 로그인 성공시 이동하는 화면
-	@GetMapping("/loginSuccess")
+	@RequestMapping(value = "/loginSuccess", method = {RequestMethod.GET, RequestMethod.POST})	
 	public String login(Authentication authentication, Model model, LogVO log, HttpServletRequest request) {
 	    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 	    EmployeeVO emp = empService.getLoginedEmp(Integer.parseInt(userDetails.getUsername()));
+	    
+	    System.out.println("로그인 시큐리티 emp: " + emp);
 		model.addAttribute("sessionEmp", emp );
 		
 		// 로그 저장
