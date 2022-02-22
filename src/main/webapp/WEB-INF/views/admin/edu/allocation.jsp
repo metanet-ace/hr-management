@@ -28,9 +28,6 @@ form {
 </style>
 <script>
 $(document).ready(function(){
-	console.log("ready");
-	console.log("keyField: " + '${keyField}');
-	
 	//검색 후 select-option 유지
 	$("#keyField").val("${keyField}").attr("selected","selected");
 });
@@ -43,9 +40,7 @@ function eduAllocation(){
 	var eduNo = ${eduNo}
 	var data ={empNo: empNo,
 			eduNo: eduNo}
-	console.log("allocation: "+empNo);
-	console.log(${eduNo})
-	console.log("function allocation");
+
 	$.ajax({
 		type: "POST",
 		url: "/edu/allocation",
@@ -64,7 +59,14 @@ function eduAllocation(){
 <body>
 <div class="content-body">
 	<div class="container-fluid">
-		<form id="search_form" action="/edu/allocation/${eduNo}" method="post" class="form-inline de-flex justify-content-end">
+			<div class="row page-titles mx-0">
+				<div class="col-sm-6 p-md-0">
+					<div class="welcome-text">
+						<h4>교육 인원 배정</h4>
+					</div>
+				</div>
+			</div>
+			<form id="search_form" action="/edu/allocation/${eduNo}" method="post" class="form-inline de-flex justify-content-end">
 			<select name="keyField" id="keyField" size="1" class="form-control form-cotrol-sm">
 				<option value="">==</option>
 				<option value="deptName">부서</option>
