@@ -17,9 +17,6 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-	console.log("ready");
-	console.log("keyField: " + '${keyField}');
-	
 	//검색 후 select-option 유지
 	$("#keyField").val("${keyField}").attr("selected","selected");
 
@@ -78,17 +75,24 @@ function modifyScore(){
         ***********************************-->
 <div class="content-body">
 	<div class="container-fluid">
+		<div class="row page-titles mx-0">
+			<div class="col-sm-6 p-md-0">
+				<div class="welcome-text">
+					<h4>교육 진행 사항 조회</h4>
+				</div>
+			</div>
+		</div>
 		<!-- 교육 히스토리 리스트 출력 -->
-		<form id="search_form" action="/edu/admin/history" method="post">
-			<select name="keyField" id="keyField" size="1">
-				<option value="">=====</option>
-				<option value="eduTitle">교육명</option>
-				<option value="empNo">사원번호</option>
-				<option value="empName">사원이름</option>
-			</select>
-			<input type="text" id="kwd" name="keyword" value="${pageInfo.keyword}"> 
-			<input	type="submit" value="찾기">
-		</form>
+			<form id="search_form" action="/edu/admin/history" method="post" class="form-inline de-flex justify-content-end">
+				<select name="keyField" id="keyField" class="form-control form-control-sm" >
+					<option value="">=====</option>
+					<option value="eduTitle">교육명</option>
+					<option value="empNo">사원번호</option>
+					<option value="empName">사원이름</option>
+				</select>
+				<input type="text" class="form-control form-cotrol-sm" id="kwd" name="keyword" value="${pageInfo.keyword}"  > 
+				<input	type="submit" class="btn btn-outline-info btn-sm" value="찾기">
+			</form>
 		<br>
 		<form action="/edu/score" method="post">
 		<table class="table table-striped" border=1>
@@ -130,8 +134,8 @@ function modifyScore(){
 			<tbody>
 		</table>
 		<div>
-			<input type="button" class="btn-light" value="점수입력" onclick="activeInput();">
-			<input type="button" class="btn-primary" name="btnScore" value="점수반영" hidden="hidden" onclick="modifyScore();">
+			<input type="button" class="btn btn-light" value="점수입력" onclick="activeInput();">
+			<input type="button" class="btn btn-primary" name="btnScore" value="점수반영" hidden="hidden" onclick="modifyScore();">
 		</div>
 		</form>
 		<!-- 페이지네이션  -->

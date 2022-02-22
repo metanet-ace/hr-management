@@ -32,6 +32,13 @@ form {
 <div class="content-body">
 	<div class="container-fluid">
 		<!-- 교육 히스토리 리스트 출력 -->
+		<div class="row page-titles mx-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>내 교육 정보</h4>
+            </div>
+         </div>
+      </div>
 		<form id="search_form" action="/edu/history" method="post" class="form-inline d-flex justify-content-end">
 			<input type="hidden" name="empNo" value="${sessionEmp.empNo }">
 			<select name="keyField" id="keyField" size="1" class="form-control form-control-sm">

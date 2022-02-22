@@ -59,7 +59,7 @@
         <div class="nav-header" style="display:absolute;">
             <a href="/main" class="brand-logo">
              	<img class="logo-abbr" src="" style="width: 300px;" alt="">
-                <img class="brand-title" src="/assets/icons/metanet-logo-removebg.png" style="max-width: 400px; width: 300px; margin-left: -30px"alt="">
+                <img class="brand-title" src="/assets/icons/metanet-logo2.png" style="max-width: 400px; width: 180px;" alt="">
             </a>
 
             <div class="nav-control">

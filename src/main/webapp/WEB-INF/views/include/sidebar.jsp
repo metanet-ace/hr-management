@@ -15,6 +15,7 @@
                         <ul aria-expanded="false">
                             <li><a href="/emp/detail?empNo=${sessionEmp.empNo }">내 정보 조회</a></li> 
                             <li><a href="/edu/history?empNo=${sessionEmp.empNo}">내 교육 정보</a></li>
+                            <li><a href="/main">출·퇴근 관리</a></li>
                         </ul>
                     </li>
                  	
@@ -26,7 +27,7 @@
                             <li><a href="/admin/emp/deptList">부서 관리</a></li>
                             <li><a href="/admin/emp/posList">직급 관리</a></li>
                    			<li><a href="/admin/emp">인사 이동</a></li>
-                            <li><a href="/admin/emp/history">인사 이동 히스토리</a></li>
+                            <li><a href="/admin/emp/history">인사 이동 기록</a></li>
                             <li><a href="/admin/emp/retire">퇴사자 관리</a></li>
                         </ul>
                     </li>

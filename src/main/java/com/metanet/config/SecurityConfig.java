@@ -25,19 +25,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity security) throws Exception{
 		security.authorizeRequests()
 				.antMatchers("/signin").permitAll()
-				.antMatchers("/main", "/notice").authenticated()
 				// hasRole은 접두어 "ROLE_"이 디폴트로 붙어 있다.DB에 ROLE_ADMIN, ROLE_USER 등으로 저장했다면 사용가능
 				// 현재는 부서번호로 권한을 주기 때문에 ROLE_이 붙으면 안되므로 hasAuthority 사용 
 				.antMatchers("/admin/**").hasAuthority("인사팀")
-				.antMatchers("/edu/**").hasAuthority("인사팀");
+				.antMatchers("/edu/log", "/edu/update", "/edu/delete", 
+						"/edu/add", "/updateNotice",  "/noticeAdd", "/deleteNotice",
+						"/edu/list/**", "/edu/allocation/**", "/edu/score", "/edu/calendar").hasAuthority("인사팀")
+				.antMatchers("/", "/main", "/notice", "/edu/detail", "/edu/eduEmpDetail","/edu/history", "/edu/download", 
+						"/edu/empEduCalendar", "/noticeDetail").authenticated();
+				
 		
 		security.csrf().disable();
-		// 시큐리티 로그인 페이지를 대체할 커스템 페이지 지정
-		security.formLogin().loginPage("/signin").defaultSuccessUrl("/loginSuccess");
-		// security.logout().invalidateHttpSession(true).logoutSuccessUrl("/signin");
+		// defaultSuccessUrl의 true는 사용자가 인증 전에 보안 페이지를 방문했을 경우, 즉 /admin/emp로 강제 접속을
+		// 했다가 다시 signin 페이지로 튕겨져 나와서 접속을 시도했을 때, /loginSuccess를 탈 수 있게 한다.
+		// 만약 true가 아니면 /admin/emp로 접속했다가 튕겨져 나오고 로그인에 성공한다면 /loginSuccess 페이지를 탈 수 없게 된다.
+		// loginProcessingUrl은 form 태그의 action 값을 따로 주고 싶을 때 사용한다. 이것 때문에 헷갈렸다 
+		security.formLogin().loginPage("/signin").defaultSuccessUrl("/loginSuccess", true);
+		security.logout().invalidateHttpSession(true).logoutSuccessUrl("/selfLogout");
 		security.exceptionHandling().accessDeniedPage("/accessDenied");
 	
-		
 		// 시큐리티 로그인 비즈니스 로직 수행
 		security.userDetailsService(service);
 	}

@@ -88,7 +88,7 @@
                                                     		<c:otherwise>
                                                     		<input type="hidden" name="noticeRefile" value="${detail.noticeRefile }">
                                                     		<input type="text" class="form-control" id="uploadfile" name="uploadfile" value="${detail.noticeFile }" readonly>
-                                                        <a href="./downloadNoticeFile?uuid=${uuid }&fileName=${detail.noticeFile}">[download]</a>
+                                                        <a href="/edu/download?uuid=${uuid }&fileName=${detail.noticeFile}">[download]</a>
                                                     		</c:otherwise>
                                                     	</c:choose>
                                                     </div>

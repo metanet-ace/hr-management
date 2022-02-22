@@ -74,17 +74,21 @@ function fnSubmit(){
         ***********************************-->
 <div class="content-body">
 	<div class="container-fluid">
+	<div class="row page-titles mx-0">
+         <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+               <h4>부서 등록</h4>
+            </div>
+         </div>
+      </div>
 		<!-- row -->
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="card">
-					<div class="card-header">
-						<h4 class="card-title">Form Validation</h4>
-					</div>
 					<div class="card-body">
 						<div class="form-validation">
 							<form id="insert" class="form-valide" action="/admin/emp/insertDept"
-								method="post">
+								method="post"> 
 								<div class="row">
 									<div class="col-xl-6">
 
@@ -115,7 +119,7 @@ function fnSubmit(){
 										</div>
 
 										<div class="form-group row">
-											<div class="col-lg-8 ml-auto">
+											<div class="col-lg-8 ml-auto" align="right">
 												<button type="button" class="btn btn-primary"
 													onclick="fnSubmit(); return false;">Submit</button>
 											</div>
