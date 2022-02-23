@@ -62,11 +62,11 @@ function eduAllocation(){
 			<div class="row page-titles mx-0">
 				<div class="col-sm-6 p-md-0">
 					<div class="welcome-text">
-						<h4>교육 인원 배정</h4>
+						<h4>교육 인원 배정 - [${eduTitle}]</h4>
 					</div>
 				</div>
 			</div>
-			<form id="search_form" action="/edu/allocation/${eduNo}" method="post" class="form-inline de-flex justify-content-end">
+			<form id="search_form" action="/edu/allocation/${eduNo}/${eduTitle}" method="post" class="form-inline de-flex justify-content-end">
 			<select name="keyField" id="keyField" size="1" class="form-control form-cotrol-sm">
 				<option value="">==</option>
 				<option value="deptName">부서</option>

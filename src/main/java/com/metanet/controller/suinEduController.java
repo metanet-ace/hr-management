@@ -92,8 +92,9 @@ public class suinEduController {
 	}
 	
 	//교육 인원 배정 페이지 출력 관련
-	@RequestMapping(value={"/allocation/{eduNo}", "/allocation/{eduNo}/{pageNum}", "/allocation/{eduNo}/{pageNum}/{keyField}/{keyword}"})
+	@RequestMapping(value={"/allocation/{eduNo}/{eduTitle}", "/allocation/{eduNo}/{eduTitle}/{pageNum}", "/allocation/{eduNo}/{eduTitle}/{pageNum}/{keyField}/{keyword}"})
 	public String eduAllocation(@PathVariable("eduNo") int eduNo,
+								@PathVariable("eduTitle") String eduTitle,
 								@PathVariable(value = "pageNum", required = false) Integer p,
 								@PathVariable(value = "keyField", required = false) String keyField,
 								@PathVariable(value = "keyword", required = false) String keyword,
