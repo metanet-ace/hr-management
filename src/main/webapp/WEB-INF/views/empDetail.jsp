@@ -27,7 +27,7 @@
 						<div class="form-validation">
 							<form class="form-valide" align="center">
 								<c:if test="${empDetail.empPhoto != null }">
-							<img src="${ pageContext.servletContext.contextPath }/resources/multiFiles/${ empDetail.empRePhoto }" style="width: 250px; height: 300px">
+							<img src="${ pageContext.servletContext.contextPath }/resources/${ empDetail.empRePhoto }" style="width: 250px; height: 300px">
 							</c:if>
 							<c:if test="${empDetail.empPhoto == null }">
 							<img src="${ pageContext.servletContext.contextPath }/resources/employeeImages/basic.png" style="width: 250px; height: 300px">
