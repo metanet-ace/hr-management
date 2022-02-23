@@ -66,7 +66,7 @@ function eduAllocation(){
 					</div>
 				</div>
 			</div>
-			<form id="search_form" action="/edu/allocation/${eduNo}" method="post" class="form-inline de-flex justify-content-end">
+			<form id="search_form" action="/edu/allocation/${eduNo}/${eduTitle}" method="post" class="form-inline de-flex justify-content-end">
 			<select name="keyField" id="keyField" size="1" class="form-control form-cotrol-sm">
 				<option value="">==</option>
 				<option value="deptName">부서</option>
