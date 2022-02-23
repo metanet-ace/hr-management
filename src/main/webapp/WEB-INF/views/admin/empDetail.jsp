@@ -36,18 +36,14 @@ function upPwd(no){
 							<form class="form-valide" align="center">
 							<br><br>
 							<c:if test="${empDetail.empPhoto != null }">
-							<img src="${ pageContext.servletContext.contextPath }/resources/multiFiles/${ empDetail.empRePhoto }" style="width: 250px; height: 300px">
+							<img src="${ pageContext.servletContext.contextPath }/resources/${ empDetail.empRePhoto }" style="width: 250px; height: 300px">
 							</c:if>
 							<c:if test="${empDetail.empPhoto == null }">
 							<img src="${ pageContext.servletContext.contextPath }/resources/employeeImages/basic.png" style="width: 250px; height: 300px">
 							</c:if>
 											<br><br><br><br>
 								<div class="row">
-									
-										
-									
 									<div class="col-xl-6">
-
 										<div class="form-group row">
 											<label class="col-lg-4 col-form-label" for="empNo">사원번호</label>
 											<div class="col-lg-6">
