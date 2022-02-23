@@ -36,7 +36,7 @@ function upPwd(no){
 							<form class="form-valide" align="center">
 							<br><br>
 							<c:if test="${empDetail.empPhoto != null }">
-							<img src="${ pageContext.servletContext.contextPath }/resources/employeeImages/${ empDetail.empRePhoto }" style="width: 250px; height: 300px">
+							<img src="${ pageContext.servletContext.contextPath }/resources/multiFiles/${ empDetail.empRePhoto }" style="width: 250px; height: 300px">
 							</c:if>
 							<c:if test="${empDetail.empPhoto == null }">
 							<img src="${ pageContext.servletContext.contextPath }/resources/employeeImages/basic.png" style="width: 250px; height: 300px">

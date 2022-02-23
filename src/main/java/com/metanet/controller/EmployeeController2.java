@@ -3,17 +3,19 @@ package com.metanet.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,7 @@ import com.metanet.domain.DepartmentVO;
 import com.metanet.domain.DeptVO;
 import com.metanet.domain.EmployeeVO;
 import com.metanet.domain.EmployeeVO2;
+import com.metanet.domain.FileDTO;
 import com.metanet.domain.LogVO;
 import com.metanet.domain.PageDTO;
 import com.metanet.domain.PaginationDTO;
@@ -43,6 +46,9 @@ import com.metanet.service.WonwooEduService;
 @Controller
 public class EmployeeController2 {
 
+	@Value("${spring.servlet.multipart.location}")
+	String filePath;
+	
 	@Autowired
 	EmployeeService2 service;
 	
@@ -64,56 +70,27 @@ public class EmployeeController2 {
 	// 사원등록하기(인사팀)
 	@PostMapping("/admin/emp/insertEmp")
 	public String insertEmployee(@Valid EmployeeVO2 emp, Errors errors, HttpServletRequest request, Model model,
-			@RequestParam(name = "upfile", required = false) MultipartFile mfile, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+			@RequestParam(name = "upfile", required = false) MultipartFile mfile, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) throws IllegalStateException, IOException {
 		// parameter 값이 없어도 오류가 나지 않게 하기 위해서 required = false
 		
 		log.setLogIp(Util.getUserIp(request));
 		log.setEmpNo(empVo.getEmpNo());
 		log.setLogTarget("사원 등록(인사팀)");
 		
-		// 파일 저장 폴더 지정
-		String savePath = request.getSession().getServletContext().getRealPath("resources/employeeImages");
-
 		if (!mfile.isEmpty()) {
 			String fileName = mfile.getOriginalFilename();
-			if (fileName != null && fileName.length() > 0) {
-				try {
-					mfile.transferTo(new File(savePath + "\\" + fileName));
-
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-
-					String renameFileName = sdf.format(new java.sql.Date(System.currentTimeMillis()));
-
-					renameFileName += "." + fileName.substring(fileName.lastIndexOf(".") + 1);
-
-					File originFile = new File(savePath + "\\" + fileName);
-					File renameFile = new File(savePath + "\\" + renameFileName);
-
-					if (!originFile.renameTo(renameFile)) {
-						FileInputStream fin = new FileInputStream(originFile);
-						FileOutputStream fout = new FileOutputStream(renameFile);
-
-						int data = -1;
-						byte[] buffer = new byte[1024];
-
-						while ((data = fin.read(buffer, 0, buffer.length)) != -1) {
-							fout.write(buffer, 0, buffer.length);
-						}
-
-						fin.close();
-						fout.close();
-						originFile.delete();
-					}
-
-					emp.setEmpRePhoto(renameFileName);
-				} catch (Exception e) {
-					e.printStackTrace();
-					model.addAttribute("message", "파일 업로드 실패");
-				}
-			}
-
-			emp.setEmpPhoto(mfile.getOriginalFilename());
+			emp.setEmpPhoto(fileName);
+			
+			FileDTO dto = new FileDTO(UUID.randomUUID().toString(), mfile.getOriginalFilename(), mfile.getContentType());
+			
+			File newFileName = new File(dto.getUuid() + "_" + dto.getFileName());
+			
+			mfile.transferTo(newFileName);
+			
+			String empRe = newFileName.getName();
+			emp.setEmpRePhoto(empRe);
 		}
+			
 		// 유효성 검사
 
 		// 유효성 통과 못한 필드와 메시지를 핸들링
@@ -166,60 +143,33 @@ public class EmployeeController2 {
 	// 사원수정하기(인사팀) : 비밀번호변경X
 	@PostMapping("/admin/emp/updateEmp")
 	public String updateEmployee(@Valid EmployeeVO2 emp, Errors errors, HttpServletRequest request, Model model,
-			@RequestParam(name = "upfile", required = false) MultipartFile mfile, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) {
+			@RequestParam(name = "upfile", required = false) MultipartFile mfile, LogVO log, @SessionAttribute("sessionEmp") EmployeeVO empVo) throws IllegalStateException, IOException {
 		
 		log.setLogIp(Util.getUserIp(request));
 		log.setEmpNo(empVo.getEmpNo());
 		log.setLogTarget("사원 정보 수정(인사팀)");
 		
-		// 파일 저장 경로
-		String savePath = request.getSession().getServletContext().getRealPath("resources/employeeImages");
-
 		// 새로운 파일
 		if (!mfile.isEmpty()) {
 			// 이전 파일 삭제
 			if (emp.getEmpPhoto() != null) {
-				new File(savePath + "\\" + emp.getEmpRePhoto()).delete();
+				new File(filePath + "\\" + emp.getEmpRePhoto()).delete();
 				emp.setEmpPhoto(null);
 				emp.setEmpRePhoto(null);
 			}
 
-			String fileName = mfile.getOriginalFilename();
-			if (fileName != null && fileName.length() > 0) {
-				try {
-					mfile.transferTo(new File(savePath + "\\" + fileName));
-
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-
-					String renameFileName = sdf.format(new java.sql.Date(System.currentTimeMillis()));
-
-					renameFileName += "." + fileName.substring(fileName.lastIndexOf(".") + 1);
-
-					File originFile = new File(savePath + "\\" + fileName);
-					File renameFile = new File(savePath + "\\" + renameFileName);
-
-					if (!originFile.renameTo(renameFile)) {
-						FileInputStream fin = new FileInputStream(originFile);
-						FileOutputStream fout = new FileOutputStream(renameFile);
-
-						int data = -1;
-						byte[] buffer = new byte[1024];
-
-						while ((data = fin.read(buffer, 0, buffer.length)) != -1) {
-							fout.write(buffer, 0, buffer.length);
-						}
-
-						fin.close();
-						fout.close();
-						originFile.delete();
-					}
-
-					emp.setEmpRePhoto(renameFileName);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					model.addAttribute("message", "파일 업로드 실패");
-				}
+			if (!mfile.isEmpty()) {
+				String fileName = mfile.getOriginalFilename();
+				emp.setEmpPhoto(fileName);
+				
+				FileDTO dto = new FileDTO(UUID.randomUUID().toString(), mfile.getOriginalFilename(), mfile.getContentType());
+				
+				File newFileName = new File(dto.getUuid() + "_" + dto.getFileName());
+				
+				mfile.transferTo(newFileName);
+				
+				String empRe = newFileName.getName();
+				emp.setEmpRePhoto(empRe);
 			}
 
 			emp.setEmpPhoto(mfile.getOriginalFilename());
