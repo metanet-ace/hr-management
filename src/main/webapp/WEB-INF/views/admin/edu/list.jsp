@@ -84,7 +84,7 @@ $(document).ready(function(){
 							</c:choose></td>
 						<td>
 							<c:if test="${list.eduProgress eq 'pre'}">
-								<button type="button" class="btn-primary" onclick="location.href='/edu/allocation/${list.eduNo }'">교육배정</button>
+								<button type="button" class="btn-primary" onclick="location.href='/edu/allocation/${list.eduNo }/${list.eduTitle}'">교육배정</button>
 							</c:if>
 						</td>
 					</tr>
