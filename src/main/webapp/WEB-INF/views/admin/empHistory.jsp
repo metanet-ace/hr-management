@@ -138,8 +138,9 @@ $(document).ready(function() {
             Content body end
         ***********************************-->
 <script>
-function reasonModal(){
-	var reason = $("#why").val()
+function reasonModal(event){
+	console.log(event)
+	var reason = $(event).val();
 	$(".modal-body").html(reason);
 	$("#reasonModal").modal("show");
 }
@@ -213,8 +214,7 @@ function getPage(pageNum){
 					
 					data += "<td align='center'>" + list[i]['issuedOrder'] + "</td>";
 					data += "<td align='center'>" + list[i]['issuedDate'] + "</td>";
-					data += "<td width='10%'  align='center'><button class='btn btn-primary' href='#' onclick=reasonModal();>상세내용</td>";
-					data += "<input type='hidden' id='why' value='"+ reason + "'/> "
+					data += "<td width='10%'  align='center'><button value = '" + reason + "' class='btn btn-primary' href='#' onclick=reasonModal(this);>상세내용</td>";
 				}
 			}
 			// 이전 버튼 활성화

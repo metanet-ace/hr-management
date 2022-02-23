@@ -210,7 +210,7 @@ public class EmployeeController {
 			pageSize = 5; // 기본값
 		}
 		
-		Pageable pageable = PageRequest.of(pageNum-1, pageSize, Sort.Direction.DESC, "issuedDate");
+		Pageable pageable = PageRequest.of(pageNum-1, pageSize, Sort.Direction.DESC, "empHisno");
 		
 		Page<EmpHistoryVO> empHistoryPage = empService.getEmpHistoryList(data, pageable);
 
