@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+	<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -145,7 +145,7 @@ $(document).ready(function(){
 
 								<c:if test="${paging.hasNext }">
 									<li class="page-item"><a class="page-link"
-										href="/admin/emp/deptDetail?deptNo=${dept.deptNo}?pageNum=${paging.endPage+1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
+										href="/admin/emp/deptDetail?deptNo=${dept.deptNo}&pageNum=${paging.endPage+1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
 								</c:if>
 							</ul>
 						</nav>

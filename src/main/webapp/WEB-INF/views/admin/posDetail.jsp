@@ -126,7 +126,7 @@ $(document).ready(function(){
 				</c:forEach>
 
 				<c:if test="${paging.hasNext }">
-					<li class="page-item"><a class="page-link" href="/admin/emp/posDetail?posNo=${pos.posNo}?pageNum=${paging.endPage+1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
+					<li class="page-item"><a class="page-link" href="/admin/emp/posDetail?posNo=${pos.posNo}&pageNum=${paging.endPage+1}&keyField=${pageInfo.keyField }&keyword=${pageInfo.keyword}">다음</a></li>
 				</c:if>
 			</ul>
 			</nav>
