@@ -4,7 +4,7 @@
 <c:import url="/WEB-INF/views/include/header.jsp" />
 <c:import url="/WEB-INF/views/include/sidebar.jsp" />
 <!DOCTYPE html>
-<html>
+<html>s
 <head>
 <style type="text/css">
 h1 {
@@ -111,10 +111,10 @@ function eduAllocation(){
 				<c:if test="${paging.hasPrev }">
 					<c:choose>
 						<c:when test="${empty pageInfo.keyField}">
-							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.startPage-1}">이전</a></li>
+							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${eduTitle}/${paging.startPage-1}">이전</a></li>
 						</c:when>
 						<c:otherwise>
-							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.startPage-1}/${pageInfo.keyField }/${pageInfo.keyword}">이전</a></li>
+							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${eduTitle}/${paging.startPage-1}/${pageInfo.keyField }/${pageInfo.keyword}">이전</a></li>
 						</c:otherwise>
 					</c:choose>
 				</c:if>
@@ -127,10 +127,10 @@ function eduAllocation(){
 						<c:otherwise>
 							<c:choose>
 								<c:when test="${empty pageInfo.keyField}">
-									<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${p}">${p}</a>
+									<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${eduTitle}/${p}">${p}</a>
 								</c:when>
 								<c:otherwise>
-									<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${p}/${pageInfo.keyField }/${pageInfo.keyword}">${p}</a>
+									<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${eduTitle}/${p}/${pageInfo.keyField }/${pageInfo.keyword}">${p}</a>
 								</c:otherwise>
 							</c:choose>
 							
@@ -140,10 +140,10 @@ function eduAllocation(){
 				<c:if test="${paging.hasNext }">
 					<c:choose>
 						<c:when test="${empty pageInfo.keyField}">
-							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.endPage+1}">다음</a></li>
+							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${eduTitle}/${paging.endPage+1}">다음</a></li>
 						</c:when>
 						<c:otherwise>
-							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${paging.endPage+1}/${pageInfo.keyField }/${pageInfo.keyword}">다음</a></li>
+							<li class="page-item"><a class="page-link" href="/edu/allocation/${eduNo}/${eduTitle}/${paging.endPage+1}/${pageInfo.keyField }/${pageInfo.keyword}">다음</a></li>
 						</c:otherwise>
 					</c:choose>
 					
