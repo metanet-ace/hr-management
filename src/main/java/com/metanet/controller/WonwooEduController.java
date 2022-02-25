@@ -334,7 +334,6 @@ public class WonwooEduController {
 		if (!uploadfile.isEmpty()) {
 			String eduFile = uploadfile.getOriginalFilename();
 			eduVO.setEduFile(eduFile);
-
 			FileDTO dto = new FileDTO(UUID.randomUUID().toString(), uploadfile.getOriginalFilename(),
 					uploadfile.getContentType());
 			File newFileName = new File(dto.getUuid() + "_" + dto.getFileName());
