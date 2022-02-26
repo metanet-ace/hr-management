@@ -39,6 +39,8 @@ public class EmpHistoryVO {
 	private Date issuedDate;
 	private String issuedOrder;
 	private String issuedContent;
+	private String nowDeptName;
+	private String nowPosName;
 	
 	@Transient
 	private int batisEmpNo; 

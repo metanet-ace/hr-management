@@ -38,6 +38,10 @@ public class QEmpHistoryVO extends EntityPathBase<EmpHistoryVO> {
 
     public final StringPath issuedOrder = createString("issuedOrder");
 
+    public final StringPath nowDeptName = createString("nowDeptName");
+
+    public final StringPath nowPosName = createString("nowPosName");
+
     public final NumberPath<Integer> posNo = createNumber("posNo", Integer.class);
 
     public QEmpHistoryVO(String variable) {

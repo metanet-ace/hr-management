@@ -6,4 +6,6 @@ import com.metanet.domain.PositionVO;
 
 public interface PositionRepository extends JpaRepository<PositionVO, Integer> {
 
+	PositionVO findByPosNo(int posNo);
+
 }

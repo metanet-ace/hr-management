@@ -102,6 +102,13 @@ public class EmployeeServiceImpl {
 		empHis.setBatisEmpNo(empNo);
 		empHis.setDeptNo(deptNo);
 		empHis.setPosNo(posNo);
+		
+		// 현재 부서이름 테이블에 저장
+		DepartmentVO deptVO = deptRepo.findByDeptNo(deptNo);
+		PositionVO posVO = posRepo.findByPosNo(posNo);
+		empHis.setNowDeptName(deptVO.getDeptName());
+		empHis.setNowPosName(posVO.getPosName());
+
 		empHis.setIssuedDate(new Date());
 		empHis.setIssuedOrder("인사이동");
 		empHis.setIssuedContent(reason);
@@ -126,6 +133,9 @@ public class EmployeeServiceImpl {
 		// 히스토리 테이블 정보 입력
 		empHis.setBatisEmpNo(empNo);
 		empHis.setDeptNo(deptNo);
+		DepartmentVO deptVO = deptRepo.findByDeptNo(deptNo);
+		empHis.setNowDeptName(deptVO.getDeptName());
+		empHis.setNowPosName("변동사항 없음");
 		empHis.setIssuedDate(new Date());
 		empHis.setIssuedOrder("부서이동");
 		empHis.setIssuedContent(reason);
@@ -150,6 +160,9 @@ public class EmployeeServiceImpl {
 		// 히스토리 테이블 정보 입력
 		empHis.setBatisEmpNo(empNo);
 		empHis.setPosNo(posNo);
+		PositionVO posVO = posRepo.findByPosNo(posNo);
+		empHis.setNowDeptName("변동사항 없음");
+		empHis.setNowPosName(posVO.getPosName());
 		empHis.setIssuedDate(new Date());
 		empHis.setIssuedOrder("직급변경");
 		empHis.setIssuedContent(reason);
@@ -184,9 +197,7 @@ public class EmployeeServiceImpl {
 		if(data.get("empName") != "" && data.get("empName") != null ) {
 			return empHisRepo.findByEmpEmpNameContaining(data.get("empName"), pageable);
 		} else if (data.get("startDate") != null && data.get("endDate") != null) {
-			System.out.println("dafsdfasdjkfhasldjkfhasdjlkf");
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			
 			try {
 				Date startDate = sdf.parse(data.get("startDate"));
 				Date endDate = sdf.parse(data.get("endDate"));

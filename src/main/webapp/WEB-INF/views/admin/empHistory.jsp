@@ -194,22 +194,23 @@ function getPage(pageNum){
 					var reason = list[i]['issuedContent'];
 					data += "<tr id='empHistoryList'>";
 					data += "<td align='center'>" + list[i]['emp'].empName + "</td>";
-					if(list[i]['emp'].pos.posName === list[i]['beforePos']) {
+					
+					if(list[i]['nowPosName'] === '변동사항 없음') {
 						data += "<td colspan='2' align='center'>" + list[i]['beforePos'] + "</td>";
-					} else if (list[i]['beforePos'] === "-"){
+					} else if (list[i]['beforePos'] === "-"){ // 퇴사일 때
 						data += "<td colspan='2' align='center'>" + "-" + "</td>";
 					} else {
 						data += "<td align='center'>" + list[i]['beforePos'] + "</td>";
-						data += "<td align='center'>" + list[i]['emp'].pos.posName + "</td>"
+						data += "<td align='center'>" +list[i]['nowPosName'] + "</td>"
 					}
 					
-					if(list[i]['beforeDept'] === list[i]['emp'].dept.deptName ){
+					if(list[i]['nowDeptName'] === '변동사항 없음' ){
 						data += "<td colspan='2' align='center'>" + list[i]['beforeDept'] + "</td>";
 					} else if(list[i]['beforeDept'] === "-") {
 						data += "<td colspan='2' align='center'>" + "-" + "</td>";
 					} else {
 						data += "<td align='center'>" + list[i]['beforeDept'] + "</td>";
-						data += "<td align='center'>" + list[i]['emp'].dept.deptName + "</td>"
+						data += "<td align='center'>" +  list[i]['nowDeptName'] + "</td>"
 					}
 					
 					data += "<td align='center'>" + list[i]['issuedOrder'] + "</td>";

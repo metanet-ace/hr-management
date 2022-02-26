@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
@@ -126,8 +125,8 @@ public class EmployeeController {
 	@ResponseBody
 	public ResponseEntity<String> updateHumanResource(@RequestBody HashMap<String, Object> map,
 			LogVO log, HttpServletRequest request, @SessionAttribute("sessionEmp") EmployeeVO emp) {
-		int deptNo = 0;
-		int posNo = 0;
+		int deptNo = -1;
+		int posNo = -1;
 		
 		String reason = (String) map.get("reason");
 		Object targetEmpList = map.get("targetEmps");
@@ -145,11 +144,11 @@ public class EmployeeController {
 		
 		for(Object result : (List) targetEmpList) {
 			int targetNo = Integer.parseInt((String) result);
-			if(deptNo != 0 && posNo != 0) {
+			if(deptNo != -1 && posNo != -1) {
 				empService.updateEmpDeptAndPos(targetNo, deptNo, posNo, reason);
-			} else if(deptNo != 0 && posNo == 0){
+			} else if(deptNo != -1 && posNo == -1){
 				empService.updateEmpDept(targetNo, deptNo, reason);
-			} else if(deptNo == 0 && posNo != 0) {
+			} else if(deptNo == -1 && posNo != -1) {
 				empService.updateEmpPos(targetNo, posNo, reason);
 			} else {
 				return new ResponseEntity<String>("오류 발생", HttpStatus.INTERNAL_SERVER_ERROR);

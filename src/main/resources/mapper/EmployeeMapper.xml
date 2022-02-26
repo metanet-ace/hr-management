@@ -22,7 +22,7 @@
 	
 	<insert id="saveHistory">
 		INSERT INTO EMP_HISTORY
-		VALUES (SEQ_EMP_HISNO.nextval, #{batisEmpNo}, #{posNo}, #{beforePos}, #{deptNo}, #{beforeDept}, #{issuedDate}, #{issuedOrder}, #{issuedContent} )
+		VALUES (SEQ_EMP_HISNO.nextval, #{batisEmpNo}, #{posNo}, #{beforePos}, #{deptNo}, #{beforeDept}, #{issuedDate}, #{issuedOrder}, #{issuedContent}, #{nowDeptName}, #{nowPosName} )
 	</insert>
 	
 	<select id="findByEmpNo" resultType="com.metanet.domain.EmployeeVO">
